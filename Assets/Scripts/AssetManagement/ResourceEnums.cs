@@ -7,6 +7,9 @@ namespace CustomResourceManagement
 				Unit_1,
 			}
 		}
+		public enum UI{
+			SelectionBox,
+		}
 	}
 }
 

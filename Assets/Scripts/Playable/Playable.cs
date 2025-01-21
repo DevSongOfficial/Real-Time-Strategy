@@ -13,7 +13,12 @@ public interface ISelectable
     void OnDeselected();
 }
 
-public abstract class Playable : MonoBehaviour, ISelectable
+public interface ITransformProvider
+{
+    Transform GetTransform();
+}
+
+public abstract class Playable : MonoBehaviour, ISelectable, ITransformProvider
 {
     // Team that the object belongs to.
     [field: SerializeField] private Team Team {  get; set; }
@@ -21,9 +26,12 @@ public abstract class Playable : MonoBehaviour, ISelectable
     public abstract void OnSelected();
     public abstract void OnDeselected();
 
+    public Transform GetTransform() { return transform; }
+
 
     private void SetUp(Team team)
     {
         Team = team;
     }
+
 }

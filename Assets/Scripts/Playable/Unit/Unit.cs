@@ -11,6 +11,7 @@ public interface IMovable
 public class Unit : Playable, IMovable
 {
     [SerializeField] private NavMeshAgent agent;
+    [SerializeField] private GameObject selectionIndicator;
 
     private void Awake()
     {
@@ -24,9 +25,12 @@ public class Unit : Playable, IMovable
 
     public override void OnSelected()
     {
+        selectionIndicator.SetActive(false);
+        selectionIndicator.SetActive(true);
     }
 
     public override void OnDeselected()
     {
+        selectionIndicator.SetActive(false);
     }
 }
