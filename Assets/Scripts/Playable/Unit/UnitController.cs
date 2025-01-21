@@ -12,31 +12,31 @@ public sealed class UnitController : MonoBehaviour, IUnitSelector
     [SerializeField] private new Camera camera;
     [SerializeField] private Canvas canvas;
 
-    [SerializeField] private LayerMask layerMask_Ground;
-    [SerializeField] private LayerMask layerMask_Selectable;
+    private List<ISelectable> allUnits;
 
+    // Mouse Drag Event
+    private DragEventHandler dragEventHandler;
 
     // Unit Selection
+    private SelectionHandler selectionHandler;
+    [SerializeField] private LayerMask layerMask_Selectable;
     private List<ISelectable> selectedUnits;
-    private List<ISelectable> allUnits;
-    public IEnumerable<ISelectable> EnumerateAllUnits()
-    {
-        foreach (var unit in allUnits)
-            yield return unit;
 
-    }
-
-    // Handle mouse drag events.
-    private DragEventHandler dragEventHandler;
+    // Unit Movement
+    private UnitMovementHandler unitMovementHandler;
+    [SerializeField] private LayerMask layerMask_Ground;
 
     private void Awake()
     {
         selectedUnits = new List<ISelectable>();
         allUnits = new List<ISelectable>();
 
-        //Setup components.
-        dragEventHandler = new DragEventHandler(camera, canvas, this);
-        dragEventHandler.OnUnitDetectedInDragArea += SelectUnits;
+        
+        dragEventHandler    = new DragEventHandler(camera, canvas, this as IUnitSelector);
+        selectionHandler    = new SelectionHandler(selectedUnits, camera, layerMask_Selectable);
+        unitMovementHandler = new UnitMovementHandler(selectedUnits, camera, layerMask_Ground);
+
+        dragEventHandler.OnUnitDetectedInDragArea += selectionHandler.SelectUnits;
     }
 
     private void Start()
@@ -52,76 +52,15 @@ public sealed class UnitController : MonoBehaviour, IUnitSelector
 
     private void Update()
     {
-        dragEventHandler.Update();
-
-        HandleUnitSelection();
-        HandleUnitMovement();
+        dragEventHandler.HandleDragEvent();
+        selectionHandler.HandleUnitSelection();
+        unitMovementHandler.HandleUnitMovement();
     }
 
-    private void HandleUnitSelection()
+    public IEnumerable<ISelectable> EnumerateAllUnits()
     {
-        if (!Input.GetMouseButtonDown(0)) return;
-        
-        // Allows mutil-selection.
-        if(!Input.GetKey(KeyCode.LeftShift))
-            DeselectAllUnits();
+        foreach (var unit in allUnits)
+            yield return unit;
 
-        var ray = camera.ScreenPointToRay(Input.mousePosition);
-        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, layerMask_Selectable)) return;
-
-        if (hit.collider.TryGetComponent(out ISelectable unit))
-        {
-            SelectUnit(unit);
-        }
-    }
-
-    private void SelectUnit(ISelectable unit)
-    {
-        if(!selectedUnits.Contains(unit)) 
-            selectedUnits.Add(unit);
-
-        unit.OnSelected();
-    }
-
-    private void SelectUnits(List<ISelectable> units)
-    {
-        foreach (var unit in units)
-            SelectUnit(unit);
-
-    }
-
-    private void DeselectUnit(ISelectable unit)
-    {
-        if (selectedUnits.Contains(unit))
-            selectedUnits.Remove(unit);
-
-        unit.OnDeselected();
-    }
-
-    private void DeselectAllUnits()
-    {
-        for(int i = selectedUnits.Count - 1; i >= 0; i--)
-            DeselectUnit(selectedUnits[i]);
-    }
-
-    private void HandleUnitMovement()
-    {
-        if (!Input.GetMouseButtonDown(1)) return;
-        if (selectedUnits.Count == 0) return;
-
-        var ray = camera.ScreenPointToRay(Input.mousePosition);
-        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, layerMask_Ground)) return;
-
-        foreach (var unit in selectedUnits)
-            MoveUnit(unit, hit.point);
-
-    }
-
-    private void MoveUnit(ISelectable unit, Vector3 destination)
-    {
-        if (unit is IMovable movable)
-        {
-            movable.MoveTo(destination);
-        }
     }
 }

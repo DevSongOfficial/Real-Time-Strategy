@@ -31,7 +31,7 @@ public sealed class DragEventHandler
     }
 
     // This function should be called every frame to handle drag input.
-    public void Update()
+    public void HandleDragEvent()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -56,7 +56,7 @@ public sealed class DragEventHandler
         }
     }
 
-    void DrawSelectionBox()
+    private void DrawSelectionBox()
     {
         selectionBox.position = (startPosition + endPosition) / 2; ;
         selectionBox.sizeDelta = new Vector2(Mathf.Abs(startPosition.x - endPosition.x), Mathf.Abs(startPosition.y - endPosition.y)); ;
