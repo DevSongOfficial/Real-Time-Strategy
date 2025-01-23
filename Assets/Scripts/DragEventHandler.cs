@@ -78,7 +78,7 @@ public sealed class DragEventHandler
         foreach (var unit in unitSelector.EnumerateAllUnits())
         {
             if (unit is not ITransformProvider transformProvider) return;
-
+            
             var screenPosition = camera.WorldToScreenPoint(transformProvider.GetTransform().position);
             if (selectionRect.Contains(screenPosition))
             {

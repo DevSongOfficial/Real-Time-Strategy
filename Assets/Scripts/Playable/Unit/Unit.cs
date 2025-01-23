@@ -8,7 +8,7 @@ public interface IMovable
 }
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class Unit : Playable, IMovable
+public class Unit : Playable, IMovable, IAttackable
 {
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private GameObject selectionIndicator;
@@ -23,6 +23,11 @@ public class Unit : Playable, IMovable
         agent?.SetDestination(destination);
     }
 
+    public void Attack()
+    {
+        Debug.Log("Attack!");
+    }
+
     public override void OnSelected()
     {
         selectionIndicator.SetActive(false);
@@ -33,4 +38,5 @@ public class Unit : Playable, IMovable
     {
         selectionIndicator.SetActive(false);
     }
+
 }

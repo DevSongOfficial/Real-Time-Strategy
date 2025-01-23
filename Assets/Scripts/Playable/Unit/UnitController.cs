@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using CustomResourceManagement;
+using System.Linq;
 
 public interface IUnitSelector
 {
@@ -9,22 +10,37 @@ public interface IUnitSelector
 
 public sealed class UnitController : MonoBehaviour, IUnitSelector
 {
+    // Temporary for testing.
+    [SerializeField, Range(0, 99)] private int numberOfUnitOnStart = 3;
+    private void GenerateUnits(int numberOfUnit)
+    {
+        for (int i = 0; i < numberOfUnit; i++)
+        {
+            var prefab = ResourceLoader.GetResource<Unit>(Prefabs.Playable.Unit.Unit_1);
+            var randomPosition = new Vector3(Random.Range(26, 35), 2, Random.Range(20, 36));
+            allUnits.Add(Instantiate(prefab, randomPosition, Quaternion.identity));
+        }
+    }
+
     [SerializeField] private new Camera camera;
     [SerializeField] private Canvas canvas;
 
     private List<ISelectable> allUnits;
 
-    // Mouse Drag Event
+    // Mouse drag event.
     private DragEventHandler dragEventHandler;
 
-    // Unit Selection
+    // Selection of selected playbles.
     private SelectionHandler selectionHandler;
-    [SerializeField] private LayerMask layerMask_Selectable;
     private List<ISelectable> selectedUnits;
+    [SerializeField] private LayerMask layerMask_Selectable;
 
-    // Unit Movement
-    private UnitMovementHandler unitMovementHandler;
+    // Movement of selected playables.
+    private MovementHandler movementHandler;
     [SerializeField] private LayerMask layerMask_Ground;
+
+    // Attack of selected playables.
+    private AttackHandler attackHandler;
 
     private void Awake()
     {
@@ -34,27 +50,23 @@ public sealed class UnitController : MonoBehaviour, IUnitSelector
         
         dragEventHandler    = new DragEventHandler(camera, canvas, this as IUnitSelector);
         selectionHandler    = new SelectionHandler(selectedUnits, camera, layerMask_Selectable);
-        unitMovementHandler = new UnitMovementHandler(selectedUnits, camera, layerMask_Ground);
+        movementHandler     = new MovementHandler(GetUnitsOfType<IMovable>(), camera, layerMask_Ground);
+        attackHandler       = new AttackHandler(GetUnitsOfType<IAttackable>());
 
         dragEventHandler.OnUnitDetectedInDragArea += selectionHandler.SelectUnits;
     }
 
     private void Start()
     {
-        // Temporary
-        for (int i = 0; i < 3 ; i++)
-        {
-            var prefab = ResourceLoader.GetResource<Unit>(Prefabs.Playable.Unit.Unit_1);
-            var randomPosition = new Vector3(Random.Range(26, 35), 2, Random.Range(20, 36));
-            allUnits.Add(Instantiate(prefab, randomPosition, Quaternion.identity));
-        }
+        GenerateUnits(numberOfUnitOnStart);
     }
 
     private void Update()
     {
         dragEventHandler.HandleDragEvent();
         selectionHandler.HandleUnitSelection();
-        unitMovementHandler.HandleUnitMovement();
+        movementHandler.HandleUnitMovement();
+        attackHandler.HandleAttack();
     }
 
     public IEnumerable<ISelectable> EnumerateAllUnits()
@@ -62,5 +74,11 @@ public sealed class UnitController : MonoBehaviour, IUnitSelector
         foreach (var unit in allUnits)
             yield return unit;
 
+    }
+
+    // OfType<T>() -> Lazy Evaluation.
+    private IEnumerable<T> GetUnitsOfType<T>()
+    {
+        return selectedUnits.OfType<T>();
     }
 }
