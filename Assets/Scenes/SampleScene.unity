@@ -660,7 +660,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2391b714b488aa40b9795c0c8fda98a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfUnitOnStart: 11
+  numberOfUnitOnStart: 9
   camera: {fileID: 330585545}
   canvas: {fileID: 1868754047}
   layerMask_Selectable:

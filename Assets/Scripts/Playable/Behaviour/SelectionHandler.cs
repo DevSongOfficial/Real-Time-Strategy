@@ -39,7 +39,7 @@ public class SelectionHandler
         unit.OnSelected();
     }
 
-    public void SelectUnits(List<ISelectable> units)
+    public void SelectUnits(IEnumerable<ISelectable> units)
     {
         foreach (var unit in units)
             SelectUnit(unit);

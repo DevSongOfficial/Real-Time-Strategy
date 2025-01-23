@@ -7,20 +7,21 @@ public sealed class DragEventHandler
 {
     private Camera camera;
     private Canvas canvas;
-    private IUnitSelector unitSelector;
     private RectTransform selectionBox;
 
     private Vector2 startPosition;
     private Vector2 endPosition;
 
-    private List<ISelectable> unitsInSelectionBox;
-    public event Action<List<ISelectable>> OnUnitDetectedInDragArea;
+    private IEnumerable<ITransformProvider> units;
+    private List<ITransformProvider> unitsInSelectionBox;
+    public event Action<IEnumerable<ISelectable>> OnUnitDetectedInDragArea;
 
-    public DragEventHandler(Camera camera, Canvas canvas, IUnitSelector unitSelector)
+    public DragEventHandler(IEnumerable<ITransformProvider> units , Camera camera, Canvas canvas)
     {
+        this.units = units;
+
         this.camera = camera;
         this.canvas = canvas;
-        this.unitSelector = unitSelector;
         selectionBox = GameObject.Instantiate(ResourceLoader.GetResource<RectTransform>(Prefabs.UI.SelectionBox), canvas.transform);
 
 
@@ -73,13 +74,11 @@ public sealed class DragEventHandler
         );
 
 
-        unitsInSelectionBox = new List<ISelectable>();
+        unitsInSelectionBox = new List<ITransformProvider>();
 
-        foreach (var unit in unitSelector.EnumerateAllUnits())
-        {
-            if (unit is not ITransformProvider transformProvider) return;
-            
-            var screenPosition = camera.WorldToScreenPoint(transformProvider.GetTransform().position);
+        foreach (var unit in units)
+        {            
+            var screenPosition = camera.WorldToScreenPoint(unit.GetTransform().position);
             if (selectionRect.Contains(screenPosition))
             {
                 unitsInSelectionBox.Add(unit);
@@ -87,6 +86,6 @@ public sealed class DragEventHandler
         }
 
         if (unitsInSelectionBox.Count > 0) 
-            OnUnitDetectedInDragArea?.Invoke(unitsInSelectionBox);
+            OnUnitDetectedInDragArea?.Invoke(unitsInSelectionBox.FilterByType<ITransformProvider, ISelectable>());
     }
 }

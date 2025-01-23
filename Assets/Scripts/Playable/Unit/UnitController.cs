@@ -1,14 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using CustomResourceManagement;
-using System.Linq;
 
-public interface IUnitSelector
-{
-    public IEnumerable<ISelectable> EnumerateAllUnits();
-}
-
-public sealed class UnitController : MonoBehaviour, IUnitSelector
+public sealed class UnitController : MonoBehaviour
 {
     // Temporary for testing.
     [SerializeField, Range(0, 99)] private int numberOfUnitOnStart = 3;
@@ -48,10 +42,10 @@ public sealed class UnitController : MonoBehaviour, IUnitSelector
         allUnits = new List<ISelectable>();
 
         
-        dragEventHandler    = new DragEventHandler(camera, canvas, this as IUnitSelector);
+        dragEventHandler    = new DragEventHandler(selectedUnits.FilterByType<ISelectable, ITransformProvider>(), camera, canvas);
         selectionHandler    = new SelectionHandler(selectedUnits, camera, layerMask_Selectable);
-        movementHandler     = new MovementHandler(GetUnitsOfType<IMovable>(), camera, layerMask_Ground);
-        attackHandler       = new AttackHandler(GetUnitsOfType<IAttackable>());
+        movementHandler     = new MovementHandler(selectedUnits.FilterByType<ISelectable, IMovable>(), camera, layerMask_Ground);
+        attackHandler       = new AttackHandler(selectedUnits.FilterByType <ISelectable, IAttackable>());
 
         dragEventHandler.OnUnitDetectedInDragArea += selectionHandler.SelectUnits;
     }
@@ -67,18 +61,5 @@ public sealed class UnitController : MonoBehaviour, IUnitSelector
         selectionHandler.HandleUnitSelection();
         movementHandler.HandleUnitMovement();
         attackHandler.HandleAttack();
-    }
-
-    public IEnumerable<ISelectable> EnumerateAllUnits()
-    {
-        foreach (var unit in allUnits)
-            yield return unit;
-
-    }
-
-    // OfType<T>() -> Lazy Evaluation.
-    private IEnumerable<T> GetUnitsOfType<T>()
-    {
-        return selectedUnits.OfType<T>();
     }
 }
