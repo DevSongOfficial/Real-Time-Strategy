@@ -24,14 +24,10 @@ public sealed class UnitController : MonoBehaviour
     // Mouse drag event.
     private DragEventHandler dragEventHandler;
 
-    // Selection of selected playbles.
+    // Playbles selection.
     private SelectionHandler selectionHandler;
     private List<ISelectable> selectedUnits;
     [SerializeField] private LayerMask layerMask_Selectable;
-
-    // Movement of selected playables.
-    private MovementHandler movementHandler;
-    [SerializeField] private LayerMask layerMask_Ground;
 
     // Attack of selected playables.
     private AttackHandler attackHandler;
@@ -42,9 +38,9 @@ public sealed class UnitController : MonoBehaviour
         allUnits = new List<ISelectable>();
 
         
-        dragEventHandler    = new DragEventHandler(selectedUnits.FilterByType<ISelectable, ITransformProvider>(), camera, canvas);
+        dragEventHandler    = new DragEventHandler(allUnits.FilterByType<ISelectable, ITransformProvider>(), camera, canvas);
         selectionHandler    = new SelectionHandler(selectedUnits, camera, layerMask_Selectable);
-        movementHandler     = new MovementHandler(selectedUnits.FilterByType<ISelectable, IMovable>(), camera, layerMask_Ground);
+
         attackHandler       = new AttackHandler(selectedUnits.FilterByType <ISelectable, IAttackable>());
 
         dragEventHandler.OnUnitDetectedInDragArea += selectionHandler.SelectUnits;
@@ -59,7 +55,7 @@ public sealed class UnitController : MonoBehaviour
     {
         dragEventHandler.HandleDragEvent();
         selectionHandler.HandleUnitSelection();
-        movementHandler.HandleUnitMovement();
+        selectionHandler.HandleTargetSelection();
         attackHandler.HandleAttack();
     }
 }

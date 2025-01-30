@@ -1,6 +1,35 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+public struct Target
+{
+    public bool IsGround { get; private set; }
+
+    private Transform entity;
+    private Vector3 hitPoint;
+
+    public Target(RaycastHit hit)
+    {
+        if (hit.collider.CompareLayer(Layer.Ground))
+        {
+            IsGround = true;
+            entity = null;
+            hitPoint = hit.point;
+        }
+        else
+        {
+            IsGround = false;
+            entity = hit.transform;
+            hitPoint = entity.position;
+        }
+    }
+
+    public Vector3 GetPosition()
+    {
+        return IsGround ? hitPoint : entity.position;
+    }
+}
 public class SelectionHandler
 {
     private LayerMask layerMask;
@@ -14,6 +43,21 @@ public class SelectionHandler
         this.layerMask = layerMask;
     }
 
+    public void HandleTargetSelection()
+    {
+        if (!Input.GetMouseButtonDown(1)) return;
+
+        var ray = camera.ScreenPointToRay(Input.mousePosition);
+        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity /* LayerMask: Ground || Enemy Playble */)) return;
+
+        var target = new Target(hit);
+        foreach(var unit in selectedUnits)
+        {
+            if(unit is ITargetor targetor)
+                targetor.SetTarget(target);
+        }
+    }
+
     public void HandleUnitSelection()
     {
         if (!Input.GetMouseButtonDown(0)) return;
@@ -23,6 +67,7 @@ public class SelectionHandler
             DeselectAllUnits();
 
         var ray = camera.ScreenPointToRay(Input.mousePosition);
+        // TODO: Only allow selection of same team units.
         if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, layerMask)) return;
 
         if (hit.collider.TryGetComponent(out ISelectable unit))
@@ -31,19 +76,19 @@ public class SelectionHandler
         }
     }
 
+    public void SelectUnits(IEnumerable<ISelectable> units)
+    {
+        foreach (var unit in units)
+            SelectUnit(unit);
+
+    }
+
     private void SelectUnit(ISelectable unit)
     {
         if (!selectedUnits.Contains(unit))
             selectedUnits.Add(unit);
 
         unit.OnSelected();
-    }
-
-    public void SelectUnits(IEnumerable<ISelectable> units)
-    {
-        foreach (var unit in units)
-            SelectUnit(unit);
-
     }
 
     private void DeselectUnit(ISelectable unit)
