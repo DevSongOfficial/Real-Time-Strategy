@@ -8,9 +8,11 @@ public interface IMovable
 }
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class Unit : Playable, IMovable, IAttackable, IDamageable, ITargetor
+public class Unit : Playable, IMovable, IDamageable, ITargetor, ITarget
 {
-    private StateMachine stateMachine;
+    // State Machine
+    private UnitStateMachine stateMachine;
+    private BlackBoard blackBoard;
 
     [SerializeField] private NavMeshAgent agent;
 
@@ -20,8 +22,12 @@ public class Unit : Playable, IMovable, IAttackable, IDamageable, ITargetor
 
     private void Awake()
     {
-        stateMachine = new StateMachine();
+        // State Machine
         agent = GetComponent<NavMeshAgent>();
+        blackBoard = new BlackBoard(data);
+        stateMachine = new UnitStateMachine(agent, blackBoard);
+
+        healthSystem = new HealthSystem(data.MaxHealth);
     }
 
     private void Update()
@@ -40,35 +46,22 @@ public class Unit : Playable, IMovable, IAttackable, IDamageable, ITargetor
         selectionIndicator.SetActive(false);
     }
 
-    // States:
-    // Idle, Move, Attack
-
     public void SetTarget(Target target)
     {
-        stateMachine.ChangeState(new MoveState(stateMachine, agent, target));
+        blackBoard.target = target;
+        stateMachine.ChangeState(stateMachine.MoveState);
     }
+
+    public Vector3 GetPosition() => transform.position;
 
     public void MoveTo(Vector3 destination)
     {
         agent?.SetDestination(destination);
     }
 
-    public void Attack(IDamageable damageable)
-    {
-        damageable.GetDamaged(data.AttackDamage);
-    }
-
     public void GetDamaged(int damage)
     {
         healthSystem.GetDamaged(damage);
         Debug.Log("Get Damaged");
-    }
-
-
-    private void OnTriggerEnter(Collider other)
-    {
-        var damageable = other.GetComponent<IDamageable>();
-        if (damageable != null)
-            damageable.GetDamaged(data.AttackDamage);
     }
 }

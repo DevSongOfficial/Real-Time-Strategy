@@ -16,3 +16,4 @@ MonoBehaviour:
   <DisplayName>k__BackingField: Tiny Cap
   <MaxHealth>k__BackingField: 200
   <AttackDamage>k__BackingField: 15
+  <AttackRange>k__BackingField: 2

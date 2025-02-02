@@ -1,22 +1,19 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class MoveState : StateBase
+public class MoveState : UnitStateBase
 {
-    private StateMachine stateMachine;
     private NavMeshAgent agent;
-    private Target target;
 
-    public MoveState(StateMachine stateMachine, NavMeshAgent agent, Target target)
+    public MoveState(UnitStateMachine stateMachine, BlackBoard blackBoard, NavMeshAgent agent)
+        : base(stateMachine, blackBoard)
     {
-        this.stateMachine = stateMachine;
-        this.target = target;
         this.agent = agent;
     }
 
     public override void Enter()
     {
-        agent.SetDestination(target.GetPosition());
+        agent.SetDestination(blackBoard.target.GetPosition());
     }
 
     public override void Exit()
@@ -26,16 +23,16 @@ public class MoveState : StateBase
 
     public override void Update()
     {
-        if (!target.IsGround)
-            agent.SetDestination(target.GetPosition());
+        if (!blackBoard.target.IsGround)
+            agent.SetDestination(blackBoard.target.GetPosition());
 
-        if (agent.remainingDistance < 3)
+        if (agent.remainingDistance < blackBoard.data.AttackRange)
         {
-            stateMachine.ChangeState(new IdleState(agent));
+            stateMachine.ChangeState(stateMachine.AttackState);
         }
 
         if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
-            stateMachine.ChangeState(new IdleState(agent));
+            stateMachine.ChangeState(stateMachine.IdleState);
 
     }
 }

@@ -29,8 +29,7 @@ public sealed class UnitController : MonoBehaviour
     private List<ISelectable> selectedUnits;
     [SerializeField] private LayerMask layerMask_Selectable;
 
-    // Attack of selected playables.
-    private AttackHandler attackHandler;
+
 
     private void Awake()
     {
@@ -40,8 +39,6 @@ public sealed class UnitController : MonoBehaviour
         
         dragEventHandler    = new DragEventHandler(allUnits.FilterByType<ISelectable, ITransformProvider>(), camera, canvas);
         selectionHandler    = new SelectionHandler(selectedUnits, camera, layerMask_Selectable);
-
-        attackHandler       = new AttackHandler(selectedUnits.FilterByType <ISelectable, IAttackable>());
 
         dragEventHandler.OnUnitDetectedInDragArea += selectionHandler.SelectUnits;
     }
@@ -56,6 +53,5 @@ public sealed class UnitController : MonoBehaviour
         dragEventHandler.HandleDragEvent();
         selectionHandler.HandleUnitSelection();
         selectionHandler.HandleTargetSelection();
-        attackHandler.HandleAttack();
     }
 }

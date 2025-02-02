@@ -4,9 +4,11 @@ using UnityEngine;
 
 public struct Target
 {
+    // For preventing null check.
     public bool IsGround { get; private set; }
+    public ITarget Entity => entity;
 
-    private Transform entity;
+    private ITarget entity;
     private Vector3 hitPoint;
 
     public Target(RaycastHit hit)
@@ -20,14 +22,14 @@ public struct Target
         else
         {
             IsGround = false;
-            entity = hit.transform;
-            hitPoint = entity.position;
+            entity = hit.collider.GetComponent<ITarget>();
+            hitPoint = entity.GetPosition();
         }
     }
 
     public Vector3 GetPosition()
     {
-        return IsGround ? hitPoint : entity.position;
+        return IsGround ? hitPoint : entity.GetPosition();
     }
 }
 public class SelectionHandler

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public abstract class StateBase
 {
@@ -6,6 +7,19 @@ public abstract class StateBase
     public abstract void Update();
     public abstract void Exit();
 }
+
+public abstract class UnitStateBase : StateBase
+{
+    protected UnitStateMachine stateMachine;
+    protected BlackBoard blackBoard;
+
+    public UnitStateBase(UnitStateMachine stateMachine, BlackBoard blackBoard)
+    {
+        this.stateMachine = stateMachine;
+        this.blackBoard = blackBoard;
+    }
+}
+
 
 public class StateMachine
 {
@@ -23,4 +37,32 @@ public class StateMachine
         CurrentState?.Update();
     }
 
+}
+
+
+public class UnitStateMachine : StateMachine
+{
+    public IdleState    IdleState   { get; private set; }
+    public MoveState    MoveState   { get; private set; }
+    public AttackState  AttackState { get; private set; }
+
+    public UnitStateMachine(NavMeshAgent agent, BlackBoard blackBoard)
+    {
+        IdleState   = new IdleState(this, blackBoard, agent);
+        MoveState   = new MoveState(this, blackBoard, agent);
+        AttackState = new AttackState(this, blackBoard);
+    }
+}
+
+
+public class BlackBoard
+{
+    public EntityData data;
+
+    public Target target;
+
+    public BlackBoard(EntityData data)
+    {
+        this.data = data;
+    }
 }
