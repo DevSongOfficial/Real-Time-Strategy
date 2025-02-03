@@ -13,4 +13,5 @@ public interface ITargetor
 public interface ITarget 
 {
     Vector3 GetPosition();
+    IHealthSystem GetHealthSystem();
 }

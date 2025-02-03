@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -42,6 +43,7 @@ public class StateMachine
 
 public class UnitStateMachine : StateMachine
 {
+    // States
     public IdleState    IdleState   { get; private set; }
     public MoveState    MoveState   { get; private set; }
     public AttackState  AttackState { get; private set; }

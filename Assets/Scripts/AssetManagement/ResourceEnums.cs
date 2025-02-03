@@ -8,6 +8,7 @@ namespace CustomResourceManagement
 			}
 		}
 		public enum UI{
+			HealthTracker,
 			SelectionBox,
 		}
 	}

@@ -24,15 +24,17 @@ public class MoveState : UnitStateBase
     public override void Update()
     {
         if (!blackBoard.target.IsGround)
+        {
             agent.SetDestination(blackBoard.target.GetPosition());
 
-        if (agent.remainingDistance < blackBoard.data.AttackRange)
-        {
-            stateMachine.ChangeState(stateMachine.AttackState);
+            if (agent.remainingDistance < blackBoard.data.AttackRange)
+                stateMachine.ChangeState(stateMachine.AttackState);
+
         }
-
-        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
-            stateMachine.ChangeState(stateMachine.IdleState);
-
+        else
+        {
+            if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+                stateMachine.ChangeState(stateMachine.IdleState);
+        }
     }
 }

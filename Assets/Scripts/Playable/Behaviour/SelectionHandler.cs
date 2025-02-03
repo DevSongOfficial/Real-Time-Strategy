@@ -11,6 +11,13 @@ public struct Target
     private ITarget entity;
     private Vector3 hitPoint;
 
+    public Target(ITarget target)
+    {
+        entity = target;
+        hitPoint = Vector3.zero;
+        IsGround = false;
+    }
+
     public Target(RaycastHit hit)
     {
         if (hit.collider.CompareLayer(Layer.Ground))

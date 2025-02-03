@@ -10,15 +10,22 @@ public sealed class UnitController : MonoBehaviour
     {
         for (int i = 0; i < numberOfUnit; i++)
         {
-            var prefab = ResourceLoader.GetResource<Unit>(Prefabs.Playable.Unit.Unit_1);
+            // Generate Units.
+            var prefab_Unit = ResourceLoader.GetResource<Unit>(Prefabs.Playable.Unit.Unit_1);
             var randomPosition = new Vector3(Random.Range(26, 35), 2, Random.Range(20, 36));
-            allUnits.Add(Instantiate(prefab, randomPosition, Quaternion.identity));
+            var newUnit = Instantiate(prefab_Unit, randomPosition, Quaternion.identity);
+            allUnits.Add(newUnit);
+
+            var prefab_HealthBar = ResourceLoader.GetResource<HealthTracker>(Prefabs.UI.HealthTracker);
+            var newHealthBar = Instantiate(prefab_HealthBar, canvas.transform);
+            newHealthBar.SetUp(camera, new Target(newUnit));
         }
     }
 
     [SerializeField] private new Camera camera;
     [SerializeField] private Canvas canvas;
 
+    // Temporary for testing.
     private List<ISelectable> allUnits;
 
     // Mouse drag event.

@@ -22,7 +22,7 @@ public class Unit : Playable, IMovable, IDamageable, ITargetor, ITarget
 
     private void Awake()
     {
-        // State Machine
+        // Init State Machine.
         agent = GetComponent<NavMeshAgent>();
         blackBoard = new BlackBoard(data);
         stateMachine = new UnitStateMachine(agent, blackBoard);
@@ -53,6 +53,7 @@ public class Unit : Playable, IMovable, IDamageable, ITargetor, ITarget
     }
 
     public Vector3 GetPosition() => transform.position;
+    public IHealthSystem GetHealthSystem() => healthSystem;
 
     public void MoveTo(Vector3 destination)
     {
@@ -62,6 +63,5 @@ public class Unit : Playable, IMovable, IDamageable, ITargetor, ITarget
     public void GetDamaged(int damage)
     {
         healthSystem.GetDamaged(damage);
-        Debug.Log("Get Damaged");
     }
 }
