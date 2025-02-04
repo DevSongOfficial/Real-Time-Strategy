@@ -10,12 +10,13 @@ public sealed class UnitController : MonoBehaviour
     {
         for (int i = 0; i < numberOfUnit; i++)
         {
-            // Generate Units.
+            // Generate units.
             var prefab_Unit = ResourceLoader.GetResource<Unit>(Prefabs.Playable.Unit.Unit_1);
             var randomPosition = new Vector3(Random.Range(26, 35), 2, Random.Range(20, 36));
             var newUnit = Instantiate(prefab_Unit, randomPosition, Quaternion.identity);
             allUnits.Add(newUnit);
 
+            // Generate health bar per unit.
             var prefab_HealthBar = ResourceLoader.GetResource<HealthTracker>(Prefabs.UI.HealthTracker);
             var newHealthBar = Instantiate(prefab_HealthBar, canvas.transform);
             newHealthBar.SetUp(camera, new Target(newUnit));
