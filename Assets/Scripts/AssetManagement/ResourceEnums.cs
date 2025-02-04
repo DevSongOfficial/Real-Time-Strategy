@@ -3,6 +3,9 @@ namespace CustomResourceManagement
 {
 	public struct Prefabs{
 		public struct Playable{
+			public enum Building{
+				BuildingA,
+			}
 			public enum Unit{
 				Unit_1,
 			}

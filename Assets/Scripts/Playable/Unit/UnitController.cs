@@ -35,9 +35,6 @@ public sealed class UnitController : MonoBehaviour
     // Playbles selection.
     private SelectionHandler selectionHandler;
     private List<ISelectable> selectedUnits;
-    [SerializeField] private LayerMask layerMask_Selectable;
-
-
 
     private void Awake()
     {
@@ -46,7 +43,7 @@ public sealed class UnitController : MonoBehaviour
 
         
         dragEventHandler    = new DragEventHandler(allUnits.FilterByType<ISelectable, ITransformProvider>(), camera, canvas);
-        selectionHandler    = new SelectionHandler(selectedUnits, camera, layerMask_Selectable);
+        selectionHandler    = new SelectionHandler(selectedUnits, camera);
 
         dragEventHandler.OnUnitDetectedInDragArea += selectionHandler.SelectUnits;
     }

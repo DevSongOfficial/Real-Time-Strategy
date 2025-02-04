@@ -41,15 +41,13 @@ public struct Target
 }
 public class SelectionHandler
 {
-    private LayerMask layerMask;
     private Camera camera;
     private List<ISelectable> selectedUnits;
 
-    public SelectionHandler(List<ISelectable> selectedUnits, Camera camera, LayerMask layerMask)
+    public SelectionHandler(List<ISelectable> selectedUnits, Camera camera)
     {
         this.selectedUnits = selectedUnits;
         this.camera = camera;
-        this.layerMask = layerMask;
     }
 
     public void HandleTargetSelection()
@@ -57,7 +55,7 @@ public class SelectionHandler
         if (!Input.GetMouseButtonDown(1)) return;
 
         var ray = camera.ScreenPointToRay(Input.mousePosition);
-        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity /* LayerMask: Ground || Enemy Playble */)) return;
+        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity /*, LayerMask: Ground || Enemy Playble */)) return;
 
         var target = new Target(hit);
         foreach(var unit in selectedUnits)
@@ -77,7 +75,7 @@ public class SelectionHandler
 
         var ray = camera.ScreenPointToRay(Input.mousePosition);
         // TODO: Only allow selection of same team units.
-        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, layerMask)) return;
+        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, Layer.Selectable.ToLayerMask())) return;
 
         if (hit.collider.TryGetComponent(out ISelectable unit))
         {

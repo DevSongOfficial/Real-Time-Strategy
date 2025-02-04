@@ -10,7 +10,8 @@ public enum Layer
     IgnoreRaycast = 2,
     Water = 4,
     UI = 5,
-    Ground = 6
+    Ground = 6,
+    Selectable = 11,
 }
 
 public static class Utility
@@ -39,5 +40,36 @@ public static class Utility
     public static IEnumerable<TTarget> FilterByType<TSource, TTarget>(this IEnumerable<TSource> sourceList)
     {
         return sourceList.OfType<TTarget>();
+    }
+
+
+    public static Vector3 WithX(this Vector3 vector, float x)
+    {
+        return new Vector3(x, vector.y, vector.z);
+    }
+
+    public static Vector3 WithY(this Vector3 vector, float y)
+    {
+        return new Vector3(vector.x, y, vector.z);
+    }
+
+    public static Vector3 WithZ(this Vector3 vector, float z)
+    {
+        return new Vector3(vector.x, vector.y, z);
+    }
+
+    public static Vector3Int WithX(this Vector3Int vector, int x)
+    {
+        return new Vector3Int(x, vector.y, vector.z);
+    }
+
+    public static Vector3Int WithY(this Vector3Int vector, int y)
+    {
+        return new Vector3Int(vector.x, y, vector.z);
+    }
+
+    public static Vector3Int WithZ(this Vector3Int vector, int z)
+    {
+        return new Vector3Int(vector.x, vector.y, z);
     }
 }

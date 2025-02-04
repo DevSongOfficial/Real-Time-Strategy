@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 915620872e4acd1458581db132f14223, type: 3}
   m_Name: HealthBarSettings
   m_EditorClassIdentifier: 
-  <Offset>k__BackingField: {x: 0, y: 61.61, z: 0}
-  <Scale>k__BackingField: {x: 0, y: 0}
+  <Offset>k__BackingField: {x: 0, y: 55, z: 0}
+  <Size>k__BackingField: {x: 100, y: 20}
