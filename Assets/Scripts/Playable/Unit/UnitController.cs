@@ -1,10 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using CustomResourceManagement;
+using BuildingSystem;
 
+// todo: Need to seprate class
 public sealed class UnitController : MonoBehaviour
 {
     // Temporary for testing.
+    [Header("Spawn(temp)")]
     [SerializeField, Range(0, 99)] private int numberOfUnitOnStart = 3;
     private void GenerateUnits(int numberOfUnit)
     {
@@ -19,12 +22,15 @@ public sealed class UnitController : MonoBehaviour
             // Generate health bar per unit.
             var prefab_HealthBar = ResourceLoader.GetResource<HealthTracker>(Prefabs.UI.HealthTracker);
             var newHealthBar = Instantiate(prefab_HealthBar, canvas.transform);
-            newHealthBar.SetUp(camera, new Target(newUnit));
+            newHealthBar.SetUp(mainCamera, new Target(newUnit));
         }
     }
 
-    [SerializeField] private new Camera camera;
+    [Header("Scene Refs")]
+    [SerializeField] private Camera mainCamera;
     [SerializeField] private Canvas canvas;
+    [SerializeField] private PlacementSystem placementSystem; 
+
 
     // Temporary for testing.
     private List<ISelectable> allUnits;
@@ -36,16 +42,33 @@ public sealed class UnitController : MonoBehaviour
     private SelectionHandler selectionHandler;
     private List<ISelectable> selectedUnits;
 
+
+    // Input
+    private InputManager inputManager;
+
+    // Game Mode (Normal / Build)
+    private ModeBase currentMode;
+    private ModeBase normalMode;
+    private ModeBase buildMode;
+
     private void Awake()
     {
         selectedUnits = new List<ISelectable>();
         allUnits = new List<ISelectable>();
 
-        
-        dragEventHandler    = new DragEventHandler(allUnits.FilterByType<ISelectable, ITransformProvider>(), camera, canvas);
-        selectionHandler    = new SelectionHandler(selectedUnits, camera);
+        dragEventHandler    = new DragEventHandler(allUnits.FilterByType<ISelectable, ITransformProvider>(), mainCamera, canvas);
+        selectionHandler    = new SelectionHandler(selectedUnits, mainCamera);
 
-        dragEventHandler.OnUnitDetectedInDragArea += selectionHandler.SelectUnits;
+        inputManager = new InputManager(mainCamera);
+
+        
+        
+        normalMode = new NormalMode(selectionHandler, dragEventHandler);
+        buildMode = new BuildMode(inputManager, placementSystem);
+
+
+        placementSystem.EnablePreview(false); 
+        SetMode(normalMode);
     }
 
     private void Start()
@@ -55,8 +78,19 @@ public sealed class UnitController : MonoBehaviour
 
     private void Update()
     {
-        dragEventHandler.HandleDragEvent();
-        selectionHandler.HandleUnitSelection();
-        selectionHandler.HandleTargetSelection();
+        currentMode?.Update();
+        currentMode?.HandleInput();
+
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            SetMode(currentMode == normalMode ? buildMode : normalMode);
+        }
+    }
+
+    private void SetMode(ModeBase newMode)
+    {
+        currentMode?.Exit();
+        currentMode = newMode;
+        currentMode.Enter();
     }
 }

@@ -676,7 +676,7 @@ GameObject:
   - component: {fileID: 978289354}
   - component: {fileID: 978289353}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: Sphere - Mouse Indicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -801,8 +801,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1386255003}
-  - {fileID: 978289352}
   - {fileID: 1257367830}
+  - {fileID: 978289352}
   - {fileID: 1964652610}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -915,8 +915,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numberOfUnitOnStart: 9
-  camera: {fileID: 330585545}
+  mainCamera: {fileID: 330585545}
   canvas: {fileID: 1868754047}
+  placementSystem: {fileID: 1386255004}
 --- !u!4 &1511205668
 Transform:
   m_ObjectHideFlags: 0
@@ -1092,7 +1093,7 @@ GameObject:
   - component: {fileID: 1964652612}
   - component: {fileID: 1964652611}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Cube - Grid Indicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

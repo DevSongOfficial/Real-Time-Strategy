@@ -1,5 +1,4 @@
 using CustomResourceManagement;
-using UnityEditor;
 using UnityEngine;
 
 namespace BuildingSystem
@@ -9,39 +8,26 @@ namespace BuildingSystem
         [SerializeField] private Transform mouseIndicator;
         [SerializeField] private Transform cellIndicator;
 
-        private InputManager inputManager;
-
         [SerializeField] private Grid grid;
 
-        private void Awake()
+        public void EnablePreview(bool enable)
         {
-            inputManager = new InputManager(Camera.main);
+            mouseIndicator?.gameObject.SetActive(enable);
+            cellIndicator?.gameObject.SetActive(enable);
         }
 
-        private void Update()
+        public void UpdatePreview(Vector3 mousePosition)
         {
-            var mousePosition = inputManager.GetSelectedMapPosition();
+            // Set mouse indicator position.
+            mouseIndicator.position = mousePosition;
 
             // Set cell indicator position.
             var gridPosition = grid.WorldToCell(mousePosition);
             cellIndicator.position = grid.CellToWorld(gridPosition).WithY(0);
-
-            // Set mouse indicator position.
-            mouseIndicator.position = mousePosition;
-
-            HandlePlacement();
         }
 
-
-        private void HandlePlacement()
+        public void PlaceBuilding()
         {
-            if(Input.GetKeyDown(KeyCode.Mouse0))
-                PlaceBuilding();
-        }
-        private void PlaceBuilding()
-        {
-            if (inputManager.IsPointerOverUI()) return;
-
             var prefab = ResourceLoader.GetResource<Transform>(Prefabs.Playable.Building.BuildingA);
             var building = Instantiate(prefab);
             building.position = cellIndicator.position;

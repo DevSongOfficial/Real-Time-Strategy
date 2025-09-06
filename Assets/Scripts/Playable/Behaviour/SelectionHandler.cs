@@ -49,38 +49,32 @@ public class SelectionHandler
         this.selectedUnits = selectedUnits;
         this.camera = camera;
     }
-
-    public void HandleTargetSelection()
+    
+    // Select our units' target.
+    public void SelectTarget(Vector2 screenPos)
     {
-        if (!Input.GetMouseButtonDown(1)) return;
-
-        var ray = camera.ScreenPointToRay(Input.mousePosition);
-        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity /*, LayerMask: Ground || Enemy Playble */)) return;
+        var ray = camera.ScreenPointToRay(screenPos);
+        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity /*, LayerMask: Ground || Enemy Playble */))
+            return;
 
         var target = new Target(hit);
-        foreach(var unit in selectedUnits)
-        {
-            if(unit is ITargetor targetor)
+        foreach (var unit in selectedUnits)
+            if (unit is ITargetor targetor) 
                 targetor.SetTarget(target);
-        }
     }
 
-    public void HandleUnitSelection()
+    // Select a unit to control.
+    public void SelectUnit(Vector2 screenPos, bool additive)
     {
-        if (!Input.GetMouseButtonDown(0)) return;
+        if (!additive) DeselectAllUnits();
 
-        // Allows mutil-selection.
-        if (!Input.GetKey(KeyCode.LeftShift))
-            DeselectAllUnits();
-
-        var ray = camera.ScreenPointToRay(Input.mousePosition);
+        var ray = camera.ScreenPointToRay(screenPos);
         // TODO: Only allow selection of same team units.
-        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, Layer.Selectable.ToLayerMask())) return;
+        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, Layer.Selectable.ToLayerMask()))
+            return;
 
         if (hit.collider.TryGetComponent(out ISelectable unit))
-        {
             SelectUnit(unit);
-        }
     }
 
     public void SelectUnits(IEnumerable<ISelectable> units)

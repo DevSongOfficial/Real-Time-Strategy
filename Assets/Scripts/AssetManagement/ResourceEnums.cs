@@ -7,8 +7,8 @@ namespace CustomResourceManagement
 				BuildingA,
 			}
 			public enum Unit{
-				Unit_1,
-			}
+                Unit_1
+            }
 		}
 		public enum UI{
 			HealthTracker,
