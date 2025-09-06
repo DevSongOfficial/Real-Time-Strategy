@@ -11,8 +11,4 @@ public class EntityData : ScriptableObject
     [field: SerializeField] public int AttackDamage { get; private set; }
     [field: SerializeField] public int AttackRange { get; private set; }
 
-
-
-
-
 }
