@@ -2,32 +2,33 @@ using System;
 using BuildingSystem;
 using CustomResourceManagement;
 using UnityEngine;
+using UnityEngine.UI;
 
 public sealed class BuildMode : ModeBase
 {
     private readonly InputManager inputManager;
-    private readonly PlacementSystem placementSystem;
+    private readonly PlacementPresenter presenter;
 
     public BuildMode(InputManager inputManager, PlacementSystem placementSystem)
     {
         this.inputManager = inputManager;
-        this.placementSystem = placementSystem;
+        presenter = new PlacementPresenter(placementSystem, placementSystem.Grid);
     }
 
     public override void Enter()
     {
-        placementSystem.EnablePreview(true);
+        presenter.Enter();
     }
 
     public override void Exit()
     {
-        placementSystem.EnablePreview(false);
+        presenter.Exit();
     }
 
     public override void Update()
     {
         var mousePosition = inputManager.GetSelectedMapPosition();
-        placementSystem.UpdatePreview(mousePosition);
+        presenter.UpdatePreview(mousePosition);
     }
 
     public override void HandleInput()
@@ -35,11 +36,11 @@ public sealed class BuildMode : ModeBase
         if (inputManager.IsPointerOverUI()) return;
 
         if (Input.GetMouseButtonDown(0))
-            placementSystem.PlaceBuilding(/* building prefab */);
+            presenter.Place();
 
         if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.Escape))
         {
-            // Transition to Normal Mode.
+            // todo: Transition to Normal Mode.
 
         }
     }

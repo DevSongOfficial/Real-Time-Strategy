@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using CustomResourceManagement;
 using BuildingSystem;
 
@@ -67,7 +68,7 @@ public sealed class UnitController : MonoBehaviour
         buildMode = new BuildMode(inputManager, placementSystem);
 
 
-        placementSystem.EnablePreview(false); 
+        placementSystem.TogglePreview(false); 
         SetMode(normalMode);
     }
 

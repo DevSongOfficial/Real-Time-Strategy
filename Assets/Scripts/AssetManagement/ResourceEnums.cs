@@ -5,10 +5,11 @@ namespace CustomResourceManagement
 		public struct Playable{
 			public enum Building{
 				BuildingA,
+				BuildingB,
 			}
 			public enum Unit{
-                Unit_1
-            }
+				Unit_1,
+			}
 		}
 		public enum UI{
 			HealthTracker,
