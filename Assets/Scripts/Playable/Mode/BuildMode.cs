@@ -38,9 +38,9 @@ public sealed class BuildMode : ModeBase
         if (Input.GetMouseButtonDown(0))
             presenter.Place();
 
-        if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetMouseButtonDown(1))
         {
-            // todo: Transition to Normal Mode.
+            presenter.Cancel();
 
         }
     }

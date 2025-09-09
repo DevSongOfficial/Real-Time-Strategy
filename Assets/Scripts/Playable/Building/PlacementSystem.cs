@@ -1,6 +1,7 @@
 using CustomResourceManagement;
 using UnityEngine;
 using UnityEngine.UI;
+using static CustomResourceManagement.Prefabs.Playable;
 
 namespace BuildingSystem
 {
@@ -9,6 +10,7 @@ namespace BuildingSystem
     {
         [SerializeField] private Transform mouseIndicator;
         [SerializeField] private Transform cellIndicator;
+        private Transform buildingIndicator;
         [SerializeField] private Grid grid;
 
         [Header("UI(Temp)")]
@@ -36,10 +38,22 @@ namespace BuildingSystem
             buttonPanel.gameObject.SetActive(enable);
         }
 
-        public void TogglePreview(bool enable)
+        public void TogglePreview(bool enable, Transform prefabToPreview = null)
         {
             mouseIndicator?.gameObject.SetActive(enable);
             cellIndicator?.gameObject.SetActive(enable);
+            
+
+            if(enable && prefabToPreview != null)
+            {
+                // todo: This prefab's collider or other components must be unactivated. (so far it doesn't have a component)
+                buildingIndicator = Instantiate(prefabToPreview);
+                buildingIndicator.position = CurrentCellWorldPosition;
+            }
+            else if (buildingIndicator != null)
+            {
+               Destroy(buildingIndicator.gameObject);
+            }
         }
 
         public void SetMouseIndicatorPosition(Vector3 position)
@@ -51,6 +65,11 @@ namespace BuildingSystem
         {
             CurrentCellWorldPosition = position;
             cellIndicator.position = CurrentCellWorldPosition;
+        }
+
+        public void SetBuildingIndicatorPosition(Vector3 position)
+        {
+            buildingIndicator.position = position;
         }
 
         public void Place(Transform prefab)
