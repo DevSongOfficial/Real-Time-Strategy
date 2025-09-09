@@ -21,14 +21,12 @@ public class PlacementPresenter
 {
     private readonly IPlacementView view;
     private Transform selectedPrefab;
-    private readonly Grid grid;
 
     private PlacementMode placementMode;
 
-    public PlacementPresenter(IPlacementView view, Grid grid)
+    public PlacementPresenter(IPlacementView view)
     {
         this.view = view;
-        this.grid = grid;
 
         view.OnPrefabSelected += SelectPrefab;
     }
@@ -41,6 +39,7 @@ public class PlacementPresenter
     public void Exit()
     {
         view.ToggleButtonPanel(false);
+        Cancel();
     }
 
     public void UpdatePreview(Vector3 mouseWorld)
@@ -51,11 +50,11 @@ public class PlacementPresenter
         view.SetMouseIndicatorPosition(mouseWorld);
 
         // Set cell indicator position.
-        var cell = grid.WorldToCell(mouseWorld);
-        var snapped = grid.CellToWorld(cell);
-        view.SetCellPosition(snapped.WithY(0));
+        var cellPosition = GridController.WorldToCell(mouseWorld);
+        var snappedPosition = GridController.CellToWorld(cellPosition).WithY(0);
+        view.SetCellPosition(snappedPosition);
 
-        view.SetBuildingIndicatorPosition(mouseWorld);
+        view.SetBuildingIndicatorPosition(snappedPosition);
     }
 
     public void SelectPrefab(Transform prefab)

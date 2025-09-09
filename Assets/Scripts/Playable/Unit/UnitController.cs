@@ -82,7 +82,7 @@ public sealed class UnitController : MonoBehaviour
         currentMode?.Update();
         currentMode?.HandleInput();
 
-        if (Input.GetKeyDown(KeyCode.B))
+        if (inputManager.GetKeyDown(KeyCode.B))
         {
             SetMode(currentMode == normalMode ? buildMode : normalMode);
         }

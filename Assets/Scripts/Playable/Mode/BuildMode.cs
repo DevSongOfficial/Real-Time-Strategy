@@ -12,7 +12,7 @@ public sealed class BuildMode : ModeBase
     public BuildMode(InputManager inputManager, PlacementSystem placementSystem)
     {
         this.inputManager = inputManager;
-        presenter = new PlacementPresenter(placementSystem, placementSystem.Grid);
+        presenter = new PlacementPresenter(placementSystem);
     }
 
     public override void Enter()
@@ -35,10 +35,10 @@ public sealed class BuildMode : ModeBase
     {
         if (inputManager.IsPointerOverUI()) return;
 
-        if (Input.GetMouseButtonDown(0))
+        if (inputManager.GetMouseButtonDown(0))
             presenter.Place();
 
-        if (Input.GetMouseButtonDown(1))
+        if (inputManager.GetMouseButtonDown(1))
         {
             presenter.Cancel();
 

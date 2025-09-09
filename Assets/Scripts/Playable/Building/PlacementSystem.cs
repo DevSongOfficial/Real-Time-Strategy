@@ -1,7 +1,7 @@
 using CustomResourceManagement;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
-using static CustomResourceManagement.Prefabs.Playable;
 
 namespace BuildingSystem
 {
@@ -11,7 +11,6 @@ namespace BuildingSystem
         [SerializeField] private Transform mouseIndicator;
         [SerializeField] private Transform cellIndicator;
         private Transform buildingIndicator;
-        [SerializeField] private Grid grid;
 
         [Header("UI(Temp)")]
         [SerializeField] private Image buttonPanel;
@@ -21,8 +20,8 @@ namespace BuildingSystem
         // Events
         public event System.Action<Transform> OnPrefabSelected;
 
+
         public Vector3 CurrentCellWorldPosition { get; private set; }
-        public Grid Grid => grid;
 
         private void Awake()
         {

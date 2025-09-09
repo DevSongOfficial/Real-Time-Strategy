@@ -13,6 +13,21 @@ namespace BuildingSystem
             this.camera = camera;
         }
 
+        public bool GetMouseButton(int button)
+        {
+            return Input.GetMouseButton(button);
+        }
+
+        public bool GetMouseButtonDown(int button)
+        {
+            return Input.GetMouseButtonDown(button);
+        }
+
+        public bool GetKeyDown(KeyCode keyCode)
+        {
+            return Input.GetKeyDown(keyCode);
+        }
+
         public Vector3 GetSelectedMapPosition()
         {
             Ray ray = camera.ScreenPointToRay(Input.mousePosition);
