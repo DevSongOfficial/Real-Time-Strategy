@@ -9,10 +9,10 @@ public sealed class BuildMode : ModeBase
     private readonly InputManager inputManager;
     private readonly PlacementPresenter presenter;
 
-    public BuildMode(InputManager inputManager, PlacementSystem placementSystem)
+    public BuildMode(InputManager inputManager, PlacementView placementView, BuildingFactory factory)
     {
         this.inputManager = inputManager;
-        presenter = new PlacementPresenter(placementSystem);
+        presenter = new PlacementPresenter(placementView, factory);
     }
 
     public override void Enter()
@@ -39,9 +39,6 @@ public sealed class BuildMode : ModeBase
             presenter.Place();
 
         if (inputManager.GetMouseButtonDown(1))
-        {
             presenter.Cancel();
-
-        }
     }
 }

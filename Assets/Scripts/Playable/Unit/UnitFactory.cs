@@ -1,13 +1,17 @@
-using Unity.AI.Navigation.Editor;
-using UnityEditor;
 using UnityEngine;
-using CustomResourceManagement;
 
 
 public class UnitFactory : PlayableAbsFactory<Unit>
 {
-    public override Unit CreatePlayable()
+    public override Unit Create(EntityData data)
     {
-        return new Unit();
+        var unit = data.Prefab.GetComponent<Unit>();
+        return GameObject.Instantiate<Unit>(unit);
+    }
+
+    public Unit Create(Transform prefab)
+    {
+        var unit = prefab.GetComponent<Unit>();
+        return GameObject.Instantiate<Unit>(unit);
     }
 }

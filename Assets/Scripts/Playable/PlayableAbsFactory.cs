@@ -3,5 +3,5 @@ using CustomResourceManagement;
 
 public abstract class PlayableAbsFactory<T> where T : Playable
 {
-    public abstract T CreatePlayable();
+    public abstract T Create(EntityData data);
 }

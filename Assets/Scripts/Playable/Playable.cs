@@ -24,6 +24,8 @@ public abstract class Playable : MonoBehaviour, ISelectable, ITransformProvider
     public abstract void OnDeselected();
 
     public Transform GetTransform() { return transform; }
+    public void SetPosition(Vector3 position) {  transform.position = position; }
+    public void SetRotation(Quaternion rotation) {  transform.rotation = rotation; }
 
-    [field: SerializeField] protected EntityData data;
+    protected EntityData data;
 }

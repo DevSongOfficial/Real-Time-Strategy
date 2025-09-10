@@ -30,7 +30,7 @@ public sealed class UnitController : MonoBehaviour
     [Header("Scene Refs")]
     [SerializeField] private Camera mainCamera;
     [SerializeField] private Canvas canvas;
-    [SerializeField] private PlacementSystem placementSystem; 
+    [SerializeField] private PlacementView placementView; 
 
 
     // Temporary for testing.
@@ -43,9 +43,12 @@ public sealed class UnitController : MonoBehaviour
     private SelectionHandler selectionHandler;
     private List<ISelectable> selectedUnits;
 
-
     // Input
     private InputManager inputManager;
+
+    // Factory
+    private BuildingFactory buildingFactory;
+    private UnitFactory unitFactory;
 
     // Game Mode (Normal / Build)
     private ModeBase currentMode;
@@ -61,14 +64,14 @@ public sealed class UnitController : MonoBehaviour
         selectionHandler    = new SelectionHandler(selectedUnits, mainCamera);
 
         inputManager = new InputManager(mainCamera);
+        buildingFactory     = new BuildingFactory();
+        unitFactory         = new UnitFactory();
 
-        
-        
+        placementView.Initialize(buildingFactory);
+        placementView.ToggleUIPreview(false); 
+
         normalMode = new NormalMode(selectionHandler, dragEventHandler);
-        buildMode = new BuildMode(inputManager, placementSystem);
-
-
-        placementSystem.TogglePreview(false); 
+        buildMode = new BuildMode(inputManager, placementView, buildingFactory);
         SetMode(normalMode);
     }
 
