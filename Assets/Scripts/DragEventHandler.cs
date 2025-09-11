@@ -5,8 +5,8 @@ using CustomResourceManagement;
 
 public sealed class DragEventHandler
 {
+    private InputManager inputManager;
     private Camera camera;
-    private Canvas canvas;
     private RectTransform selectionBox;
 
     private Vector2 startPosition;
@@ -16,14 +16,14 @@ public sealed class DragEventHandler
     private List<ITransformProvider> unitsInSelectionBox;
     public event Action<IEnumerable<ISelectable>> OnUnitDetectedInDragArea;
 
-    public DragEventHandler(IEnumerable<ITransformProvider> units , Camera camera, Canvas canvas)
+    // Only units can be dragged, not buildings.
+    public DragEventHandler(IEnumerable<ITransformProvider> units , Camera camera, Canvas canvas, InputManager inputManager)
     {
         this.units = units;
+        this.inputManager = inputManager;
 
         this.camera = camera;
-        this.canvas = canvas;
         selectionBox = GameObject.Instantiate(ResourceLoader.GetResource<RectTransform>(Prefabs.UI.SelectionBox), canvas.transform);
-
 
         startPosition = Vector2.zero;
         endPosition = Vector2.zero;
@@ -34,19 +34,19 @@ public sealed class DragEventHandler
     // This function should be called every frame to handle drag input.
     public void HandleDragEvent()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (inputManager.GetMouseButtonDown(0))
         {
-            startPosition = Input.mousePosition;
+            startPosition = inputManager.GetMousePosition();
         }
 
-        if (Input.GetMouseButton(0))
+        if (inputManager.GetMouseButton(0))
         {
-            endPosition = Input.mousePosition;
+            endPosition = inputManager.GetMousePosition();
 
             DrawSelectionBox();
         }
 
-        if (Input.GetMouseButtonUp(0))
+        if (inputManager.GetMouseButtonUp(0))
         {
             DetectUnitsInSelectionBox();
 

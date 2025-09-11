@@ -7,9 +7,9 @@ public class UnitGenerator
     public System.Action<Unit> OnUnitGenerated;
 
     private UnitFactory unitFactory;
-    IRegisterUnit unitRegistry;
+    IUnitRegisterer unitRegistry;
 
-    public UnitGenerator(UnitFactory unitFactory, IRegisterUnit unitRegistry)
+    public UnitGenerator(UnitFactory unitFactory, IUnitRegisterer unitRegistry)
     {
         this.unitFactory = unitFactory;
         this.unitRegistry = unitRegistry;

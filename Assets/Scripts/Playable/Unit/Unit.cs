@@ -21,7 +21,8 @@ public class Unit : Playable, IMovable, IDamageable, ITargetor, ITarget
 
     private void Awake()
     {
-        agent = GetComponent<NavMeshAgent>();
+        if(agent == null)
+            agent = GetComponent<NavMeshAgent>();
     }
 
     public Unit SetUp(EntityData data)

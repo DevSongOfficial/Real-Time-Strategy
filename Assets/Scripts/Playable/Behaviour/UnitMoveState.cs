@@ -1,11 +1,11 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class MoveState : UnitStateBase
+public class UnitMoveState : StateBase
 {
     private NavMeshAgent agent;
 
-    public MoveState(UnitStateMachine stateMachine, BlackBoard blackBoard, NavMeshAgent agent)
+    public UnitMoveState(UnitStateMachine stateMachine, BlackBoard blackBoard, NavMeshAgent agent)
         : base(stateMachine, blackBoard)
     {
         this.agent = agent;

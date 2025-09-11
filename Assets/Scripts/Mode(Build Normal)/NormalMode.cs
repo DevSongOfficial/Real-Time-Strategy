@@ -18,11 +18,11 @@ public sealed class NormalMode : ModeBase
 
     public override void Enter() 
     {
-        dragEventHandler.OnUnitDetectedInDragArea += selectionHandler.SelectUnits;
+        dragEventHandler.OnUnitDetectedInDragArea += selectionHandler.SelectEntities;
     }
     public override void Exit() 
     {
-        dragEventHandler.OnUnitDetectedInDragArea -= selectionHandler.SelectUnits;
+        dragEventHandler.OnUnitDetectedInDragArea -= selectionHandler.SelectEntities;
     }
 
     public override void Update()
@@ -33,7 +33,7 @@ public sealed class NormalMode : ModeBase
     public override void HandleInput()
     {
         if (inputManager.GetMouseButtonDown(0))
-            selectionHandler.SelectUnit(inputManager.GetMousePosition(), additive: inputManager.GetKey(KeyCode.LeftShift));
+            selectionHandler.SelectEntity(inputManager.GetMousePosition(), additive: inputManager.GetKey(KeyCode.LeftShift));
 
         if (inputManager.GetMouseButtonDown(1))
             selectionHandler.SelectTarget(inputManager.GetMousePosition());

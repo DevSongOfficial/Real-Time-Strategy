@@ -42,15 +42,15 @@ public struct Target
 public class SelectionHandler
 {
     private Camera camera;
-    private List<ISelectable> selectedUnits;
+    private List<ISelectable> selectedEntities;
 
-    public SelectionHandler(List<ISelectable> selectedUnits, Camera camera)
+    public SelectionHandler(List<ISelectable> selectedEntities, Camera camera)
     {
-        this.selectedUnits = selectedUnits;
+        this.selectedEntities = selectedEntities;
         this.camera = camera;
     }
     
-    // Select our units' target.
+    // Select our units' target to attack or move towards. (Mouse 1)
     public void SelectTarget(Vector2 screenPos)
     {
         var ray = camera.ScreenPointToRay(screenPos);
@@ -58,13 +58,13 @@ public class SelectionHandler
             return;
 
         var target = new Target(hit);
-        foreach (var unit in selectedUnits)
+        foreach (var unit in selectedEntities)
             if (unit is ITargetor targetor) 
                 targetor.SetTarget(target);
     }
 
-    // Select a unit to control.
-    public void SelectUnit(Vector2 screenPos, bool additive)
+    // Select an entity to control. (Mouse 0)
+    public void SelectEntity(Vector2 screenPos, bool additive)
     {
         if (!additive) DeselectAllUnits();
 
@@ -73,36 +73,37 @@ public class SelectionHandler
         if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, Layer.Selectable.ToLayerMask()))
             return;
 
-        if (hit.collider.TryGetComponent(out ISelectable unit))
-            SelectUnit(unit);
+        if (!hit.collider.TryGetComponent(out ISelectable entity))
+            return;
+
+        SelectEntity(entity);
     }
 
-    public void SelectUnits(IEnumerable<ISelectable> units)
+    public void SelectEntities(IEnumerable<ISelectable> entities)
     {
-        foreach (var unit in units)
-            SelectUnit(unit);
-
+        foreach (var entity in entities)
+            SelectEntity(entity);
     }
 
-    private void SelectUnit(ISelectable unit)
+    private void SelectEntity(ISelectable entity)
     {
-        if (!selectedUnits.Contains(unit))
-            selectedUnits.Add(unit);
+        if (!selectedEntities.Contains(entity))
+            selectedEntities.Add(entity);
 
-        unit.OnSelected();
+        entity.OnSelected();
     }
 
     private void DeselectUnit(ISelectable unit)
     {
-        if (selectedUnits.Contains(unit))
-            selectedUnits.Remove(unit);
+        if (selectedEntities.Contains(unit))
+            selectedEntities.Remove(unit);
 
         unit.OnDeselected();
     }
 
     private void DeselectAllUnits()
     {
-        for (int i = selectedUnits.Count - 1; i >= 0; i--)
-            DeselectUnit(selectedUnits[i]);
+        for (int i = selectedEntities.Count - 1; i >= 0; i--)
+            DeselectUnit(selectedEntities[i]);
     }
 }

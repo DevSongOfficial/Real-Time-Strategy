@@ -10,7 +10,7 @@ public class HealthBarGenerator
     {
         this.canvas = canvas;
         this.mainCamera = mainCamera;
-}
+    }
 
     public void GenerateAndSetTargetUnit(ITarget targetUnit)
     {

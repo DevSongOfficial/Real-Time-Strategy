@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class AttackState : UnitStateBase
+public class UnitAttackState : StateBase
 {
-    public AttackState(UnitStateMachine stateMachine, BlackBoard blackBoard)
+    public UnitAttackState(UnitStateMachine stateMachine, BlackBoard blackBoard)
         : base(stateMachine, blackBoard) { }
 
     public override void Enter()

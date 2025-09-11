@@ -16,15 +16,14 @@ public sealed class Player : MonoBehaviour
     [SerializeField] private Canvas canvas;
     [SerializeField] private PlacementView placementView; 
 
-    // Unit container
-    private UnitRegistry unitRegistry;
+    // Entity Regsitry includes diffrent type of entity containers.
+    private EntityRegistry entityRegistry;
 
     // Mouse drag event.
     private DragEventHandler dragEventHandler;
 
     // Playbles selection.
     private SelectionHandler selectionHandler;
-    private List<ISelectable> selectedUnits;
 
     // Input
     private InputManager inputManager;
@@ -45,17 +44,16 @@ public sealed class Player : MonoBehaviour
     {
         inputManager = new InputManager(mainCamera);
 
-        unitRegistry = new UnitRegistry();
-        selectedUnits = new List<ISelectable>();
+        entityRegistry = new EntityRegistry();
 
-        dragEventHandler    = new DragEventHandler(unitRegistry.GetTransforms(), mainCamera, canvas);
-        selectionHandler    = new SelectionHandler(selectedUnits, mainCamera);
+        dragEventHandler    = new DragEventHandler(entityRegistry.GetTransformsOfUnits(), mainCamera, canvas, inputManager);
+        selectionHandler    = new SelectionHandler(entityRegistry.GetSelectedEntities(), mainCamera);
 
         buildingFactory     = new BuildingFactory();
         unitFactory         = new UnitFactory();
 
         healthBarGenerator = new HealthBarGenerator(canvas.transform, mainCamera);
-        unitGenerator = new UnitGenerator(unitFactory, unitRegistry);
+        unitGenerator = new UnitGenerator(unitFactory, entityRegistry);
         unitGenerator.OnUnitGenerated += healthBarGenerator.GenerateAndSetTargetUnit;
 
         placementView.SetUp(buildingFactory);

@@ -21,6 +21,11 @@ public sealed class InputManager
         return Input.GetMouseButtonDown(button);
     }
 
+    public bool GetMouseButtonUp(int button)
+    {
+        return Input.GetMouseButtonUp(button);
+    }
+
     public bool GetKey(KeyCode keyCode)
     {
         return Input.GetKey(keyCode);

@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 3281691918532333655}
   - component: {fileID: 5390877121405160964}
   - component: {fileID: 8293923969687124148}
-  - component: {fileID: -2221089450137219821}
-  m_Layer: 0
+  - component: {fileID: 8520013616256981188}
+  m_Layer: 11
   m_Name: BuildingB
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -110,7 +110,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-2221089450137219821
+--- !u!114 &8520013616256981188
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -119,10 +119,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1547474263831521869}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf6ada3da4d87ad4d839cb8f78bf0ed8, type: 3}
+  m_Script: {fileID: 11500000, guid: b79b6644b2a8b794ca4eb55ca890c856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  data: {fileID: 11400000, guid: 400b97f1b7a05b34ca9db82575080867, type: 2}
 --- !u!1 &4384696930661239257
 GameObject:
   m_ObjectHideFlags: 0
@@ -135,7 +134,7 @@ GameObject:
   - component: {fileID: 5277100281422831488}
   - component: {fileID: 6366718450971799859}
   - component: {fileID: 5636706358240965257}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
