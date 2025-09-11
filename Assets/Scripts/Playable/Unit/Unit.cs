@@ -1,4 +1,3 @@
-using CustomResourceManagement;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -22,12 +21,19 @@ public class Unit : Playable, IMovable, IDamageable, ITargetor, ITarget
 
     private void Awake()
     {
-        // Init State Machine.
         agent = GetComponent<NavMeshAgent>();
+    }
+
+    public Unit SetUp(EntityData data)
+    {
+        this.data = data;
+
         blackBoard = new BlackBoard(data);
         stateMachine = new UnitStateMachine(agent, blackBoard);
 
         healthSystem = new HealthSystem(data.MaxHealth);
+
+        return this;
     }
 
     private void Update()

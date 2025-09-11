@@ -1,40 +1,23 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using CustomResourceManagement;
 using BuildingSystem;
 
-// todo: Need to seprate class
-public sealed class UnitController : MonoBehaviour
+public sealed class Player : MonoBehaviour
 {
     // Temporary for testing.
     [Header("Spawn(temp)")]
     [SerializeField, Range(0, 99)] private int numberOfUnitOnStart = 3;
-    private void GenerateUnits(int numberOfUnit)
-    {
-        for (int i = 0; i < numberOfUnit; i++)
-        {
-            // Generate units.
-            var prefab_Unit = ResourceLoader.GetResource<Unit>(Prefabs.Playable.Unit.Unit_1);
-            var randomPosition = new Vector3(Random.Range(26, 35), 2, Random.Range(20, 36));
-            var newUnit = Instantiate(prefab_Unit, randomPosition, Quaternion.identity);
-            allUnits.Add(newUnit);
-
-            // Generate health bar per unit.
-            var prefab_HealthBar = ResourceLoader.GetResource<HealthTracker>(Prefabs.UI.HealthTracker);
-            var newHealthBar = Instantiate(prefab_HealthBar, canvas.transform);
-            newHealthBar.SetUp(mainCamera, new Target(newUnit));
-        }
-    }
+    [SerializeField] private EntityData unitData;
+    
 
     [Header("Scene Refs")]
     [SerializeField] private Camera mainCamera;
     [SerializeField] private Canvas canvas;
     [SerializeField] private PlacementView placementView; 
 
-
-    // Temporary for testing.
-    private List<ISelectable> allUnits;
+    // Unit container
+    private UnitRegistry unitRegistry;
 
     // Mouse drag event.
     private DragEventHandler dragEventHandler;
@@ -50,6 +33,9 @@ public sealed class UnitController : MonoBehaviour
     private BuildingFactory buildingFactory;
     private UnitFactory unitFactory;
 
+    private UnitGenerator unitGenerator;
+    private HealthBarGenerator healthBarGenerator;
+
     // Game Mode (Normal / Build)
     private ModeBase currentMode;
     private ModeBase normalMode;
@@ -57,27 +43,32 @@ public sealed class UnitController : MonoBehaviour
 
     private void Awake()
     {
-        selectedUnits = new List<ISelectable>();
-        allUnits = new List<ISelectable>();
+        inputManager = new InputManager(mainCamera);
 
-        dragEventHandler    = new DragEventHandler(allUnits.FilterByType<ISelectable, ITransformProvider>(), mainCamera, canvas);
+        unitRegistry = new UnitRegistry();
+        selectedUnits = new List<ISelectable>();
+
+        dragEventHandler    = new DragEventHandler(unitRegistry.GetTransforms(), mainCamera, canvas);
         selectionHandler    = new SelectionHandler(selectedUnits, mainCamera);
 
-        inputManager = new InputManager(mainCamera);
         buildingFactory     = new BuildingFactory();
         unitFactory         = new UnitFactory();
 
-        placementView.Initialize(buildingFactory);
+        healthBarGenerator = new HealthBarGenerator(canvas.transform, mainCamera);
+        unitGenerator = new UnitGenerator(unitFactory, unitRegistry);
+        unitGenerator.OnUnitGenerated += healthBarGenerator.GenerateAndSetTargetUnit;
+
+        placementView.SetUp(buildingFactory);
         placementView.ToggleUIPreview(false); 
 
-        normalMode = new NormalMode(selectionHandler, dragEventHandler);
+        normalMode = new NormalMode(inputManager, selectionHandler, dragEventHandler);
         buildMode = new BuildMode(inputManager, placementView, buildingFactory);
         SetMode(normalMode);
     }
 
     private void Start()
     {
-        GenerateUnits(numberOfUnitOnStart);
+        unitGenerator.Generate(unitData, numberOfUnitOnStart);
     }
 
     private void Update()

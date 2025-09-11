@@ -6,10 +6,14 @@ public sealed class NormalMode : ModeBase
     private readonly SelectionHandler selectionHandler;
     private readonly DragEventHandler dragEventHandler;
 
-    public NormalMode(SelectionHandler selectionHandler, DragEventHandler dragEventHandler)
+    private readonly InputManager inputManager;
+
+    public NormalMode(InputManager inputManager, SelectionHandler selectionHandler, DragEventHandler dragEventHandler)
     {
         this.selectionHandler = selectionHandler;
         this.dragEventHandler = dragEventHandler;
+
+        this.inputManager = inputManager;
     }
 
     public override void Enter() 
@@ -28,10 +32,10 @@ public sealed class NormalMode : ModeBase
 
     public override void HandleInput()
     {
-        if (Input.GetMouseButtonDown(0))
-            selectionHandler.SelectUnit(Input.mousePosition, additive: Input.GetKey(KeyCode.LeftShift));
+        if (inputManager.GetMouseButtonDown(0))
+            selectionHandler.SelectUnit(inputManager.GetMousePosition(), additive: inputManager.GetKey(KeyCode.LeftShift));
 
-        if (Input.GetMouseButtonDown(1))
-            selectionHandler.SelectTarget(Input.mousePosition);
+        if (inputManager.GetMouseButtonDown(1))
+            selectionHandler.SelectTarget(inputManager.GetMousePosition());
     }
 }

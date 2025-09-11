@@ -1551,6 +1551,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numberOfUnitOnStart: 9
+  unitData: {fileID: 11400000, guid: 68b5d8a57d0540946b94a3ab3bc7c466, type: 2}
   mainCamera: {fileID: 330585545}
   canvas: {fileID: 1868754047}
   placementView: {fileID: 1386255004}

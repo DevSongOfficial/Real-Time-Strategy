@@ -25,7 +25,7 @@ namespace BuildingSystem
 
         private Vector3 currentCellWorldPosition;
 
-        public void Initialize(IBuildingPreviewFactory factory)
+        public void SetUp(IBuildingPreviewFactory factory)
         {
             this.factory = factory;
         }

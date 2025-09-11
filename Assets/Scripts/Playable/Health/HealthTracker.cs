@@ -13,6 +13,7 @@ public class HealthTracker : MonoBehaviour
 
     public void SetUp(Camera camera, Target target)
     {
+
         this.camera = camera;
         this.target = target.Entity;
         this.target.GetHealthSystem().OnHelathChanged += UpdateHealthBarLength;
