@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using static CustomResourceManagement.Prefabs.Playable;
 
 public interface IBuildingPreviewFactory
 {
@@ -11,8 +12,11 @@ public class BuildingFactory : PlayableAbsFactory<Building>, IBuildingPreviewFac
 {
     public override Building Create(EntityData data)
     {
-        var building = data.Prefab.GetComponent<Building>();
-        return GameObject.Instantiate<Building>(building);
+        var prefab = data.Prefab.GetComponent<Building>();
+        var building = GameObject.Instantiate<Building>(prefab);
+        building.SetUp(data);
+
+        return building;
     }
 
     public Building CreateGhost(BuildingData data)

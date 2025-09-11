@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.AI;
 
+
+// TODO: This is actually doing nothing
 public interface IMovable
 {
     void MoveTo(Vector3 destination);
@@ -56,7 +58,7 @@ public class Unit : Playable, IMovable, IDamageable, ITargetor, ITarget
     public void SetTarget(Target target)
     {
         blackBoard.target = target;
-        stateMachine.ChangeState(stateMachine.MoveState);
+        stateMachine.ChangeState<UnitMoveState>();
     }
 
     public Vector3 GetPosition() => transform.position;

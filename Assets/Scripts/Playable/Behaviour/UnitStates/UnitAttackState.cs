@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class UnitAttackState : StateBase
+public class UnitAttackState : UnitStateBase
 {
     public UnitAttackState(UnitStateMachine stateMachine, BlackBoard blackBoard)
         : base(stateMachine, blackBoard) { }
@@ -25,6 +25,6 @@ public class UnitAttackState : StateBase
         if (blackBoard.target.Entity is IDamageable target)
             target.GetDamaged(blackBoard.data.AttackDamage);
 
-        stateMachine.ChangeState(stateMachine.IdleState);
+        stateMachine.ChangeState<UnitIdleState>();
     }
 }

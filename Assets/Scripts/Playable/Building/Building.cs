@@ -1,20 +1,20 @@
 using UnityEngine;
 
-public class Building : Playable
+public class Building : Playable, ITarget
 {
     // State Machine
-    protected StateMachine stateMachine;
+    protected StateMachineBase stateMachine;
     protected BlackBoard blackBoard;
 
-    private HealthSystem healthSystem;
+    protected HealthSystem healthSystem;
 
 
-    public Building SetUp(EntityData data)
+    public virtual Building SetUp(EntityData data)
     {
         this.data = data;
 
         blackBoard = new BlackBoard(data);
-        stateMachine = new StateMachine();
+        stateMachine = new BuildingStateMachine(blackBoard);
 
         healthSystem = new HealthSystem(data.MaxHealth);
 
@@ -29,5 +29,15 @@ public class Building : Playable
     public override void OnDeselected()
     {
         Debug.Log(name + " has unselected");
+    }
+
+    public Vector3 GetPosition()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public IHealthSystem GetHealthSystem()
+    {
+        return healthSystem;
     }
 }

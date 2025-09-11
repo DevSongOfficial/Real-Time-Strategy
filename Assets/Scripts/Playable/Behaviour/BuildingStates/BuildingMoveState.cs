@@ -1,24 +1,24 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class UnitMoveState : StateBase
+public class BuildingMoveState : BuildingStateBase
 {
     private NavMeshAgent agent;
 
-    public UnitMoveState(UnitStateMachine stateMachine, BlackBoard blackBoard, NavMeshAgent agent)
-        : base(stateMachine, blackBoard)
+    public BuildingMoveState(BuildingStateMachine stateMachine, BlackBoard blackBoard, NavMeshAgent agent) : base(stateMachine, blackBoard)
     {
         this.agent = agent;
     }
 
     public override void Enter()
     {
+        agent.isStopped = false;
         agent.SetDestination(blackBoard.target.GetPosition());
     }
 
     public override void Exit()
     {
-        
+        agent.isStopped = true;
     }
 
     public override void Update()
@@ -28,13 +28,13 @@ public class UnitMoveState : StateBase
             agent.SetDestination(blackBoard.target.GetPosition());
 
             if (agent.remainingDistance < blackBoard.data.AttackRange)
-                stateMachine.ChangeState(stateMachine.AttackState);
+                stateMachine.ChangeState<BuildingIdleState>();
 
         }
         else
         {
             if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
-                stateMachine.ChangeState(stateMachine.IdleState);
+                stateMachine.ChangeState<BuildingIdleState>();
         }
     }
 }
