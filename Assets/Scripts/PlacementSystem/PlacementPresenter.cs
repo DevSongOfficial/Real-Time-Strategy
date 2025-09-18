@@ -20,9 +20,9 @@ public enum PlacementMode { Idle, Placing }
 public sealed class PlacementPresenter
 {
     private readonly IPlacementView placementView;
-    private readonly BuildingFactory factory;
+    private readonly BuildingFactory buildingFactory;
 
-    private BuildingData selectedBuilding; // Building to place.
+    private BuildingData selectedBuildingData; // Building to place.
 
     private PlacementMode placementMode;
 
@@ -30,10 +30,10 @@ public sealed class PlacementPresenter
     private Vector3 snappedPosition;
     private Quaternion rotation;
 
-    public PlacementPresenter(IPlacementView placementView, BuildingFactory factory)
+    public PlacementPresenter(IPlacementView placementView, BuildingFactory buildingFactory)
     {
         this.placementView = placementView;
-        this.factory = factory;
+        this.buildingFactory = buildingFactory;
     }
 
     public void Enter()
@@ -58,7 +58,7 @@ public sealed class PlacementPresenter
 
         // Set cell indicator position.
         var cellPosition = GridController.WorldToCell(mouseWorld);
-        snappedPosition = GridController.CellToWorld(cellPosition).WithY(0);
+        snappedPosition = GridController.CellToWorld(cellPosition);
         placementView.SetCellPosition(snappedPosition);
 
         // Set preview position.
@@ -69,37 +69,38 @@ public sealed class PlacementPresenter
     {
         placementMode = PlacementMode.Placing;
 
-        selectedBuilding = data;
+        selectedBuildingData = data;
 
         // Preview building prefab & related UI
-        placementView.ToggleBuildingPreview(true, selectedBuilding);
+        placementView.ToggleBuildingPreview(true, selectedBuildingData);
         placementView.ToggleUIPreview(true);
     }
 
     public void Place()
     {
-        if (selectedBuilding == null) return;
+        if (selectedBuildingData == null) return;
 
         placementMode = PlacementMode.Idle;
 
-        var building = factory.Create(selectedBuilding);
+        // Setup Building.
+        var building = buildingFactory.Create(selectedBuildingData);
         building.SetPosition(snappedPosition);
 
         placementView.ToggleUIPreview(false);
         placementView.ToggleBuildingPreview(false);
 
-        selectedBuilding = null;
+        selectedBuildingData = null;
     }
 
     public void Cancel()
     {
-        if (selectedBuilding == null) return;
+        if (selectedBuildingData == null) return;
 
         placementMode = PlacementMode.Idle;
 
         placementView.ToggleUIPreview(false);
         placementView.ToggleBuildingPreview(false);
 
-        selectedBuilding = null;
+        selectedBuildingData = null;
     }
 }

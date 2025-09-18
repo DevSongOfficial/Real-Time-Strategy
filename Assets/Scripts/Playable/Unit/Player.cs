@@ -31,6 +31,7 @@ public sealed class Player : MonoBehaviour
     // Factory
     private BuildingFactory buildingFactory;
     private UnitFactory unitFactory;
+    private SelectionIndicatorFactory selectionIndicatorFactory;
 
     private UnitGenerator unitGenerator;
     private HealthBarGenerator healthBarGenerator;
@@ -49,8 +50,9 @@ public sealed class Player : MonoBehaviour
         dragEventHandler    = new DragEventHandler(entityRegistry.GetTransformsOfUnits(), mainCamera, canvas, inputManager);
         selectionHandler    = new SelectionHandler(entityRegistry.GetSelectedEntities(), mainCamera);
 
-        buildingFactory     = new BuildingFactory();
-        unitFactory         = new UnitFactory();
+        selectionIndicatorFactory   = new SelectionIndicatorFactory();
+        buildingFactory             = new BuildingFactory(selectionIndicatorFactory);
+        unitFactory                 = new UnitFactory(selectionIndicatorFactory);
 
         healthBarGenerator = new HealthBarGenerator(canvas.transform, mainCamera);
         unitGenerator = new UnitGenerator(unitFactory, entityRegistry);

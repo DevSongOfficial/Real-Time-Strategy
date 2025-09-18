@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Team>k__BackingField: 0
   <DisplayName>k__BackingField: Building 2
-  <Prefab>k__BackingField: {fileID: 9138859301630564584, guid: 4908897b143a67841a6d2e98ba0cb86e, type: 3}
+  <RadiusOnTerrain>k__BackingField: 2.5
+  <Prefab>k__BackingField: {fileID: 5758938310227597527, guid: 4908897b143a67841a6d2e98ba0cb86e, type: 3}
   <MaxHealth>k__BackingField: 100
   <AttackDamage>k__BackingField: 0
   <AttackRange>k__BackingField: 0

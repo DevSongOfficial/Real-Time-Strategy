@@ -2,6 +2,9 @@
 namespace CustomResourceManagement
 {
 	public struct Prefabs{
+		public enum Effect{
+			SelectionIndicator,
+		}
 		public struct Playable{
 			public enum Building{
 				BuildingA,

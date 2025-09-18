@@ -2,17 +2,26 @@ using UnityEngine;
 using UnityEngine.AI;
 
 // This building can Move & Attack like units.
-public class HybridBuilding : Building, IMovable, ITargetor
+public class HybridBuilding : Building, ITargetor
 {
     [SerializeField] private NavMeshAgent agent;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         if (agent == null)
             agent = GetComponent<NavMeshAgent>();
+
+
+        // If you wanna control the rotation or position by yourself, not through navmeshagent, 
+        // you can use things like:
+        // agent.updateUpAxis = false;
+        // agent.updateRotation = false;
+        // agent.updatePosition = false;
     }
 
-    public override Building SetUp(EntityData data)
+    public override Building SetUp(EntityData data, GameObject selectionIndicator)
     {
         this.data = data;
 
@@ -21,13 +30,10 @@ public class HybridBuilding : Building, IMovable, ITargetor
 
         healthSystem = new HealthSystem(data.MaxHealth);
 
+        this.selectionIndicator = selectionIndicator;
+
         return this;
 
-    }
-
-    public void MoveTo(Vector3 destination)
-    {
-        agent.SetDestination(destination);
     }
 
     public void SetTarget(Target target)

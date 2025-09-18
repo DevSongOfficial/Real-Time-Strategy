@@ -6,6 +6,7 @@ public class EntityData : ScriptableObject
 {
     [field: SerializeField] public Team Team { get; private set; }
     [field: SerializeField] public string DisplayName { get; private set; }
+    [field: SerializeField] public float RadiusOnTerrain { get; private set; } // For selection indicator
     [field: SerializeField] public Transform Prefab { get; private set; }
 
     [field: SerializeField] public int MaxHealth { get; private set; }

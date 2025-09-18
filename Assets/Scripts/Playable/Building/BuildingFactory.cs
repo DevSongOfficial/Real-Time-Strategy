@@ -1,6 +1,4 @@
-using UnityEditor;
 using UnityEngine;
-using static CustomResourceManagement.Prefabs.Playable;
 
 public interface IBuildingPreviewFactory
 {
@@ -10,11 +8,26 @@ public interface IBuildingPreviewFactory
 
 public class BuildingFactory : PlayableAbsFactory<Building>, IBuildingPreviewFactory
 {
+    private SelectionIndicatorFactory selectionIndicatorFactory;
+
+    public BuildingFactory(SelectionIndicatorFactory selectionIndicatorFactory)
+    {
+        this.selectionIndicatorFactory = selectionIndicatorFactory;
+    }
+
     public override Building Create(EntityData data)
     {
         var prefab = data.Prefab.GetComponent<Building>();
         var building = GameObject.Instantiate<Building>(prefab);
-        building.SetUp(data);
+
+        // TODO: Seperate codes?
+        // Create Selection Indicator. 
+        var selectionIndicator = selectionIndicatorFactory.Create();
+        selectionIndicator.parent = building.transform;
+        selectionIndicator.localPosition = Vector3.zero.WithY(-building.PositionDeltaY);
+        selectionIndicator.GetChild(0).localScale = (Vector3.one * data.RadiusOnTerrain).WithZ(1);
+
+        building.SetUp(data, selectionIndicator.gameObject);
 
         return building;
     }

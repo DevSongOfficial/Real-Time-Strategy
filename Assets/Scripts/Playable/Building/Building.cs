@@ -8,8 +8,23 @@ public class Building : Playable, ITarget
 
     protected HealthSystem healthSystem;
 
+    [SerializeField] private new Collider collider;
 
-    public virtual Building SetUp(EntityData data)
+    protected GameObject selectionIndicator;
+
+    // TODO: I think it's better to put this variable in EntityData and write on my own. (not getting it through collider)
+    public float PositionDeltaY { get; private set; }
+
+    // Better not use Start().
+    protected virtual void Awake()
+    {
+        if(collider == null)
+            collider = GetComponentInChildren<Collider>();
+
+        PositionDeltaY = collider.bounds.extents.y;
+    }
+
+    public virtual Building SetUp(EntityData data, GameObject selectionIndicator)
     {
         this.data = data;
 
@@ -18,22 +33,30 @@ public class Building : Playable, ITarget
 
         healthSystem = new HealthSystem(data.MaxHealth);
 
+        this.selectionIndicator = selectionIndicator;
+
         return this;
     }
 
     public override void OnSelected()
     {
-        Debug.Log(name + " has selected");
+        selectionIndicator.SetActive(true);
     }
 
     public override void OnDeselected()
     {
-        Debug.Log(name + " has unselected");
+        selectionIndicator.SetActive(false);
+    }
+
+    public override void SetPosition(Vector3 position)
+    {
+        transform.position = position.WithY(PositionDeltaY);
+        Debug.Log(transform.position);
     }
 
     public Vector3 GetPosition()
     {
-        throw new System.NotImplementedException();
+        return transform.position;
     }
 
     public IHealthSystem GetHealthSystem()

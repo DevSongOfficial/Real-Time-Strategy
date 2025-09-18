@@ -54,7 +54,7 @@ public class SelectionHandler
     public void SelectTarget(Vector2 screenPos)
     {
         var ray = camera.ScreenPointToRay(screenPos);
-        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity /*, LayerMask: Ground || Enemy Playble */))
+        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, Utility.GetLayerMask(Layer.Ground, Layer.Selectable) /*, TODO: LayerMask: Ground || Entity */))
             return;
 
         var target = new Target(hit);
@@ -73,7 +73,7 @@ public class SelectionHandler
         if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, Layer.Selectable.ToLayerMask()))
             return;
 
-        if (!hit.collider.TryGetComponent(out ISelectable entity))
+        if (!hit.transform.parent.TryGetComponent(out ISelectable entity))
             return;
 
         SelectEntity(entity);

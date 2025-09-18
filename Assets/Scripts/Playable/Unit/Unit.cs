@@ -2,14 +2,8 @@ using UnityEngine;
 using UnityEngine.AI;
 
 
-// TODO: This is actually doing nothing
-public interface IMovable
-{
-    void MoveTo(Vector3 destination);
-}
-
 [RequireComponent(typeof(NavMeshAgent))]
-public class Unit : Playable, IMovable, IDamageable, ITargetor, ITarget
+public class Unit : Playable, IDamageable, ITargetor, ITarget
 {
     // State Machine
     private UnitStateMachine stateMachine;
@@ -17,7 +11,7 @@ public class Unit : Playable, IMovable, IDamageable, ITargetor, ITarget
 
     [SerializeField] private NavMeshAgent agent;
 
-    [SerializeField] private GameObject selectionIndicator;
+    private GameObject selectionIndicator;
 
     private HealthSystem healthSystem;
 
@@ -27,7 +21,7 @@ public class Unit : Playable, IMovable, IDamageable, ITargetor, ITarget
             agent = GetComponent<NavMeshAgent>();
     }
 
-    public Unit SetUp(EntityData data)
+    public Unit SetUp(EntityData data, GameObject selectionIndicator)
     {
         this.data = data;
 
@@ -35,6 +29,8 @@ public class Unit : Playable, IMovable, IDamageable, ITargetor, ITarget
         stateMachine = new UnitStateMachine(agent, blackBoard);
 
         healthSystem = new HealthSystem(data.MaxHealth);
+
+        this.selectionIndicator = selectionIndicator;
 
         return this;
     }
