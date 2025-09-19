@@ -26,9 +26,10 @@ public class UnitMoveState : UnitStateBase
     {
         if (!blackBoard.target.IsGround)
         {
+            var contactDistance = blackBoard.target.Entity.GetData().RadiusOnTerrain + blackBoard.data.RadiusOnTerrain;
             agent.SetDestination(blackBoard.target.GetPosition());
 
-            if (agent.remainingDistance < blackBoard.data.AttackRange)
+            if (agent.remainingDistance - contactDistance * 0.5f < blackBoard.data.AttackRange)
                 stateMachine.ChangeState<UnitAttackState>();
 
         }

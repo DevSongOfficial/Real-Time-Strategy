@@ -1,3 +1,5 @@
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Building : Playable, ITarget
@@ -24,6 +26,11 @@ public class Building : Playable, ITarget
         PositionDeltaY = collider.bounds.extents.y;
     }
 
+    private void Update()
+    {
+        stateMachine?.Update();
+    }
+
     public virtual Building SetUp(EntityData data, GameObject selectionIndicator)
     {
         this.data = data;
@@ -40,6 +47,7 @@ public class Building : Playable, ITarget
 
     public override void OnSelected()
     {
+        selectionIndicator.SetActive(false);
         selectionIndicator.SetActive(true);
     }
 
@@ -51,7 +59,6 @@ public class Building : Playable, ITarget
     public override void SetPosition(Vector3 position)
     {
         transform.position = position.WithY(PositionDeltaY);
-        Debug.Log(transform.position);
     }
 
     public Vector3 GetPosition()
@@ -62,5 +69,10 @@ public class Building : Playable, ITarget
     public IHealthSystem GetHealthSystem()
     {
         return healthSystem;
+    }
+
+    public EntityData GetData()
+    {
+        return data;
     }
 }

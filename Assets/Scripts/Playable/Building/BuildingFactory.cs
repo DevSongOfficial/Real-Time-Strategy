@@ -26,6 +26,7 @@ public class BuildingFactory : PlayableAbsFactory<Building>, IBuildingPreviewFac
         selectionIndicator.parent = building.transform;
         selectionIndicator.localPosition = Vector3.zero.WithY(-building.PositionDeltaY);
         selectionIndicator.GetChild(0).localScale = (Vector3.one * data.RadiusOnTerrain).WithZ(1);
+        selectionIndicator.gameObject.SetActive(false);
 
         building.SetUp(data, selectionIndicator.gameObject);
 

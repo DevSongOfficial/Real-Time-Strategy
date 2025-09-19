@@ -29,7 +29,7 @@ public struct Target
         else
         {
             IsGround = false;
-            entity = hit.collider.GetComponent<ITarget>();
+            entity = hit.collider.GetComponentInParent<ITarget>();
             hitPoint = entity.GetPosition();
         }
     }

@@ -10,15 +10,23 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget
     private BlackBoard blackBoard;
 
     [SerializeField] private NavMeshAgent agent;
+    [SerializeField] private new Collider collider; // collider for calculating position delta.
+    public float PositionDeltaY { get; private set; }
+
 
     private GameObject selectionIndicator;
 
     private HealthSystem healthSystem;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         if(agent == null)
             agent = GetComponent<NavMeshAgent>();
+
+        if (collider == null)
+            collider = GetComponentInChildren<Collider>();
+
+        PositionDeltaY = collider.bounds.extents.y;
     }
 
     public Unit SetUp(EntityData data, GameObject selectionIndicator)
@@ -68,5 +76,10 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget
     public void GetDamaged(int damage)
     {
         healthSystem.GetDamaged(damage);
+    }
+
+    public EntityData GetData()
+    {
+        return data;
     }
 }

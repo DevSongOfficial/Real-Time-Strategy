@@ -7,7 +7,7 @@ public enum Team
     Blue,
 }
 
-public interface ISelectable
+public interface ISelectable // Selectable by mouse0 or keyboard or ... .
 {
     void OnSelected();
     void OnDeselected();
