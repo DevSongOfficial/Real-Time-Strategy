@@ -9,10 +9,10 @@ public sealed class BuildMode : ModeBase
     private readonly InputManager inputManager;
     private readonly PlacementPresenter presenter;
 
-    public BuildMode(InputManager inputManager, PlacementView placementView, BuildingFactory factory)
+    public BuildMode(InputManager inputManager, PlacementView placementView, BuildingFactory factory, GridSystem grid)
     {
         this.inputManager = inputManager;
-        presenter = new PlacementPresenter(placementView, factory);
+        presenter = new PlacementPresenter(placementView, factory, grid);
     }
 
     public override void Enter()

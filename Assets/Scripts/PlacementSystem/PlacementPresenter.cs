@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using static CustomResourceManagement.Prefabs.Playable;
 
 
 public interface IPlacementView
@@ -21,6 +22,7 @@ public sealed class PlacementPresenter
 {
     private readonly IPlacementView placementView;
     private readonly BuildingFactory buildingFactory;
+    private readonly GridSystem gridSystem;
 
     private BuildingData selectedBuildingData; // Building to place.
 
@@ -30,10 +32,11 @@ public sealed class PlacementPresenter
     private Vector3 snappedPosition;
     private Quaternion rotation;
 
-    public PlacementPresenter(IPlacementView placementView, BuildingFactory buildingFactory)
+    public PlacementPresenter(IPlacementView placementView, BuildingFactory buildingFactory, GridSystem gridSysetm)
     {
         this.placementView = placementView;
         this.buildingFactory = buildingFactory;
+        this.gridSystem = gridSysetm;
     }
 
     public void Enter()
@@ -57,12 +60,15 @@ public sealed class PlacementPresenter
         placementView.SetMouseIndicatorPosition(mouseWorld);
 
         // Set cell indicator position.
-        var cellPosition = GridController.WorldToCell(mouseWorld);
-        snappedPosition = GridController.CellToWorld(cellPosition);
+        var cellPosition = gridSystem.WorldToCell(mouseWorld);
+        snappedPosition = gridSystem.CellToWorld(cellPosition);
         placementView.SetCellPosition(snappedPosition);
 
         // Set preview position.
         placementView.SetBuildingPreviewPosition(snappedPosition);
+
+
+        gridSystem.DrawFootprintCells(cellPosition.ToVector2Int(), Vector2Int.one);
     }
 
     public void SelectBuilding(BuildingData data)
@@ -80,11 +86,19 @@ public sealed class PlacementPresenter
     {
         if (selectedBuildingData == null) return;
 
+        // Check on Grid.
+        Vector2Int cellPosition = gridSystem.WorldToCell(snappedPosition).ToVector2Int();
+        Vector2Int cellSize = Vector2Int.one * selectedBuildingData.RadiusOnTerrain * 2;
+        if (!gridSystem.CanPlace(cellPosition, cellSize)) return;
+
         placementMode = PlacementMode.Idle;
 
         // Setup Building.
         var building = buildingFactory.Create(selectedBuildingData);
         building.SetPosition(snappedPosition);
+
+        // Add to Grid.
+        gridSystem.Occupy(cellPosition, cellSize);
 
         placementView.ToggleUIPreview(false);
         placementView.ToggleBuildingPreview(false);

@@ -14,7 +14,9 @@ public sealed class Player : MonoBehaviour
     [Header("Scene Refs")]
     [SerializeField] private Camera mainCamera;
     [SerializeField] private Canvas canvas;
-    [SerializeField] private PlacementView placementView; 
+    [SerializeField] private PlacementView placementView;
+    [SerializeField] private Grid grid;
+    [SerializeField] private Mesh quadMesh;
 
     // Entity Regsitry includes diffrent type of entity containers.
     private EntityRegistry entityRegistry;
@@ -32,6 +34,9 @@ public sealed class Player : MonoBehaviour
     private BuildingFactory buildingFactory;
     private UnitFactory unitFactory;
     private SelectionIndicatorFactory selectionIndicatorFactory;
+
+    // Grid System for building placement.
+    private GridSystem gridSystem;
 
     private UnitGenerator unitGenerator;
     private HealthBarGenerator healthBarGenerator;
@@ -59,10 +64,12 @@ public sealed class Player : MonoBehaviour
         unitGenerator.OnUnitGenerated += healthBarGenerator.GenerateAndSetTargetUnit;
 
         placementView.SetUp(buildingFactory);
-        placementView.ToggleUIPreview(false); 
+        placementView.ToggleUIPreview(false);
+
+        gridSystem = new GridSystem(grid, quadMesh);
 
         normalMode = new NormalMode(inputManager, selectionHandler, dragEventHandler);
-        buildMode = new BuildMode(inputManager, placementView, buildingFactory);
+        buildMode = new BuildMode(inputManager, placementView, buildingFactory, gridSystem);
         SetMode(normalMode);
     }
 

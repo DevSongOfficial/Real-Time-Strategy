@@ -9,7 +9,6 @@ namespace BuildingSystem
     public sealed class PlacementView : MonoBehaviour, IPlacementView
     {
         [SerializeField] private Transform mouseIndicator;
-        [SerializeField] private Transform cellIndicator;
 
 
         [Header("UI(Temp)")]
@@ -44,7 +43,6 @@ namespace BuildingSystem
         public void ToggleUIPreview(bool enable)
         {
             mouseIndicator?.gameObject.SetActive(enable);
-            cellIndicator?.gameObject.SetActive(enable);
         }
 
         public void ToggleBuildingPreview(bool enable, BuildingData selectedBuilding = null)
@@ -66,7 +64,6 @@ namespace BuildingSystem
         public void SetCellPosition(Vector3 position)
         {
             currentCellWorldPosition = position;
-            cellIndicator.position = currentCellWorldPosition;
         }
 
         public void SetBuildingPreviewPosition(Vector3 position)

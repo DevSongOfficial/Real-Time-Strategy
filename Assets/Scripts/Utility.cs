@@ -72,4 +72,9 @@ public static class Utility
     {
         return new Vector3Int(vector.x, vector.y, z);
     }
+
+    public static Vector2Int ToVector2Int(this Vector3Int vector)
+    {
+        return new Vector2Int(vector.x, vector.z);
+    }
 }
