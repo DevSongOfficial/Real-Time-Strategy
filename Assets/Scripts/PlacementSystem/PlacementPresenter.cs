@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using static CustomResourceManagement.Prefabs.Playable;
 
 
 public interface IPlacementView
@@ -52,24 +51,50 @@ public sealed class PlacementPresenter
         placementView.OnBuildingSelected -= SelectBuilding;
     }
 
+    //public void UpdatePreview(Vector3 mouseWorld)
+    //{
+    //    if (placementMode != PlacementMode.Placing) return;
+
+    //    // Set mouse indicator position.
+    //    placementView.SetMouseIndicatorPosition(mouseWorld);
+
+    //    // Set cell indicator position.
+    //    var cellPosition = gridSystem.WorldToCell(mouseWorld);
+    //    snappedPosition = gridSystem.CellToWorld(cellPosition);
+    //    placementView.SetCellPosition(snappedPosition);
+
+    //    // Set preview position.
+    //    placementView.SetBuildingPreviewPosition(snappedPosition);
+
+    //    // Display footprint indicating if the preview(ghost) can be placed in the position.
+    //    if (selectedBuildingData != null)
+    //        gridSystem.DrawFootprintCells(cellPosition.ToVector2Int(), selectedBuildingData.CellSize);
+    //}
+
     public void UpdatePreview(Vector3 mouseWorld)
     {
         if (placementMode != PlacementMode.Placing) return;
 
-        // Set mouse indicator position.
         placementView.SetMouseIndicatorPosition(mouseWorld);
 
-        // Set cell indicator position.
-        var cellPosition = gridSystem.WorldToCell(mouseWorld);
-        snappedPosition = gridSystem.CellToWorld(cellPosition);
-        placementView.SetCellPosition(snappedPosition);
+        var mouseCell3 = gridSystem.WorldToCell(mouseWorld);
+        Vector2Int mouseCell = mouseCell3.ToVector2Int();
 
-        // Set preview position.
+        Vector3 mouseCellWorld = gridSystem.CellToWorld(mouseCell3);
+        placementView.SetCellPosition(mouseCellWorld);
+
+        if (selectedBuildingData == null) return;
+
+        Vector2Int size = selectedBuildingData.CellSize;
+
+        Vector2Int originCell = gridSystem.MouseToOrigin(mouseCell, size);
+
+        snappedPosition = gridSystem.GetFootprintPivotWorld(originCell, size);
         placementView.SetBuildingPreviewPosition(snappedPosition);
 
-
-        gridSystem.DrawFootprintCells(cellPosition.ToVector2Int(), Vector2Int.one);
+        gridSystem.DrawFootprintCells(mouseCell, size);
     }
+
 
     public void SelectBuilding(BuildingData data)
     {
@@ -88,8 +113,9 @@ public sealed class PlacementPresenter
 
         // Check on Grid.
         Vector2Int cellPosition = gridSystem.WorldToCell(snappedPosition).ToVector2Int();
-        Vector2Int cellSize = Vector2Int.one * selectedBuildingData.RadiusOnTerrain * 2;
+        Vector2Int cellSize = selectedBuildingData.CellSize;
         if (!gridSystem.CanPlace(cellPosition, cellSize)) return;
+        
 
         placementMode = PlacementMode.Idle;
 

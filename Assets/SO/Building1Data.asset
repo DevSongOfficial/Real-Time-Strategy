@@ -19,3 +19,4 @@ MonoBehaviour:
   <MaxHealth>k__BackingField: 100
   <AttackDamage>k__BackingField: 0
   <AttackRange>k__BackingField: 0
+  <CellSize>k__BackingField: {x: 1, y: 1}

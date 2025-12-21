@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 61594700613c48a4c83f2c31a8c39ff5, type: 3}
-  m_Name: Building2Data
+  m_Name: Building3Data
   m_EditorClassIdentifier: 
   <Team>k__BackingField: 0
-  <DisplayName>k__BackingField: Building 2
+  <DisplayName>k__BackingField: Building 3
   <RadiusOnTerrain>k__BackingField: 3
-  <Prefab>k__BackingField: {fileID: 5758938310227597527, guid: 4908897b143a67841a6d2e98ba0cb86e, type: 3}
+  <Prefab>k__BackingField: {fileID: 6404431195190590083, guid: 3e7ddadddd3047f49b7a73fe5997b3f3, type: 3}
   <MaxHealth>k__BackingField: 100
   <AttackDamage>k__BackingField: 0
   <AttackRange>k__BackingField: 0
-  <CellSize>k__BackingField: {x: 1, y: 1}
+  <CellSize>k__BackingField: {x: 2, y: 3}

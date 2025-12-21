@@ -13,6 +13,7 @@ namespace CustomResourceManagement
 			public enum Building{
 				BuildingA,
 				BuildingB,
+				BuildingC,
 			}
 			public enum Unit{
 				Unit_1,

@@ -15,6 +15,7 @@ namespace BuildingSystem
         [SerializeField] private Image buttonPanel;
         [SerializeField] private EntityCreateButton button1;
         [SerializeField] private EntityCreateButton button2;
+        [SerializeField] private EntityCreateButton button3;
 
         // Events
         public event System.Action<BuildingData> OnBuildingSelected;
@@ -33,6 +34,7 @@ namespace BuildingSystem
         {
             button1.OnButtonClicked += (EntityData data) => OnBuildingSelected?.Invoke((BuildingData)data);
             button2.OnButtonClicked += (EntityData data) => OnBuildingSelected?.Invoke((BuildingData)data);
+            button3.OnButtonClicked += (EntityData data) => OnBuildingSelected?.Invoke((BuildingData)data);
         }
 
         public void ToggleButtonPanel(bool enable)
@@ -47,7 +49,7 @@ namespace BuildingSystem
 
         public void ToggleBuildingPreview(bool enable, BuildingData selectedBuilding = null)
         {
-            if(enable && selectedBuilding != null)
+            if (enable && selectedBuilding != null)
                 buildingPreview = factory.CreateGhost(selectedBuilding);
             else
             {
