@@ -41,4 +41,10 @@ public class HybridBuilding : Building, ITargetor
         blackBoard.target = target;
         stateMachine.ChangeState<BuildingMoveState>();
     }
+
+    public override void MakeRenderOnly()
+    {
+        agent.enabled = false;
+        base.MakeRenderOnly();
+    }
 }

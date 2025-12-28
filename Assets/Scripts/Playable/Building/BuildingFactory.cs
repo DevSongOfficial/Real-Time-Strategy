@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public interface IBuildingPreviewFactory
@@ -36,7 +38,7 @@ public class BuildingFactory : PlayableAbsFactory<Building>, IBuildingPreviewFac
     public Building CreateGhost(BuildingData data)
     {
         var building = data.Prefab.GetComponent<Building>();
-        // disable components of data, and then,
+        building.MakeRenderOnly();
         return GameObject.Instantiate<Building>(building);
     }
 

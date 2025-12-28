@@ -2,6 +2,7 @@
 namespace CustomResourceManagement
 {
 	public enum Materials{
+		DefaultMaterial,
 		GreenMaterial,
 		RedMaterial,
 	}

@@ -8,6 +8,7 @@ public enum Layer
     Default = 0,
     TransparentFX = 1,
     IgnoreRaycast = 2,
+    IgnoreCollision = 3,
     Water = 4,
     UI = 5,
     Ground = 6,
@@ -16,6 +17,11 @@ public enum Layer
 
 public static class Utility
 {
+    public static void SetLayer(this GameObject gameObject, Layer layer)
+    {
+        gameObject.layer = (int)layer;
+    }
+
     public static bool CompareLayer(this Collider collider, Layer layer)
     {
         return collider.gameObject.layer == (int)layer;

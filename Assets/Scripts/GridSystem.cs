@@ -130,12 +130,9 @@ public sealed class GridSystem
                 {
                     float terrainY = Terrain.activeTerrain.SampleHeight(world)
                                    + Terrain.activeTerrain.transform.position.y;
-                    world.y = terrainY + 1f;
+                    world.y = terrainY;
                 }
-                else
-                {
-                    world.y += 1f;
-                }
+                
 
                 var trs = Matrix4x4.TRS(world, rot, baseScale);
 

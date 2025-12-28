@@ -75,4 +75,11 @@ public class Building : Playable, ITarget
     {
         return data;
     }
+
+    // This is basically for ghost building.
+    public virtual void MakeRenderOnly()
+    {
+        enabled = false;
+        gameObject.SetLayer(Layer.IgnoreCollision);
+    }
 }

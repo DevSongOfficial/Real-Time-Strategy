@@ -51,26 +51,6 @@ public sealed class PlacementPresenter
         placementView.OnBuildingSelected -= SelectBuilding;
     }
 
-    //public void UpdatePreview(Vector3 mouseWorld)
-    //{
-    //    if (placementMode != PlacementMode.Placing) return;
-
-    //    // Set mouse indicator position.
-    //    placementView.SetMouseIndicatorPosition(mouseWorld);
-
-    //    // Set cell indicator position.
-    //    var cellPosition = gridSystem.WorldToCell(mouseWorld);
-    //    snappedPosition = gridSystem.CellToWorld(cellPosition);
-    //    placementView.SetCellPosition(snappedPosition);
-
-    //    // Set preview position.
-    //    placementView.SetBuildingPreviewPosition(snappedPosition);
-
-    //    // Display footprint indicating if the preview(ghost) can be placed in the position.
-    //    if (selectedBuildingData != null)
-    //        gridSystem.DrawFootprintCells(cellPosition.ToVector2Int(), selectedBuildingData.CellSize);
-    //}
-
     public void UpdatePreview(Vector3 mouseWorld)
     {
         if (placementMode != PlacementMode.Placing) return;

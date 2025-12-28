@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6404431195190590083}
   - component: {fileID: 8471087603807888865}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: BuildingA
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1738545648953166210}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bf6ada3da4d87ad4d839cb8f78bf0ed8, type: 3}
   m_Name: 
@@ -111,7 +111,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: da44c8c058acfbc45957286806c33842, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
