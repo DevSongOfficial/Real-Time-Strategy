@@ -2,8 +2,13 @@ using UnityEngine;
 
 public class UnitAttackState : UnitStateBase
 {
-    public UnitAttackState(UnitStateMachine stateMachine, BlackBoard blackBoard)
-        : base(stateMachine, blackBoard) { }
+    private Animator animator;
+    public UnitAttackState(UnitStateMachine stateMachine, BlackBoard blackBoard, Animator animator)
+        : base(stateMachine, blackBoard) 
+    {
+        this.animator = animator;
+
+    }
 
     public override void Enter()
     {
@@ -17,14 +22,19 @@ public class UnitAttackState : UnitStateBase
 
     public override void Update()
     {
-        
+        base.Update();
     }
 
     private void TryAttack()
     {
         if (blackBoard.target.Entity is IDamageable target)
-            target.GetDamaged(blackBoard.data.AttackDamage);
+        {
+            animator.Play("Melee Attack", 0, 0f);
 
-        stateMachine.ChangeState<UnitIdleState>();
+            target.GetDamaged(blackBoard.data.AttackDamage);
+            blackBoard.attackCooldown = blackBoard.data.AttackDalay;
+        }
+
+        stateMachine.ChangeState<UnitMoveState>();
     }
 }

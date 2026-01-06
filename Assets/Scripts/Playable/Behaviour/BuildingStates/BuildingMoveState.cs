@@ -13,6 +13,7 @@ public class BuildingMoveState : BuildingStateBase
 
     public override void Enter()
     {
+        Debug.Log($"enabled={agent.enabled}, isOnNavMesh={agent.isOnNavMesh}");
         agent.isStopped = false;
         agent.SetDestination(blackBoard.target.GetPosition());
     }

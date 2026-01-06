@@ -5,7 +5,7 @@ using UnityEngine;
 public struct Target
 {
     // For preventing null check.
-    public bool IsGround { get; private set; }
+    public bool IsGround { get; private set; } // true if it's terrain.
     public ITarget Entity => entity;
 
     private ITarget entity;

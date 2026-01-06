@@ -37,9 +37,11 @@ public class BuildingFactory : PlayableAbsFactory<Building>, IBuildingPreviewFac
 
     public Building CreateGhost(BuildingData data)
     {
-        var building = data.Prefab.GetComponent<Building>();
+        var buildingData = data.Prefab.GetComponent<Building>();
+        var building = GameObject.Instantiate<Building>(buildingData);
         building.MakeRenderOnly();
-        return GameObject.Instantiate<Building>(building);
+
+        return building;
     }
 
     public void DestroyGhost(Building building)

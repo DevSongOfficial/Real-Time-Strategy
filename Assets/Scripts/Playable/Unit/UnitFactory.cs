@@ -17,7 +17,7 @@ public class UnitFactory : PlayableAbsFactory<Unit>
 
         var selectionIndicator = selectionIndicatorFactory.Create();
         selectionIndicator.parent = unit.transform;
-        selectionIndicator.localPosition = Vector3.zero.WithY(-unit.PositionDeltaY);
+        selectionIndicator.localPosition = Vector3.zero.WithY(-unit.PositionDeltaY) + data.SelectionIndicatorPositionOffset;
         selectionIndicator.GetChild(0).localScale = (Vector3.one * data.RadiusOnTerrain).WithZ(1);
         selectionIndicator.gameObject.SetActive(false);
 

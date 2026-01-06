@@ -37,11 +37,11 @@ public abstract class StateMachineBase
 
 public sealed class UnitStateMachine : StateMachineBase
 {
-    public UnitStateMachine(NavMeshAgent agent, BlackBoard blackBoard)
+    public UnitStateMachine(Animator animator, NavMeshAgent agent, BlackBoard blackBoard)
     {
-        RegisterState(new UnitIdleState(this, blackBoard));
-        RegisterState(new UnitMoveState(this, blackBoard, agent));
-        RegisterState(new UnitAttackState(this, blackBoard));
+        RegisterState(new UnitIdleState(this, blackBoard, animator));
+        RegisterState(new UnitMoveState(this, blackBoard, agent, animator));
+        RegisterState(new UnitAttackState(this, blackBoard, animator));
 
         // Initial State
         ChangeState<UnitIdleState>();
@@ -71,6 +71,7 @@ public class BlackBoard
     public EntityData data;
 
     public Target target;
+    public float attackCooldown; // time left to attack
 
     public BlackBoard(EntityData data)
     {

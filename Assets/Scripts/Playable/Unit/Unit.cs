@@ -9,6 +9,7 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget
     private UnitStateMachine stateMachine;
     private BlackBoard blackBoard;
 
+    [SerializeField] private Animator animator;
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private new Collider collider; // collider for calculating position delta.
     public float PositionDeltaY { get; private set; }
@@ -23,6 +24,9 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget
         if(agent == null)
             agent = GetComponent<NavMeshAgent>();
 
+        if(animator == null)
+            animator = GetComponent<Animator>();
+
         if (collider == null)
             collider = GetComponentInChildren<Collider>();
 
@@ -34,7 +38,7 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget
         this.data = data;
 
         blackBoard = new BlackBoard(data);
-        stateMachine = new UnitStateMachine(agent, blackBoard);
+        stateMachine = new UnitStateMachine(animator, agent, blackBoard);
 
         healthSystem = new HealthSystem(data.MaxHealth);
 

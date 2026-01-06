@@ -4,17 +4,21 @@ using UnityEngine.AI;
 public class UnitMoveState : UnitStateBase
 {
     private NavMeshAgent agent;
+    private Animator animator;
 
-    public UnitMoveState(UnitStateMachine stateMachine, BlackBoard blackBoard, NavMeshAgent agent)
+    public UnitMoveState(UnitStateMachine stateMachine, BlackBoard blackBoard, NavMeshAgent agent, Animator animator)
         : base(stateMachine, blackBoard)
     {
         this.agent = agent;
+        this.animator = animator;
     }
 
     public override void Enter()
     {
         agent.isStopped = false;
         agent.SetDestination(blackBoard.target.GetPosition());
+
+        animator.Play("Run", 0, 0f);
     }
 
     public override void Exit()
@@ -24,13 +28,23 @@ public class UnitMoveState : UnitStateBase
 
     public override void Update()
     {
+        base.Update();
+
         if (!blackBoard.target.IsGround)
         {
             var contactDistance = blackBoard.target.Entity.GetData().RadiusOnTerrain + blackBoard.data.RadiusOnTerrain;
             agent.SetDestination(blackBoard.target.GetPosition());
 
             if (agent.remainingDistance - contactDistance * 0.5f < blackBoard.data.AttackRange)
-                stateMachine.ChangeState<UnitAttackState>();
+            {
+                if (blackBoard.target.Entity is IDamageable)
+                    if (blackBoard.attackCooldown <= 0)
+                    {
+                        stateMachine.ChangeState<UnitAttackState>();
+                    }
+
+                // else Interact with the object;
+            }
 
         }
         else

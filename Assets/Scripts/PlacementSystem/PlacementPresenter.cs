@@ -103,6 +103,7 @@ public sealed class PlacementPresenter
         var building = buildingFactory.Create(selectedBuildingData);
         building.SetPosition(snappedPosition);
 
+
         // Add to Grid.
         gridSystem.Occupy(cellPosition, cellSize);
 

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-// This building can Move & Attack like units.
+// This building can Move & Attack just like units.
 public class HybridBuilding : Building, ITargetor
 {
     [SerializeField] private NavMeshAgent agent;
@@ -13,6 +13,8 @@ public class HybridBuilding : Building, ITargetor
         if (agent == null)
             agent = GetComponent<NavMeshAgent>();
 
+        if(agent.enabled == false)
+            agent.enabled = true;
 
         // If you wanna control the rotation or position by yourself, not through navmeshagent, 
         // you can use things like:
@@ -33,7 +35,6 @@ public class HybridBuilding : Building, ITargetor
         this.selectionIndicator = selectionIndicator;
 
         return this;
-
     }
 
     public void SetTarget(Target target)

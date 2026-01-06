@@ -15,7 +15,9 @@ MonoBehaviour:
   <Team>k__BackingField: 0
   <DisplayName>k__BackingField: Tiny Cap
   <RadiusOnTerrain>k__BackingField: 1
+  <SelectionIndicatorPositionOffset>k__BackingField: {x: 0, y: 0.15, z: 0}
   <Prefab>k__BackingField: {fileID: 3707527734802741352, guid: 00e0d2fdf8a6b0e4aa3c6a9638ad32d1, type: 3}
   <MaxHealth>k__BackingField: 200
   <AttackDamage>k__BackingField: 15
+  <AttackDalay>k__BackingField: 1
   <AttackRange>k__BackingField: 1
