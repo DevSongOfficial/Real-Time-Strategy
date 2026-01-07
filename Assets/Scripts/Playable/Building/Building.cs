@@ -8,6 +8,8 @@ public class Building : Playable, ITarget
     protected StateMachineBase stateMachine;
     protected BlackBoard blackBoard;
 
+    [SerializeField] protected CoroutineExecutor coroutineExecutor;
+
     protected HealthSystem healthSystem;
 
     [SerializeField] private new Collider collider;
@@ -20,7 +22,10 @@ public class Building : Playable, ITarget
     // Better not use Start().
     protected virtual void Awake()
     {
-        if(collider == null)
+        if (coroutineExecutor != null)
+            coroutineExecutor = GetComponent<CoroutineExecutor>();
+
+        if (collider == null)
             collider = GetComponentInChildren<Collider>();
 
         PositionDeltaY = collider.bounds.extents.y;
@@ -35,7 +40,7 @@ public class Building : Playable, ITarget
     {
         this.data = data;
 
-        blackBoard = new BlackBoard(data);
+        blackBoard = new BlackBoard(data, coroutineExecutor);
         stateMachine = new BuildingStateMachine(blackBoard);
 
         healthSystem = new HealthSystem(data.MaxHealth);

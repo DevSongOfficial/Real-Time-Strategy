@@ -5,6 +5,7 @@ using UnityEngine.AI;
 public class HybridBuilding : Building, ITargetor
 {
     [SerializeField] private NavMeshAgent agent;
+    
 
     protected override void Awake()
     {
@@ -27,7 +28,7 @@ public class HybridBuilding : Building, ITargetor
     {
         this.data = data;
 
-        blackBoard = new BlackBoard(data);
+        blackBoard = new BlackBoard(data, coroutineExecutor);
         stateMachine = new HybridBuildingStateMachine(blackBoard, agent);
 
         healthSystem = new HealthSystem(data.MaxHealth);

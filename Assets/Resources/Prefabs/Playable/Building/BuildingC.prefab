@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6404431195190590083}
   - component: {fileID: 8471087603807888865}
+  - component: {fileID: -1882882290456710964}
   m_Layer: 11
   m_Name: BuildingC
   m_TagString: Untagged
@@ -45,7 +46,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf6ada3da4d87ad4d839cb8f78bf0ed8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coroutineExecutor: {fileID: -1882882290456710964}
   collider: {fileID: 5660760795476879443}
+--- !u!114 &-1882882290456710964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1738545648953166210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55d3e590dd76e444d954741a4455347c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7962318980014550595
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,6 +9,7 @@ public abstract class StateMachineBase
     private readonly Dictionary<Type, IState> states = new Dictionary<Type, IState>();
 
     public IState CurrentState { get; private set; }
+    public IState PreviousState { get; private set; }
 
     public void ChangeState<T>() where T : IState 
     { 
@@ -24,7 +25,12 @@ public abstract class StateMachineBase
     {
         if(newState == null) return;
 
-        CurrentState?.Exit();
+        if(CurrentState != null)
+        {
+            PreviousState = CurrentState;
+            CurrentState.Exit();
+        }
+
         CurrentState = newState;
         CurrentState.Enter();
     }
@@ -73,8 +79,11 @@ public class BlackBoard
     public Target target;
     public float attackCooldown; // time left to attack
 
-    public BlackBoard(EntityData data)
+    public CoroutineExecutor coroutineExecutor;
+
+    public BlackBoard(EntityData data, CoroutineExecutor coroutineExecutor)
     {
         this.data = data;
+        this.coroutineExecutor = coroutineExecutor;
     }
 }

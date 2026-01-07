@@ -1,4 +1,6 @@
+using System.Collections;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class UnitAttackState : UnitStateBase
 {
@@ -12,7 +14,8 @@ public class UnitAttackState : UnitStateBase
 
     public override void Enter()
     {
-        TryAttack();
+        if (blackBoard.target.Entity is IDamageable target)
+            blackBoard.coroutineExecutor.ExecuteCoroutine(AttackRoutine(target));
     }
 
     public override void Exit()
@@ -25,14 +28,18 @@ public class UnitAttackState : UnitStateBase
         base.Update();
     }
 
-    private void TryAttack()
+    private IEnumerator AttackRoutine(IDamageable target)
     {
-        if (blackBoard.target.Entity is IDamageable target)
-        {
-            animator.Play("Melee Attack", 0, 0f);
+        animator.Play("Melee Attack", 0, 0f);
+        target.GetDamaged(blackBoard.data.AttackDamage);
+        blackBoard.attackCooldown = blackBoard.data.AttackDalay;
 
-            target.GetDamaged(blackBoard.data.AttackDamage);
-            blackBoard.attackCooldown = blackBoard.data.AttackDalay;
+        yield return null;
+
+        while (animator.GetCurrentAnimatorStateInfo(0).IsName("Melee Attack") &&
+           animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
+        {
+            yield return null;
         }
 
         stateMachine.ChangeState<UnitMoveState>();

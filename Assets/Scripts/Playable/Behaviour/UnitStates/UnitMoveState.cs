@@ -18,7 +18,8 @@ public class UnitMoveState : UnitStateBase
         agent.isStopped = false;
         agent.SetDestination(blackBoard.target.GetPosition());
 
-        animator.Play("Run", 0, 0f);
+        if(stateMachine.PreviousState != stateMachine.CurrentState)
+            animator.CrossFade("Run", 0.1f, 0);
     }
 
     public override void Exit()

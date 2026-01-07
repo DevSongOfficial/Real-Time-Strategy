@@ -9,6 +9,7 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget
     private UnitStateMachine stateMachine;
     private BlackBoard blackBoard;
 
+    [SerializeField] private CoroutineExecutor coroutineExecutor;
     [SerializeField] private Animator animator;
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private new Collider collider; // collider for calculating position delta.
@@ -21,6 +22,9 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget
 
     protected virtual void Awake()
     {
+        if (coroutineExecutor != null)
+            coroutineExecutor = GetComponent<CoroutineExecutor>();
+
         if(agent == null)
             agent = GetComponent<NavMeshAgent>();
 
@@ -37,7 +41,7 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget
     {
         this.data = data;
 
-        blackBoard = new BlackBoard(data);
+        blackBoard = new BlackBoard(data, coroutineExecutor);
         stateMachine = new UnitStateMachine(animator, agent, blackBoard);
 
         healthSystem = new HealthSystem(data.MaxHealth);

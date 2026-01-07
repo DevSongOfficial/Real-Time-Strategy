@@ -15,7 +15,7 @@ public class UnitIdleState : UnitStateBase
 
     public override void Enter()
     {
-        animator.Play("Breathing Idle", 0, 0f);
+        animator.CrossFade("Breathing Idle", 0.05f, 0);
     }
 
     public override void Exit()
