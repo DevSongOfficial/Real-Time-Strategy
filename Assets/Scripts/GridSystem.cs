@@ -163,4 +163,5 @@ public sealed class GridSystem
         int oy = size.y / 2;
         return new Vector2Int(mouseCell.x - ox, mouseCell.y - oy);
     }
+
 }
