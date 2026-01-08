@@ -41,6 +41,27 @@ public sealed class InputManager
         return Input.mousePosition;
     }
 
+    public bool IsMouseScrolled(out MouseScrollType type)
+    {
+        float scroll = Input.mouseScrollDelta.y;
+        
+        if (scroll < -0.9f)
+        {
+            type = MouseScrollType.Down;
+            return true;
+        }
+        else if (scroll > 0.9f)
+        {
+            type = MouseScrollType.Up;
+            return true;
+        }
+        else
+        {
+            type = MouseScrollType.None;
+            return false;
+        }
+    }
+
     public Vector3 GetSelectedMapPosition()
     {
         Ray ray = camera.ScreenPointToRay(Input.mousePosition);
@@ -55,3 +76,5 @@ public sealed class InputManager
         return EventSystem.current.IsPointerOverGameObject();
     }
 }
+
+public enum MouseScrollType { None = 0, Up = 1, Down = -1}

@@ -3,12 +3,44 @@ using UnityEngine.EventSystems;
 
 public class CameraController : MonoBehaviour
 {
+    [field: SerializeField] public Camera Camera { get; private set; }
+
+
+    [Header("Camera Move")]
     [SerializeField] [Range(0, 300)] float edgeSize      = 50f;
     [SerializeField] [Range(0, 10)]  float movementSpeed = 3f;
+
+    [Header("Camera Zoom In & Out")]
+    [SerializeField] private float zoomSpeed = 50f;
+    [Tooltip("Z position of Camera Rig")]
+    [SerializeField] private float baseZ = -120f;
+    [SerializeField] private float minZ = -115f;
+    [SerializeField] private float maxZ = -130f;
+
+    private InputManager inputManager;
+
+    public void Setup(InputManager inputManager)
+    {
+        this.inputManager = inputManager;
+    }
 
     private void Update()
     {
         HandleCameraMovement();
+        HandleZoom();
+    }
+
+    private void HandleZoom()
+    {
+        if (!inputManager.IsMouseScrolled(out MouseScrollType type)) return;
+
+        var direction = Camera.transform.forward * (int)type;
+        var positionToMove = transform.position + direction * zoomSpeed * Time.deltaTime;
+
+        if(positionToMove.z > maxZ && type == MouseScrollType.Up) return;
+        if (positionToMove.z < minZ && type == MouseScrollType.Down) return;
+
+        transform.position = positionToMove;
     }
 
     private void HandleCameraMovement()

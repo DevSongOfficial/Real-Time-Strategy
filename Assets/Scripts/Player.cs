@@ -12,7 +12,7 @@ public sealed class Player : MonoBehaviour
     
 
     [Header("Scene Refs")]
-    [SerializeField] private Camera mainCamera;
+    [SerializeField] private CameraController cameraController;
     [SerializeField] private Canvas canvas;
     [SerializeField] private PlacementView placementView;
     [SerializeField] private Grid grid;
@@ -48,18 +48,19 @@ public sealed class Player : MonoBehaviour
 
     private void Awake()
     {
-        inputManager = new InputManager(mainCamera);
+        inputManager = new InputManager(cameraController.Camera);
+        cameraController.Setup(inputManager);
 
         entityRegistry = new EntityRegistry();
 
-        dragEventHandler    = new DragEventHandler(entityRegistry.GetTransformsOfUnits(), mainCamera, canvas, inputManager);
-        selectionHandler    = new SelectionHandler(entityRegistry.GetSelectedEntities(), mainCamera);
+        dragEventHandler    = new DragEventHandler(entityRegistry.GetTransformsOfUnits(), cameraController.Camera, canvas, inputManager);
+        selectionHandler    = new SelectionHandler(entityRegistry.GetSelectedEntities(), cameraController.Camera);
 
         selectionIndicatorFactory   = new SelectionIndicatorFactory();
         buildingFactory             = new BuildingFactory(selectionIndicatorFactory);
         unitFactory                 = new UnitFactory(selectionIndicatorFactory);
 
-        healthBarGenerator = new HealthBarGenerator(canvas.transform, mainCamera);
+        healthBarGenerator = new HealthBarGenerator(canvas.transform, cameraController.Camera);
         unitGenerator = new UnitGenerator(unitFactory, entityRegistry);
         unitGenerator.OnUnitGenerated += healthBarGenerator.GenerateAndSetTargetUnit;
 
