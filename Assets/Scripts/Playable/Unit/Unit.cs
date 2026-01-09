@@ -3,7 +3,7 @@ using UnityEngine.AI;
 
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class Unit : Playable, IDamageable, ITargetor, ITarget
+public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
 {
     // State Machine
     private UnitStateMachine stateMachine;
@@ -42,7 +42,7 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget
         this.data = data;
 
         blackBoard = new BlackBoard(data, coroutineExecutor);
-        stateMachine = new UnitStateMachine(animator, agent, blackBoard);
+        stateMachine = new UnitStateMachine(this, blackBoard);
 
         healthSystem = new HealthSystem(data.MaxHealth);
 
@@ -73,18 +73,58 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget
         stateMachine.ChangeState<UnitMoveState>();
     }
 
+    #region Transform
+    // Transform
     public Vector3 GetPosition() => transform.position;
-    public IHealthSystem GetHealthSystem() => healthSystem;
-
-    public void MoveTo(Vector3 destination)
+    // TODO: Make rotation smoothe
+    public void LookAt(Vector3 target)
     {
+        Vector3 direction = target - transform.position;
+        direction.y = 0f;
+
+        float yaw = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0f, yaw, 0f);
+    }
+    #endregion
+
+    #region NavMeshAgent
+    // NavMesh Agent
+    public void SetDestination(Vector3 destination)
+    {
+        agent.isStopped = false;
         agent?.SetDestination(destination);
     }
+    public void ClearDestination() { agent.isStopped = true; }
+    public float GetRemainingDistance() => agent.remainingDistance;
+    public bool HasArrived() => !agent.pathPending && agent.remainingDistance <= agent.stoppingDistance;
+    #endregion
 
+    #region Animator
+    // Animator
+    public void PlayAnimation(string stateName, int layer, float normalizedTime)
+    {
+        animator.Play(stateName, layer, normalizedTime);
+    }
+    public void CrossFadeAnimation(string stateName, float normalizedTransitionDuration, int layer)
+    {
+        animator.CrossFade(stateName, normalizedTransitionDuration, layer);
+    }
+
+    public bool IsAnimationInProgress(string stateName, int layer = 0)
+    {
+        var info = animator.GetCurrentAnimatorStateInfo(layer);
+        return info.IsName(stateName) && info.normalizedTime < 1f;
+    }
+    #endregion
+
+    #region HealthSystem
+    // Health System
+    public IHealthSystem GetHealthSystem() => healthSystem;
     public void GetDamaged(int damage)
     {
         healthSystem.GetDamaged(damage);
     }
+    #endregion
 
     public EntityData GetData()
     {

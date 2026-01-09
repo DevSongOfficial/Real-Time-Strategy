@@ -43,11 +43,11 @@ public abstract class StateMachineBase
 
 public sealed class UnitStateMachine : StateMachineBase
 {
-    public UnitStateMachine(Animator animator, NavMeshAgent agent, BlackBoard blackBoard)
+    public UnitStateMachine(IUnitStateContext stateContext, BlackBoard blackBoard)
     {
-        RegisterState(new UnitIdleState(this, blackBoard, animator));
-        RegisterState(new UnitMoveState(this, blackBoard, agent, animator));
-        RegisterState(new UnitAttackState(this, blackBoard, animator));
+        RegisterState(new UnitIdleState(this, blackBoard, stateContext));
+        RegisterState(new UnitMoveState(this, blackBoard, stateContext));
+        RegisterState(new UnitAttackState(this, blackBoard, stateContext));
 
         // Initial State
         ChangeState<UnitIdleState>();

@@ -5,17 +5,17 @@ using System.Security.Cryptography.X509Certificates;
 
 public class UnitIdleState : UnitStateBase
 {
-    private Animator animator;
-
-    public UnitIdleState(UnitStateMachine stateMachine, BlackBoard blackBoard, Animator animator)
+    private IUnitStateContext stateContext;
+    public UnitIdleState(UnitStateMachine stateMachine, BlackBoard blackBoard, IUnitStateContext stateContext)
         : base(stateMachine, blackBoard)
     {
-        this.animator = animator;
+        this.stateContext = stateContext;
+
     }
 
     public override void Enter()
     {
-        animator.CrossFade("Breathing Idle", 0.05f, 0);
+        stateContext.CrossFadeAnimation("Breathing Idle", 0.05f, 0);
     }
 
     public override void Exit()

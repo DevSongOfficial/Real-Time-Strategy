@@ -3,28 +3,25 @@ using UnityEngine.AI;
 
 public class UnitMoveState : UnitStateBase
 {
-    private NavMeshAgent agent;
-    private Animator animator;
+    private IUnitStateContext stateContext;
 
-    public UnitMoveState(UnitStateMachine stateMachine, BlackBoard blackBoard, NavMeshAgent agent, Animator animator)
+    public UnitMoveState(UnitStateMachine stateMachine, BlackBoard blackBoard, IUnitStateContext stateContext)
         : base(stateMachine, blackBoard)
     {
-        this.agent = agent;
-        this.animator = animator;
+        this.stateContext = stateContext;
     }
 
     public override void Enter()
     {
-        agent.isStopped = false;
-        agent.SetDestination(blackBoard.target.GetPosition());
+        stateContext.SetDestination(blackBoard.target.GetPosition());
 
-        if(stateMachine.PreviousState != stateMachine.CurrentState)
-            animator.CrossFade("Run", 0.1f, 0);
+        if (stateMachine.PreviousState != stateMachine.CurrentState)
+            stateContext.CrossFadeAnimation("Run", 0.1f, 0);
     }
 
     public override void Exit()
     {
-        agent.isStopped = true;
+        stateContext.ClearDestination();
     }
 
     public override void Update()
@@ -33,14 +30,15 @@ public class UnitMoveState : UnitStateBase
 
         if (!blackBoard.target.IsGround)
         {
-            var contactDistance = blackBoard.target.Entity.GetData().RadiusOnTerrain + blackBoard.BaseData.RadiusOnTerrain;
-            agent.SetDestination(blackBoard.target.GetPosition());
+            stateContext.SetDestination(blackBoard.target.GetPosition());
 
-            if (agent.remainingDistance - contactDistance * 0.5f < blackBoard.BaseData.Combat.AttackCooldown)
+            var contactDistance = blackBoard.target.Entity.GetData().RadiusOnTerrain + blackBoard.BaseData.RadiusOnTerrain;
+            if (stateContext.GetRemainingDistance()- contactDistance * 0.5f < blackBoard.BaseData.Combat.AttackRange)
             {
                 if (blackBoard.target.Entity is IDamageable)
                     if (blackBoard.attackCooldown <= 0)
                     {
+                        stateContext.LookAt(blackBoard.target.GetPosition());
                         stateMachine.ChangeState<UnitAttackState>();
                     }
 
@@ -50,7 +48,7 @@ public class UnitMoveState : UnitStateBase
         }
         else
         {
-            if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+            if (stateContext.HasArrived())
                 stateMachine.ChangeState<UnitIdleState>();
         }
     }

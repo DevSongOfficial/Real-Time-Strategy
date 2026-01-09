@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class UnitAttackState : UnitStateBase
 {
-    private Animator animator;
-    public UnitAttackState(UnitStateMachine stateMachine, BlackBoard blackBoard, Animator animator)
+    private IUnitStateContext stateContext;
+
+    public UnitAttackState(UnitStateMachine stateMachine, BlackBoard blackBoard, IUnitStateContext stateContext)
         : base(stateMachine, blackBoard) 
     {
-        this.animator = animator;
-
+        this.stateContext = stateContext;
     }
 
     public override void Enter()
@@ -29,7 +29,7 @@ public class UnitAttackState : UnitStateBase
 
     private IEnumerator AttackRoutine(IDamageable target)
     {
-        animator.Play(blackBoard.BaseData.Combat.Animation, 0, 0f);
+        stateContext.PlayAnimation(blackBoard.BaseData.Combat.Animation, 0, 0f);
         blackBoard.attackCooldown = blackBoard.BaseData.Combat.AttackCooldown;
 
         yield return new WaitForSeconds(blackBoard.BaseData.Combat.WindupTime);
@@ -37,8 +37,7 @@ public class UnitAttackState : UnitStateBase
 
         yield return null;
 
-        while (animator.GetCurrentAnimatorStateInfo(0).IsName(blackBoard.BaseData.Combat.Animation) &&
-           animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
+        while (stateContext.IsAnimationInProgress(blackBoard.BaseData.Combat.Animation, 0))
         {
             yield return null;
         }
