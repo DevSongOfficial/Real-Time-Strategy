@@ -100,7 +100,7 @@ public sealed class PlacementPresenter
         placementMode = PlacementMode.Idle;
 
         // Setup Building.
-        var building = buildingFactory.Create(selectedBuildingData);
+        var building = buildingFactory.Create(selectedBuildingData, Player.Team);
         building.SetPosition(snappedPosition);
 
 

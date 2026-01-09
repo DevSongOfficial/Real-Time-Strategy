@@ -17,7 +17,7 @@ public class BuildingFactory : PlayableAbsFactory<Building>, IBuildingPreviewFac
         this.selectionIndicatorFactory = selectionIndicatorFactory;
     }
 
-    public override Building Create(EntityData data)
+    public override Building Create(EntityData data, Team team)
     {
         var prefab = data.Prefab.GetComponent<Building>();
         var building = GameObject.Instantiate<Building>(prefab);

@@ -80,13 +80,12 @@ public class SelectionHandler
                 if (selectedEntities[i] is ITargetor targetor)
                     targetor.SetTarget(new Target(slots[i]));
         }
-        else
+        else // When the target is entity
         {
             foreach (var unit in selectedEntities)
-                if (unit is ITargetor targetor)
+                if (unit is ITargetor targetor && targetor.GetTeam() != target.Entity.GetTeam())
                     targetor.SetTarget(target);
         }
-
     }
 
     // Select an entity to control. (Mouse 0)

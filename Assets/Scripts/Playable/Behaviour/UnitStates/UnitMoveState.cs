@@ -44,7 +44,6 @@ public class UnitMoveState : UnitStateBase
 
                 // else Interact with the object;
             }
-
         }
         else
         {

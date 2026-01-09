@@ -18,6 +18,9 @@ public sealed class Player : MonoBehaviour
     [SerializeField] private Grid grid;
     [SerializeField] private Mesh quadMesh;
 
+    // Team
+    public static Team Team = Team.Green;
+
     // Entity Regsitry includes diffrent type of entity containers.
     private EntityRegistry entityRegistry;
 

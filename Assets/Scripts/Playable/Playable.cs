@@ -2,6 +2,7 @@ using UnityEngine;
 
 public enum Team
 {
+    None, // Neutral
     Red,
     Green,
     Blue,
@@ -21,6 +22,8 @@ public interface ITransformProvider
 public abstract class Playable : MonoBehaviour, ISelectable, ITransformProvider
 {
     protected EntityData data;
+    protected Team team;
+
 
     public abstract void OnSelected();
     public abstract void OnDeselected();

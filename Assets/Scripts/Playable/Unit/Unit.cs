@@ -5,6 +5,8 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
 {
+    public Team GetTeam() => team;
+
     // State Machine
     private UnitStateMachine stateMachine;
     private BlackBoard blackBoard;
@@ -37,16 +39,16 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
         PositionDeltaY = collider.bounds.extents.y;
     }
 
-    public Unit SetUp(EntityData data, GameObject selectionIndicator)
+    public Unit SetUp(EntityData data, Team team, GameObject selectionIndicator)
     {
         this.data = data;
+        this.team = team;
+        this.selectionIndicator = selectionIndicator;
 
         blackBoard = new BlackBoard(data, coroutineExecutor);
         stateMachine = new UnitStateMachine(this, blackBoard);
 
         healthSystem = new HealthSystem(data.MaxHealth);
-
-        this.selectionIndicator = selectionIndicator;
 
         return this;
     }
@@ -60,6 +62,8 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
     {
         selectionIndicator.SetActive(false);
         selectionIndicator.SetActive(true);
+
+        Debug.Log(GetTeam());
     }
 
     public override void OnDeselected()
