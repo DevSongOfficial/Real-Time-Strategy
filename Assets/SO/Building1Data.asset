@@ -15,8 +15,8 @@ MonoBehaviour:
   <Team>k__BackingField: 0
   <DisplayName>k__BackingField: Building 1
   <RadiusOnTerrain>k__BackingField: 3
+  <SelectionIndicatorPositionOffset>k__BackingField: {x: 0, y: 0, z: 0}
   <Prefab>k__BackingField: {fileID: 6404431195190590083, guid: e1e49127e964eaa46aca0de9452cc1c6, type: 3}
   <MaxHealth>k__BackingField: 100
-  <AttackDamage>k__BackingField: 0
-  <AttackRange>k__BackingField: 0
+  <Combat>k__BackingField: {fileID: 11400000, guid: 6cb5b9cdf07257844966f082b6a892f4, type: 2}
   <CellSize>k__BackingField: {x: 1, y: 1}

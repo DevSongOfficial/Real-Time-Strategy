@@ -11,7 +11,5 @@ public class EntityData : ScriptableObject
     [field: SerializeField] public Transform Prefab { get; private set; }
 
     [field: SerializeField] public int MaxHealth { get; private set; }
-    [field: SerializeField] public int AttackDamage { get; private set; }
-    [field: SerializeField] public float AttackDalay { get; private set; } = 1f;
-    [field: SerializeField] public int AttackRange { get; private set; }
+    [field: SerializeField] public CombatData Combat { get; private set; }
 }

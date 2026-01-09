@@ -5,7 +5,7 @@ public class CoroutineExecutor : MonoBehaviour
 {
     private IEnumerator currentCoroutine;
     
-    public void ExecuteCoroutine(IEnumerator enumerator)
+    public void Execute(IEnumerator enumerator)
     {
         StopCurrentCoroutine();
 

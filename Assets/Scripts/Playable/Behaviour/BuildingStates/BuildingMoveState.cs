@@ -27,7 +27,7 @@ public class BuildingMoveState : BuildingStateBase
     {
         if (!blackBoard.target.IsGround)
         {
-            var contactDistance = blackBoard.target.Entity.GetData().RadiusOnTerrain + blackBoard.data.RadiusOnTerrain;
+            var contactDistance = blackBoard.target.Entity.GetData().RadiusOnTerrain + blackBoard.BaseData.RadiusOnTerrain;
             agent.SetDestination(blackBoard.target.GetPosition());
 
             if (agent.remainingDistance < contactDistance * 0.5f)

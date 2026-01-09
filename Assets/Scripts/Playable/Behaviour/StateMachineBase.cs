@@ -74,7 +74,7 @@ public class HybridBuildingStateMachine : BuildingStateMachine
 
 public class BlackBoard
 {
-    public EntityData data;
+    public EntityData BaseData { get; private set; }
 
     public Target target;
     public float attackCooldown; // time left to attack
@@ -83,7 +83,7 @@ public class BlackBoard
 
     public BlackBoard(EntityData data, CoroutineExecutor coroutineExecutor)
     {
-        this.data = data;
+        this.BaseData = data;
         this.coroutineExecutor = coroutineExecutor;
     }
 }

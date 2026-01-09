@@ -13,7 +13,6 @@ public class CameraController : MonoBehaviour
     [Header("Camera Zoom In & Out")]
     [SerializeField] private float zoomSpeed = 50f;
     [Tooltip("Z position of Camera Rig")]
-    [SerializeField] private float baseZ = -120f;
     [SerializeField] private float minZ = -115f;
     [SerializeField] private float maxZ = -130f;
 
