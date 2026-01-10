@@ -12,6 +12,7 @@ public interface ISelectable // Selectable by mouse0 or keyboard or ... .
 {
     void OnSelected();
     void OnDeselected();
+    Team GetTeam();
 }
 
 public interface ITransformProvider
@@ -27,6 +28,8 @@ public abstract class Playable : MonoBehaviour, ISelectable, ITransformProvider
 
     public abstract void OnSelected();
     public abstract void OnDeselected();
+    public Team GetTeam() => team;
+
 
     public Transform GetTransform() { return transform; }
     public virtual void SetPosition(Vector3 position) { transform.position = position; }

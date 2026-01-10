@@ -8,8 +8,6 @@ public interface IDamageable
 public interface ITargetor
 {
     void SetTarget(Target target);
-    Team GetTeam();
-
 }
 
 public interface ITarget 

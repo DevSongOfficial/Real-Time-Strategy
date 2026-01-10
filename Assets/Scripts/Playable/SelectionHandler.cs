@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using UnityEngine;
 
 public struct Target
@@ -54,6 +56,8 @@ public class SelectionHandler
     private List<ISelectable> selectedEntities;
     private MoveMakerFactory moveMarkerFactory;
 
+    private Team currentSelectedTeam; // The team of the currently selected entity; this matters since it's not allowed to select multiple teams' units at a time.
+
     public SelectionHandler(List<ISelectable> selectedEntities, Camera camera, MoveMakerFactory moveMarkerFactory)
     {
         this.selectedEntities = selectedEntities;
@@ -89,7 +93,7 @@ public class SelectionHandler
         else // When the target is entity
         {
             foreach (var unit in selectedEntities)
-                if (unit is ITargetor targetor && targetor.GetTeam() != target.Entity.GetTeam())
+                if (unit is ITargetor targetor && unit.GetTeam() == Player.Team && Player.Team != target.Entity.GetTeam())
                     targetor.SetTarget(target);
         }
     }
@@ -118,10 +122,19 @@ public class SelectionHandler
 
     private void SelectEntity(ISelectable entity)
     {
-        if (!selectedEntities.Contains(entity))
-            selectedEntities.Add(entity);
+        if (selectedEntities.Contains(entity)) return;
 
+        if (currentSelectedTeam != entity.GetTeam())
+        {
+            if(currentSelectedTeam == Player.Team)
+                return;
+            else if(entity.GetTeam() == Player.Team)
+                DeselectAllUnits();
+        }
+
+        selectedEntities.Add(entity);
         entity.OnSelected();
+        currentSelectedTeam = entity.GetTeam();
     }
 
     private void DeselectUnit(ISelectable unit)
@@ -136,6 +149,17 @@ public class SelectionHandler
     {
         for (int i = selectedEntities.Count - 1; i >= 0; i--)
             DeselectUnit(selectedEntities[i]);
+
+        currentSelectedTeam = Team.None;
+    }
+
+    // Return true if selectedEntities contains any entity whose team is input value.
+    private bool HasSelectedTeam(Team team)
+    {
+        foreach (var entity in selectedEntities)
+            if (entity.GetTeam() == team) return true;
+
+        return false;
     }
 
     private List<Vector3> BuildGridSlots(Vector3 target, int count, float spacing)

@@ -5,8 +5,6 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
 {
-    public Team GetTeam() => team;
-
     // State Machine
     private UnitStateMachine stateMachine;
     private BlackBoard blackBoard;

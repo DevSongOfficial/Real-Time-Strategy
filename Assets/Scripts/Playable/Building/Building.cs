@@ -87,6 +87,4 @@ public class Building : Playable, ITarget
         enabled = false;
         gameObject.SetLayer(Layer.IgnoreCollision);
     }
-
-    public Team GetTeam() => team;
 }
