@@ -381,7 +381,6 @@ MonoBehaviour:
   edgeSize: 100
   movementSpeed: 3
   zoomSpeed: 50
-  baseZ: -115
   minZ: -130
   maxZ: -115
 --- !u!1 &330585543
@@ -823,7 +822,7 @@ Transform:
   m_GameObject: {fileID: 498599569}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 25.6, y: 1.2, z: 33.54}
+  m_LocalPosition: {x: 25.6, y: 0.592, z: 33.54}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []

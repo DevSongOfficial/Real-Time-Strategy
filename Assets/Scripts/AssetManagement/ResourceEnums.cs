@@ -8,6 +8,7 @@ namespace CustomResourceManagement
 	}
 	public struct Prefabs{
 		public enum Effect{
+			MoveMarker,
 			SelectionIndicator,
 		}
 		public struct Playable{

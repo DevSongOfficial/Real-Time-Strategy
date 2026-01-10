@@ -52,11 +52,13 @@ public class SelectionHandler
 {
     private Camera camera;
     private List<ISelectable> selectedEntities;
+    private MoveMakerFactory moveMarkerFactory;
 
-    public SelectionHandler(List<ISelectable> selectedEntities, Camera camera)
+    public SelectionHandler(List<ISelectable> selectedEntities, Camera camera, MoveMakerFactory moveMarkerFactory)
     {
         this.selectedEntities = selectedEntities;
         this.camera = camera;
+        this.moveMarkerFactory = moveMarkerFactory; 
     }
     
     // Select our units' target to attack or move towards. (Mouse 1)
@@ -70,6 +72,10 @@ public class SelectionHandler
 
         if (target.IsGround)
         {
+            // Show destination marker.
+            moveMarkerFactory.Spawn(target.GetPosition());
+
+            // Make slots for the formation to move
             int count = 0;
             foreach(var unit in selectedEntities)
                 if (unit is ITargetor) 

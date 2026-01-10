@@ -37,6 +37,7 @@ public sealed class Player : MonoBehaviour
     private BuildingFactory buildingFactory;
     private UnitFactory unitFactory;
     private SelectionIndicatorFactory selectionIndicatorFactory;
+    private MoveMakerFactory moveMarkerFactory;
 
     // Grid System for building placement.
     private GridSystem gridSystem;
@@ -56,12 +57,13 @@ public sealed class Player : MonoBehaviour
 
         entityRegistry = new EntityRegistry();
 
-        dragEventHandler    = new DragEventHandler(entityRegistry.GetTransformsOfUnits(), cameraController.Camera, canvas, inputManager);
-        selectionHandler    = new SelectionHandler(entityRegistry.GetSelectedEntities(), cameraController.Camera);
-
         selectionIndicatorFactory   = new SelectionIndicatorFactory();
+        moveMarkerFactory            = new MoveMakerFactory();
         buildingFactory             = new BuildingFactory(selectionIndicatorFactory);
         unitFactory                 = new UnitFactory(selectionIndicatorFactory);
+
+        dragEventHandler    = new DragEventHandler(entityRegistry.GetTransformsOfUnits(), cameraController.Camera, canvas, inputManager);
+        selectionHandler    = new SelectionHandler(entityRegistry.GetSelectedEntities(), cameraController.Camera, moveMarkerFactory);
 
         healthBarGenerator = new HealthBarGenerator(canvas.transform, cameraController.Camera);
         unitGenerator = new UnitGenerator(unitFactory, entityRegistry);

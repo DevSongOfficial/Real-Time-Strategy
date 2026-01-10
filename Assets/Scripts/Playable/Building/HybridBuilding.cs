@@ -49,6 +49,4 @@ public class HybridBuilding : Building, ITargetor
         agent.enabled = false;
         base.MakeRenderOnly();
     }
-
-    public Team GetTeam() => team;
 }
