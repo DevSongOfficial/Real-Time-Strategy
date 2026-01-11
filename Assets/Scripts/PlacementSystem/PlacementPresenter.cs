@@ -20,6 +20,7 @@ public enum PlacementMode { Idle, Placing }
 public sealed class PlacementPresenter
 {
     private readonly IPlacementView placementView;
+    private readonly CommandPanel commandPanel;
     private readonly BuildingFactory buildingFactory;
     private readonly GridSystem gridSystem;
 
@@ -31,16 +32,18 @@ public sealed class PlacementPresenter
     private Vector3 snappedPosition;
     private Quaternion rotation;
 
-    public PlacementPresenter(IPlacementView placementView, BuildingFactory buildingFactory, GridSystem gridSysetm)
+    public PlacementPresenter(IPlacementView placementView, CommandPanel commandPanel, BuildingFactory buildingFactory, GridSystem gridSystem)
     {
         this.placementView = placementView;
         this.buildingFactory = buildingFactory;
-        this.gridSystem = gridSysetm;
+        this.commandPanel = commandPanel;
+        this.gridSystem = gridSystem;
     }
 
     public void Enter()
     {
         placementView.ToggleButtonPanel(true);
+        commandPanel.OnBuildingButtonClicked += SelectBuilding;
         placementView.OnBuildingSelected += SelectBuilding;
     }
 

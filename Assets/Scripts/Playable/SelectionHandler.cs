@@ -53,15 +53,18 @@ public struct Target
 public class SelectionHandler
 {
     private Camera camera;
+    private CommandPanel commandPanel;
     private List<ISelectable> selectedEntities;
     private MoveMakerFactory moveMarkerFactory;
 
+
     private Team currentSelectedTeam; // The team of the currently selected entity; this matters since it's not allowed to select multiple teams' units at a time.
 
-    public SelectionHandler(List<ISelectable> selectedEntities, Camera camera, MoveMakerFactory moveMarkerFactory)
+    public SelectionHandler(List<ISelectable> selectedEntities, Camera camera, CommandPanel commandPanel, MoveMakerFactory moveMarkerFactory)
     {
         this.selectedEntities = selectedEntities;
         this.camera = camera;
+        this.commandPanel = commandPanel;
         this.moveMarkerFactory = moveMarkerFactory; 
     }
     
@@ -132,8 +135,10 @@ public class SelectionHandler
                 DeselectAllUnits();
         }
 
+        // Select entity.
         selectedEntities.Add(entity);
         entity.OnSelected();
+        commandPanel.OnEntitySelected(entity);
         currentSelectedTeam = entity.GetTeam();
     }
 

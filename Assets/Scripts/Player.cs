@@ -14,6 +14,7 @@ public sealed class Player : MonoBehaviour
     [Header("Scene Refs")]
     [SerializeField] private CameraController cameraController;
     [SerializeField] private Canvas canvas;
+    [SerializeField] private CommandPanel commandPanel;
     [SerializeField] private PlacementView placementView;
     [SerializeField] private Grid grid;
     [SerializeField] private Mesh quadMesh;
@@ -55,19 +56,20 @@ public sealed class Player : MonoBehaviour
         inputManager = new InputManager(cameraController.Camera);
         cameraController.Setup(inputManager);
 
-        entityRegistry = new EntityRegistry();
-
+        entityRegistry              = new EntityRegistry();
         selectionIndicatorFactory   = new SelectionIndicatorFactory();
-        moveMarkerFactory            = new MoveMakerFactory();
-        buildingFactory             = new BuildingFactory(selectionIndicatorFactory);
-        unitFactory                 = new UnitFactory(selectionIndicatorFactory);
+        healthBarGenerator          = new HealthBarGenerator(canvas.transform, cameraController.Camera);
+        
+        unitFactory                     = new UnitFactory(selectionIndicatorFactory);
+        unitGenerator                   = new UnitGenerator(unitFactory, entityRegistry);
+        unitGenerator.OnUnitGenerated   += healthBarGenerator.GenerateAndSetTargetUnit;
+
+        moveMarkerFactory           = new MoveMakerFactory();
+        buildingFactory             = new BuildingFactory(unitGenerator, selectionIndicatorFactory);
 
         dragEventHandler    = new DragEventHandler(entityRegistry.GetTransformsOfUnits(), cameraController.Camera, canvas, inputManager);
-        selectionHandler    = new SelectionHandler(entityRegistry.GetSelectedEntities(), cameraController.Camera, moveMarkerFactory);
+        selectionHandler    = new SelectionHandler(entityRegistry.GetSelectedEntities(), cameraController.Camera, commandPanel, moveMarkerFactory);
 
-        healthBarGenerator = new HealthBarGenerator(canvas.transform, cameraController.Camera);
-        unitGenerator = new UnitGenerator(unitFactory, entityRegistry);
-        unitGenerator.OnUnitGenerated += healthBarGenerator.GenerateAndSetTargetUnit;
 
         placementView.SetUp(buildingFactory);
         placementView.ToggleUIPreview(false);
@@ -75,7 +77,7 @@ public sealed class Player : MonoBehaviour
         gridSystem = new GridSystem(grid, quadMesh);
 
         normalMode = new NormalMode(inputManager, selectionHandler, dragEventHandler);
-        buildMode = new BuildMode(inputManager, placementView, buildingFactory, gridSystem);
+        buildMode = new BuildMode(inputManager, commandPanel, placementView, buildingFactory, gridSystem);
         SetMode(normalMode);
     }
 

@@ -11,10 +11,12 @@ public interface IBuildingPreviewFactory
 public class BuildingFactory : PlayableAbsFactory<Building>, IBuildingPreviewFactory
 {
     private SelectionIndicatorFactory selectionIndicatorFactory;
+    private UnitGenerator unitGenerator;
 
-    public BuildingFactory(SelectionIndicatorFactory selectionIndicatorFactory)
+    public BuildingFactory(UnitGenerator unitGenerator, SelectionIndicatorFactory selectionIndicatorFactory)
     {
         this.selectionIndicatorFactory = selectionIndicatorFactory;
+        this.unitGenerator = unitGenerator;
     }
 
     public override Building Create(EntityData data, Team team)
@@ -31,6 +33,10 @@ public class BuildingFactory : PlayableAbsFactory<Building>, IBuildingPreviewFac
         selectionIndicator.gameObject.SetActive(false);
 
         building.SetUp(data, selectionIndicator.gameObject);
+
+        // For those spawning units e.g., barracks
+        if (building is IUnitGenerator unitGenerator)
+            unitGenerator.Setup(this.unitGenerator);
 
         return building;
     }

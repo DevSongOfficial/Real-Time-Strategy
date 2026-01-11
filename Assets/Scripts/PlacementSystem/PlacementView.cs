@@ -34,7 +34,7 @@ namespace BuildingSystem
         {
             button1.OnButtonClicked += (EntityData data) => OnBuildingSelected?.Invoke((BuildingData)data);
             button2.OnButtonClicked += (EntityData data) => OnBuildingSelected?.Invoke((BuildingData)data);
-            button3.OnButtonClicked += (EntityData data) => OnBuildingSelected?.Invoke((BuildingData)data);
+            button3.OnButtonClicked += (EntityData data) => OnBuildingSelected?.Invoke((BarracksData)data);
         }
 
         public void ToggleButtonPanel(bool enable)

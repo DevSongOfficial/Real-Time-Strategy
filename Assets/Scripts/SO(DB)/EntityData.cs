@@ -11,4 +11,6 @@ public class EntityData : ScriptableObject
 
     [field: SerializeField] public int MaxHealth { get; private set; }
     [field: SerializeField] public CombatData Combat { get; private set; }
+    
+    
 }
