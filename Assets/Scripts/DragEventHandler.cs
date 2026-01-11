@@ -9,6 +9,7 @@ public sealed class DragEventHandler
     private Camera camera;
     private RectTransform selectionBox;
 
+    private bool isDragging;
     private Vector2 startPosition;
     private Vector2 endPosition;
 
@@ -34,10 +35,13 @@ public sealed class DragEventHandler
     // This function should be called every frame to handle drag input.
     public void HandleDragEvent()
     {
-        if (inputManager.GetMouseButtonDown(0))
+        if (inputManager.GetMouseButtonDown(0) && inputManager.IsPointerInClickableArea())
         {
             startPosition = inputManager.GetMousePosition();
+            isDragging = true;
         }
+
+        if (!isDragging) return;
 
         if (inputManager.GetMouseButton(0))
         {
@@ -52,6 +56,7 @@ public sealed class DragEventHandler
 
             startPosition = Vector2.zero;
             endPosition = Vector2.zero;
+            isDragging = false;
 
             DrawSelectionBox();
         }

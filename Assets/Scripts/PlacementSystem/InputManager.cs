@@ -6,9 +6,12 @@ public sealed class InputManager
     private Vector3 lastPosition;
     private Camera camera;
 
-    public InputManager(Camera camera)
+    private RectTransform nonClickableArea;
+
+    public InputManager(Camera camera, RectTransform nonClickableArea)
     {
         this.camera = camera;
+        this.nonClickableArea = nonClickableArea;
     }
 
     public bool GetMouseButton(int button)
@@ -74,6 +77,16 @@ public sealed class InputManager
     public bool IsPointerOverUI()
     {
         return EventSystem.current.IsPointerOverGameObject();
+    }
+
+    public bool IsPointerOverUI(RectTransform transform)
+    {
+        return RectTransformUtility.RectangleContainsScreenPoint(transform, Input.mousePosition);
+    }
+
+    public bool IsPointerInClickableArea()
+    {
+        return !IsPointerOverUI(nonClickableArea);
     }
 }
 

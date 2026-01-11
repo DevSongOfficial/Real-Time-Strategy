@@ -5,14 +5,10 @@ using UnityEngine;
 public interface IPlacementView
 {
     void ToggleUIPreview(bool enable);
-    void ToggleButtonPanel(bool enable);
     void ToggleBuildingPreview(bool enable, BuildingData selectedBuilding = null);
     void SetMouseIndicatorPosition(Vector3 position);
     void SetCellPosition(Vector3 position);
     void SetBuildingPreviewPosition(Vector3 position);
-
-    // View -> Presenter
-    event Action<BuildingData> OnBuildingSelected;
 }
 
 public enum PlacementMode { Idle, Placing }
@@ -32,6 +28,8 @@ public sealed class PlacementPresenter
     private Vector3 snappedPosition;
     private Quaternion rotation;
 
+    public event Action OnPlacementFinished;
+
     public PlacementPresenter(IPlacementView placementView, CommandPanel commandPanel, BuildingFactory buildingFactory, GridSystem gridSystem)
     {
         this.placementView = placementView;
@@ -42,16 +40,14 @@ public sealed class PlacementPresenter
 
     public void Enter()
     {
-        placementView.ToggleButtonPanel(true);
-        commandPanel.OnBuildingButtonClicked += SelectBuilding;
-        placementView.OnBuildingSelected += SelectBuilding;
+
     }
 
     public void Exit()
     {
-        placementView.ToggleButtonPanel(false);
         Cancel();
-        placementView.OnBuildingSelected -= SelectBuilding;
+
+
     }
 
     public void UpdatePreview(Vector3 mouseWorld)
@@ -114,6 +110,8 @@ public sealed class PlacementPresenter
         placementView.ToggleBuildingPreview(false);
 
         selectedBuildingData = null;
+
+        OnPlacementFinished?.Invoke();
     }
 
     public void Cancel()
@@ -126,5 +124,7 @@ public sealed class PlacementPresenter
         placementView.ToggleBuildingPreview(false);
 
         selectedBuildingData = null;
+
+        OnPlacementFinished?.Invoke();
     }
 }

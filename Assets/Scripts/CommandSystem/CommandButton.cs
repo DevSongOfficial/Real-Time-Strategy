@@ -14,8 +14,6 @@ public class CommandButton : MonoBehaviour
 
     // Current Button Info
     private CommandType commandType;
-    private Sprite icon;
-    private string tooltip;
     private EntityData entityData; // entity to generate.
 
     public void Setup(CommandPanel commandPanel)
@@ -32,27 +30,19 @@ public class CommandButton : MonoBehaviour
     public void Refresh(CommandType commandType, Sprite icon, string tooltip, EntityData entityToGenerate)
     {
         this.commandType = commandType;
-        this.icon = icon;
-        this.tooltip = tooltip;
+        image.sprite = icon;
+        textMeshPro.text = tooltip;
         entityData = entityToGenerate;
 
-        RefreshButton();
+        button.onClick.AddListener(OnClicked);
     }
 
     public void Disable()
     {
-        icon = null;
-        tooltip = "Not Assigned";
+        image.sprite = null;
+        textMeshPro.text = "Not Assigned";
 
-        RefreshButton();
-    }
-
-    private void RefreshButton()
-    {
-        image.sprite = icon;
-        textMeshPro.text = tooltip;
-
-        button.onClick.AddListener(OnClicked);
+        button.onClick.RemoveListener(OnClicked);
     }
 
     private void OnClicked()
@@ -61,7 +51,6 @@ public class CommandButton : MonoBehaviour
 
         if(commandType == CommandType.TrainUnit)
         {
-
         }
         else if(commandType == CommandType.Build)
         {

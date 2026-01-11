@@ -10,16 +10,6 @@ namespace BuildingSystem
     {
         [SerializeField] private Transform mouseIndicator;
 
-
-        [Header("UI(Temp)")]
-        [SerializeField] private Image buttonPanel;
-        [SerializeField] private EntityCreateButton button1;
-        [SerializeField] private EntityCreateButton button2;
-        [SerializeField] private EntityCreateButton button3;
-
-        // Events
-        public event System.Action<BuildingData> OnBuildingSelected;
-
         private IBuildingPreviewFactory factory;
         private Building buildingPreview; // Building that is created temporarily for preview.
 
@@ -28,18 +18,6 @@ namespace BuildingSystem
         public void SetUp(IBuildingPreviewFactory factory)
         {
             this.factory = factory;
-        }
-
-        private void Awake()
-        {
-            button1.OnButtonClicked += (EntityData data) => OnBuildingSelected?.Invoke((BuildingData)data);
-            button2.OnButtonClicked += (EntityData data) => OnBuildingSelected?.Invoke((BuildingData)data);
-            button3.OnButtonClicked += (EntityData data) => OnBuildingSelected?.Invoke((BarracksData)data);
-        }
-
-        public void ToggleButtonPanel(bool enable)
-        {
-            buttonPanel.gameObject.SetActive(enable);
         }
 
         public void ToggleUIPreview(bool enable)

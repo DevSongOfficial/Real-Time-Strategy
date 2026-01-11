@@ -12,10 +12,12 @@ public sealed class Player : MonoBehaviour
     
 
     [Header("Scene Refs")]
-    [SerializeField] private CameraController cameraController;
     [SerializeField] private Canvas canvas;
-    [SerializeField] private CommandPanel commandPanel;
+    [SerializeField] private RectTransform nonClickableArea;
     [SerializeField] private PlacementView placementView;
+    [SerializeField] private CommandPanel commandPanel;
+
+    [SerializeField] private CameraController cameraController;
     [SerializeField] private Grid grid;
     [SerializeField] private Mesh quadMesh;
 
@@ -51,9 +53,11 @@ public sealed class Player : MonoBehaviour
     private ModeBase normalMode;
     private ModeBase buildMode;
 
+    private PlacementPresenter placementPresenter;
+
     private void Awake()
     {
-        inputManager = new InputManager(cameraController.Camera);
+        inputManager = new InputManager(cameraController.Camera, nonClickableArea);
         cameraController.Setup(inputManager);
 
         entityRegistry              = new EntityRegistry();
@@ -73,12 +77,16 @@ public sealed class Player : MonoBehaviour
 
         placementView.SetUp(buildingFactory);
         placementView.ToggleUIPreview(false);
-
-        gridSystem = new GridSystem(grid, quadMesh);
+        gridSystem          = new GridSystem(grid, quadMesh);
+        placementPresenter  = new PlacementPresenter(placementView, commandPanel, buildingFactory, gridSystem);
+        placementPresenter.OnPlacementFinished += () => SetMode(normalMode);
 
         normalMode = new NormalMode(inputManager, selectionHandler, dragEventHandler);
-        buildMode = new BuildMode(inputManager, commandPanel, placementView, buildingFactory, gridSystem);
+        buildMode  = new BuildMode(inputManager, placementPresenter);
         SetMode(normalMode);
+
+        commandPanel.OnBuildingButtonClicked += OnStartBuilding;
+
     }
 
     private void Start()
@@ -90,11 +98,6 @@ public sealed class Player : MonoBehaviour
     {
         currentMode?.Update();
         currentMode?.HandleInput();
-
-        if (inputManager.GetKeyDown(KeyCode.B))
-        {
-            SetMode(currentMode == normalMode ? buildMode : normalMode);
-        }
     }
 
     private void SetMode(ModeBase newMode)
@@ -102,5 +105,11 @@ public sealed class Player : MonoBehaviour
         currentMode?.Exit();
         currentMode = newMode;
         currentMode.Enter();
+    }
+
+    private void OnStartBuilding(BuildingData data)
+    {
+        SetMode(buildMode);
+        placementPresenter.SelectBuilding(data);
     }
 }
