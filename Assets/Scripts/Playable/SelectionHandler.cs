@@ -102,35 +102,38 @@ public class SelectionHandler
     }
 
     // Select an entity to control. (Mouse 0)
-    public void SelectEntity(Vector2 screenPos, bool additive)
+    public ISelectable SelectEntity(Vector2 screenPos, bool additive)
     {
         if (!additive) DeselectAllUnits();
 
         var ray = camera.ScreenPointToRay(screenPos);
         // TODO: Only allow selection of same team units.
         if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, Layer.Selectable.ToLayerMask()))
-            return;
+            return null;
 
         if (!hit.transform.parent.TryGetComponent(out ISelectable entity))
-            return;
+            return null;
 
-        SelectEntity(entity);
+        bool selectionSucceeded = SelectEntity(entity);
+        return selectionSucceeded ? entity : null;
     }
 
     public void SelectEntities(IEnumerable<ISelectable> entities)
     {
         foreach (var entity in entities)
-            SelectEntity(entity);
+        {
+            SelectEntity(entity);    
+        }
     }
 
-    private void SelectEntity(ISelectable entity)
+    private bool SelectEntity(ISelectable entity)
     {
-        if (selectedEntities.Contains(entity)) return;
+        if (selectedEntities.Contains(entity)) return false;
 
         if (currentSelectedTeam != entity.GetTeam())
         {
             if(currentSelectedTeam == Player.Team)
-                return;
+                return false;
             else if(entity.GetTeam() == Player.Team)
                 DeselectAllUnits();
         }
@@ -140,6 +143,8 @@ public class SelectionHandler
         entity.OnSelected();
         commandPanel.OnEntitySelected(entity);
         currentSelectedTeam = entity.GetTeam();
+
+        return true;
     }
 
     private void DeselectUnit(ISelectable unit)

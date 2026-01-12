@@ -33,7 +33,7 @@ public sealed class BuildMode : ModeBase
 
     public override void HandleInput()
     {
-        if (inputManager.IsPointerOverUI()) return;
+        if (!inputManager.IsPointerInClickableArea()) return;
 
         if (inputManager.GetMouseButtonDown(0))
             presenter.Place();

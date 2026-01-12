@@ -43,15 +43,27 @@ public abstract class StateMachineBase
 
 public sealed class UnitStateMachine : StateMachineBase
 {
+    public UnitIdleState IdleState { get; private set; }
+    public UnitMoveState MoveState { get; private set; }
+    public UnitAttackState AttackState { get; private set; }
+    public UnitConstructState ConstructState { get; private set; }
+
     public UnitStateMachine(IUnitStateContext stateContext, BlackBoard blackBoard)
     {
-        RegisterState(new UnitIdleState(this, blackBoard, stateContext));
-        RegisterState(new UnitMoveState(this, blackBoard, stateContext));
-        RegisterState(new UnitAttackState(this, blackBoard, stateContext));
+        IdleState = new UnitIdleState(this, blackBoard, stateContext);
+        MoveState = new UnitMoveState(this, blackBoard, stateContext);
+        AttackState = new UnitAttackState(this, blackBoard, stateContext);
+        ConstructState = new UnitConstructState(this, blackBoard, stateContext);
+
+        RegisterState(IdleState);
+        RegisterState(MoveState);
+        RegisterState(AttackState);
+        RegisterState(ConstructState);
 
         // Initial State
         ChangeState<UnitIdleState>();
     }
+
 }
 public class BuildingStateMachine : StateMachineBase
 {
@@ -76,8 +88,18 @@ public class BlackBoard
 {
     public EntityData BaseData { get; private set; }
 
+    // Events
+    public Action OnConstructionFinished;
+
+    // Move
     public Target target;
+    public UnitStateBase nextStateAfterMove; // some states require movement before conducting their logics.
+
+    // Attack
     public float attackCooldown; // time left to attack
+
+    // Construct building
+    public float constructionTime;
 
     public CoroutineExecutor coroutineExecutor;
 

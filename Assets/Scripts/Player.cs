@@ -64,22 +64,21 @@ public sealed class Player : MonoBehaviour
         selectionIndicatorFactory   = new SelectionIndicatorFactory();
         healthBarGenerator          = new HealthBarGenerator(canvas.transform, cameraController.Camera);
         
-        unitFactory                     = new UnitFactory(selectionIndicatorFactory);
-        unitGenerator                   = new UnitGenerator(unitFactory, entityRegistry);
-        unitGenerator.OnUnitGenerated   += healthBarGenerator.GenerateAndSetTargetUnit;
-
         moveMarkerFactory           = new MoveMakerFactory();
         buildingFactory             = new BuildingFactory(unitGenerator, selectionIndicatorFactory);
 
         dragEventHandler    = new DragEventHandler(entityRegistry.GetTransformsOfUnits(), cameraController.Camera, canvas, inputManager);
         selectionHandler    = new SelectionHandler(entityRegistry.GetSelectedEntities(), cameraController.Camera, commandPanel, moveMarkerFactory);
 
-
         placementView.SetUp(buildingFactory);
         placementView.ToggleUIPreview(false);
         gridSystem          = new GridSystem(grid, quadMesh);
-        placementPresenter  = new PlacementPresenter(placementView, commandPanel, buildingFactory, gridSystem);
-        placementPresenter.OnPlacementFinished += () => SetMode(normalMode);
+        placementPresenter  = new PlacementPresenter(placementView, commandPanel, buildingFactory, gridSystem, inputManager);
+        placementPresenter.OnPlacementFinished += (Vector3 finishedPosition) => SetMode(normalMode);
+        
+        unitFactory                     = new UnitFactory(selectionIndicatorFactory, placementPresenter);
+        unitGenerator                   = new UnitGenerator(unitFactory, entityRegistry);
+        unitGenerator.OnUnitGenerated   += healthBarGenerator.GenerateAndSetTargetUnit;
 
         normalMode = new NormalMode(inputManager, selectionHandler, dragEventHandler);
         buildMode  = new BuildMode(inputManager, placementPresenter);

@@ -5,10 +5,12 @@ using static CustomResourceManagement.Prefabs.Playable;
 public class UnitFactory : PlayableAbsFactory<Unit>
 {
     private SelectionIndicatorFactory selectionIndicatorFactory;
+    private IPlacementEvent placementEvent;
 
-    public UnitFactory(SelectionIndicatorFactory selectionIndicatorFactory)
+    public UnitFactory(SelectionIndicatorFactory selectionIndicatorFactory, IPlacementEvent placementEvent)
     {
         this.selectionIndicatorFactory = selectionIndicatorFactory;
+        this.placementEvent = placementEvent;
     }
     public override Unit Create(EntityData data, Team team)
     {
@@ -22,6 +24,6 @@ public class UnitFactory : PlayableAbsFactory<Unit>
         selectionIndicator.GetChild(0).localScale = (Vector3.one * data.RadiusOnTerrain).WithZ(1);
         selectionIndicator.gameObject.SetActive(false);
 
-        return unit.SetUp(data, team, selectionIndicator.gameObject);
+        return unit.SetUp(data, team, selectionIndicator.gameObject, placementEvent);
     }
 }

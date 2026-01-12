@@ -7,14 +7,11 @@ using UnityEngine.UI;
 public class CommandButton : MonoBehaviour
 {
     private CommandPanel commandPanel;
+    private Command command; // current command
 
     [SerializeField] private Button button;
     [SerializeField] private Image image;
     [SerializeField] private TextMeshProUGUI textMeshPro;
-
-    // Current Button Info
-    private CommandType commandType;
-    private EntityData entityData; // entity to generate.
 
     public void Setup(CommandPanel commandPanel)
     {
@@ -27,12 +24,12 @@ public class CommandButton : MonoBehaviour
             image = GetComponent<Image>();
     }
 
-    public void Refresh(CommandType commandType, Sprite icon, string tooltip, EntityData entityToGenerate)
+    public void Refresh(Command command)
     {
-        this.commandType = commandType;
-        image.sprite = icon;
-        textMeshPro.text = tooltip;
-        entityData = entityToGenerate;
+        this.command = command;
+
+        image.sprite = command.icon;
+        textMeshPro.text = command.tooltip;
 
         button.onClick.AddListener(OnClicked);
     }
@@ -49,12 +46,13 @@ public class CommandButton : MonoBehaviour
     {
         commandPanel.OnCommandButtonClicked?.Invoke();
 
-        if(commandType == CommandType.TrainUnit)
+        if(command.type == CommandType.TrainUnit)
         {
         }
-        else if(commandType == CommandType.Build)
+        else if(command.type == CommandType.Build)
         {
-            commandPanel.OnBuildingButtonClicked?.Invoke(entityData as BuildingData);
+            commandPanel.OnBuildingButtonClicked?.Invoke(command.entityToGenerate as BuildingData);
+            commandPanel.GetCurrentEntity().ExecuteCommand(command);
         }
     }
 }

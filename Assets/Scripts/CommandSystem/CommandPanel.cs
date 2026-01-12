@@ -10,6 +10,7 @@ public class CommandPanel : MonoBehaviour
     public Action OnCommandButtonClicked;
     public Action<BuildingData> OnBuildingButtonClicked;
 
+    private ISelectable currentEntity;
     private CommandSetData currentCommandSet;
 
     private void Awake()
@@ -20,7 +21,8 @@ public class CommandPanel : MonoBehaviour
 
     public void OnEntitySelected(ISelectable selectable)
     {
-        currentCommandSet = selectable.CommandSet;
+        currentEntity = selectable;
+        currentCommandSet = currentEntity.CommandSet;
 
         for(int i = 0; i < ButtonCount;  i++)
         {
@@ -32,8 +34,13 @@ public class CommandPanel : MonoBehaviour
             }
 
             var command = currentCommandSet.Commands[i];
-            button.Refresh(command.type, command.icon, command.tooltip, command.entityToGenerate);
+            button.Refresh(command);
         }
+    }
+
+    public ISelectable GetCurrentEntity()
+    {
+        return currentEntity;
     }
     
 }

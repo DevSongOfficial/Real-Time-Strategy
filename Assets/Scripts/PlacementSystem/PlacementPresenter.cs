@@ -11,14 +11,20 @@ public interface IPlacementView
     void SetBuildingPreviewPosition(Vector3 position);
 }
 
+public interface IPlacementEvent
+{
+    public event Action<Vector3> OnPlacementFinished;
+}
+
 public enum PlacementMode { Idle, Placing }
 
-public sealed class PlacementPresenter
+public sealed class PlacementPresenter : IPlacementEvent
 {
     private readonly IPlacementView placementView;
     private readonly CommandPanel commandPanel;
     private readonly BuildingFactory buildingFactory;
     private readonly GridSystem gridSystem;
+    private readonly InputManager inputManager;
 
     private BuildingData selectedBuildingData; // Building to place.
 
@@ -28,14 +34,15 @@ public sealed class PlacementPresenter
     private Vector3 snappedPosition;
     private Quaternion rotation;
 
-    public event Action OnPlacementFinished;
+    public event Action<Vector3> OnPlacementFinished;
 
-    public PlacementPresenter(IPlacementView placementView, CommandPanel commandPanel, BuildingFactory buildingFactory, GridSystem gridSystem)
+    public PlacementPresenter(IPlacementView placementView, CommandPanel commandPanel, BuildingFactory buildingFactory, GridSystem gridSystem, InputManager inputManager)
     {
         this.placementView = placementView;
         this.buildingFactory = buildingFactory;
         this.commandPanel = commandPanel;
         this.gridSystem = gridSystem;
+        this.inputManager = inputManager;
     }
 
     public void Enter()
@@ -111,7 +118,7 @@ public sealed class PlacementPresenter
 
         selectedBuildingData = null;
 
-        OnPlacementFinished?.Invoke();
+        OnPlacementFinished?.Invoke(snappedPosition);
     }
 
     public void Cancel()
@@ -125,6 +132,6 @@ public sealed class PlacementPresenter
 
         selectedBuildingData = null;
 
-        OnPlacementFinished?.Invoke();
+        OnPlacementFinished?.Invoke(inputManager.GetMousePosition());
     }
 }

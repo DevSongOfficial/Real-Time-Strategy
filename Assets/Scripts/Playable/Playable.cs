@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public enum Team
 {
@@ -10,11 +12,15 @@ public enum Team
 
 public interface ISelectable // Selectable by mouse0 or keyboard or ... .
 {
+    Team GetTeam();
+    
     void OnSelected();
     void OnDeselected();
-    Team GetTeam();
+
+    // Command
     CommandSetData CommandSet { get; }
-    
+    void ExecuteCommand(Command command);
+    event Action<Command> OnCommandExecuted;
 }
 
 public interface ITransformProvider
@@ -25,14 +31,18 @@ public interface ITransformProvider
 public abstract class Playable : MonoBehaviour, ISelectable, ITransformProvider
 {
     protected EntityData data;
+
+    public Team GetTeam() => team;
     protected Team team;
 
-    [SerializeField] protected CommandSetData commandSet;
 
     public abstract void OnSelected();
     public abstract void OnDeselected();
-    public Team GetTeam() => team;
+
     public CommandSetData CommandSet => commandSet;
+    [SerializeField] protected CommandSetData commandSet;
+    public event Action<Command> OnCommandExecuted;
+    public virtual void ExecuteCommand(Command command) => OnCommandExecuted?.Invoke(command);
 
 
     public Transform GetTransform() { return transform; }

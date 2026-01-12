@@ -45,10 +45,23 @@ public class UnitMoveState : UnitStateBase
                 // else Interact with the object;
             }
         }
-        else
+        else // if target is ground
         {
             if (stateContext.HasArrived())
-                stateMachine.ChangeState<UnitIdleState>();
+            {
+                var nextState = blackBoard.nextStateAfterMove;
+                blackBoard.nextStateAfterMove = null;
+
+                switch (nextState)
+                {
+                    case UnitConstructState:
+                        stateMachine.ChangeState<UnitConstructState>();
+                        break;
+                    default: 
+                        stateMachine.ChangeState<UnitIdleState>();
+                        break;
+                }
+            }
         }
     }
 }

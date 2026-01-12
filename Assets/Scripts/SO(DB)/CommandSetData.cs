@@ -24,4 +24,5 @@ public class Command
 
     // A building to build or unit to train
     public EntityData entityToGenerate;
+    public float generationTime;
 }

@@ -8,6 +8,7 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
     // State Machine
     private UnitStateMachine stateMachine;
     private BlackBoard blackBoard;
+    private Command command;
 
     [SerializeField] private CoroutineExecutor coroutineExecutor;
     [SerializeField] private Animator animator;
@@ -17,7 +18,7 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
 
 
     private GameObject selectionIndicator;
-
+    private IPlacementEvent placementEvent;
     private HealthSystem healthSystem;
 
     protected virtual void Awake()
@@ -37,11 +38,12 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
         PositionDeltaY = collider.bounds.extents.y;
     }
 
-    public Unit SetUp(EntityData data, Team team, GameObject selectionIndicator)
+    public Unit SetUp(EntityData data, Team team, GameObject selectionIndicator, IPlacementEvent placementEvent)
     {
         this.data = data;
         this.team = team;
         this.selectionIndicator = selectionIndicator;
+        this.placementEvent = placementEvent;
 
         blackBoard = new BlackBoard(data, coroutineExecutor);
         stateMachine = new UnitStateMachine(this, blackBoard);
@@ -72,6 +74,27 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
     public void SetTarget(Target target)
     {
         blackBoard.target = target;
+        stateMachine.ChangeState<UnitMoveState>();
+    }
+
+    public override void ExecuteCommand(Command command)
+    {
+        base.ExecuteCommand(command);
+
+        this.command = command;
+
+        // When Place() is called:
+        placementEvent.OnPlacementFinished += StartConstruction;
+    }
+
+    private void StartConstruction(Vector3 buildingPosition)
+    {
+        placementEvent.OnPlacementFinished -= StartConstruction; // one shot handler 
+
+        blackBoard.constructionTime = command.generationTime;
+        blackBoard.nextStateAfterMove = stateMachine.ConstructState;
+        blackBoard.target = new Target(buildingPosition);
+
         stateMachine.ChangeState<UnitMoveState>();
     }
 
