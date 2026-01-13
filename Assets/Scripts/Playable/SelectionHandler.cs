@@ -9,9 +9,10 @@ public struct Target
     // For preventing null check.
     public bool IsGround { get; private set; } // true if it's terrain.
     public ITarget Entity => entity;
-
     private ITarget entity;
-    private Vector3 hitPoint; // valid only it's ground.
+
+    // valid only it's ground. (cuz entity would be null in that case)
+    private Vector3 hitPoint; 
 
     public Target(ITarget target)
     {

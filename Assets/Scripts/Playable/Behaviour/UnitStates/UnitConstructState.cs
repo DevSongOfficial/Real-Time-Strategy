@@ -16,7 +16,8 @@ public class UnitConstructState : UnitStateBase
     public override void Enter()
     {
         timeLeft = blackBoard.constructionTime;
-        stateContext.CrossFadeAnimation("Construct", 0.3f, 0);
+        stateContext.CrossFadeAnimation("Construct", 0.05f, 0);
+        stateContext.LookAt(blackBoard.target.GetPosition());
     }
 
     public override void Exit()
@@ -29,7 +30,7 @@ public class UnitConstructState : UnitStateBase
         base.Update();
         
         timeLeft -= Time.deltaTime;
-        Debug.Log("Constructing...");
+        //Debug.Log(timeLeft);
         if(timeLeft <= 0)
         {
             // 건물 완성하면 실행할 코드...

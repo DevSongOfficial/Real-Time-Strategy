@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -28,40 +29,39 @@ public class UnitMoveState : UnitStateBase
     {
         base.Update();
 
-        if (!blackBoard.target.IsGround)
+        var nextState = stateMachine.DetermineNextState();
+        Debug.Log("Moving");
+
+        if(nextState == stateMachine.AttackState)
         {
+            var contactDistance = stateContext.CaculateContactDistance(blackBoard.target);
             stateContext.SetDestination(blackBoard.target.GetPosition());
-
-            var contactDistance = blackBoard.target.Entity.GetData().RadiusOnTerrain + blackBoard.BaseData.RadiusOnTerrain;
-            if (stateContext.GetRemainingDistance()- contactDistance * 0.5f < blackBoard.BaseData.Combat.AttackRange)
+            if (stateContext.GetRemainingDistance() - contactDistance * 0.5f < blackBoard.BaseData.Combat.AttackRange)
             {
-                if (blackBoard.target.Entity is IDamageable)
-                    if (blackBoard.attackCooldown <= 0)
-                    {
-                        stateContext.LookAt(blackBoard.target.GetPosition());
-                        stateMachine.ChangeState<UnitAttackState>();
-                    }
-
-                // else Interact with the object;
-            }
-        }
-        else // if target is ground
-        {
-            if (stateContext.HasArrived())
-            {
-                var nextState = blackBoard.nextStateAfterMove;
-                blackBoard.nextStateAfterMove = null;
-
-                switch (nextState)
+                if (blackBoard.attackCooldown <= 0)
                 {
-                    case UnitConstructState:
-                        stateMachine.ChangeState<UnitConstructState>();
-                        break;
-                    default: 
-                        stateMachine.ChangeState<UnitIdleState>();
-                        break;
+                    stateMachine.ChangeState<UnitAttackState>();
                 }
             }
+
+            return;
+        }
+
+        if (nextState == stateMachine.ConstructState)
+        {
+            var contactDistance = stateContext.CaculateContactDistance(blackBoard.target);
+            if (stateContext.HasArrived(contactDistance * 0.5f))
+            {
+                stateMachine.ChangeState<UnitConstructState>();
+            }
+
+            return;
+        }
+
+        if(nextState == stateMachine.IdleState)
+        {
+            if(stateContext.HasArrived())
+                stateMachine.ChangeState<UnitIdleState>();
         }
     }
 }

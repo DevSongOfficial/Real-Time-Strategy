@@ -74,8 +74,9 @@ public sealed class Player : MonoBehaviour
         placementView.ToggleUIPreview(false);
         gridSystem          = new GridSystem(grid, quadMesh);
         placementPresenter  = new PlacementPresenter(placementView, commandPanel, buildingFactory, gridSystem, inputManager);
-        placementPresenter.OnPlacementFinished += (Vector3 finishedPosition) => SetMode(normalMode);
-        
+        placementPresenter.OnPlacementCanceled += (Vector3 finishedPosition) => SetMode(normalMode);
+        placementPresenter.OnPlacementRequested += (ITarget requestedBuilding) => SetMode(normalMode);
+
         unitFactory                     = new UnitFactory(selectionIndicatorFactory, placementPresenter);
         unitGenerator                   = new UnitGenerator(unitFactory, entityRegistry);
         unitGenerator.OnUnitGenerated   += healthBarGenerator.GenerateAndSetTargetUnit;

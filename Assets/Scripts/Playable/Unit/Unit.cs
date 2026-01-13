@@ -1,5 +1,7 @@
+using Unity.AppUI.Core;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEngine.EventSystems.EventTrigger;
 
 
 [RequireComponent(typeof(NavMeshAgent))]
@@ -45,7 +47,7 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
         this.selectionIndicator = selectionIndicator;
         this.placementEvent = placementEvent;
 
-        blackBoard = new BlackBoard(data, coroutineExecutor);
+        blackBoard = new BlackBoard(data, coroutineExecutor, team);
         stateMachine = new UnitStateMachine(this, blackBoard);
 
         healthSystem = new HealthSystem(data.MaxHealth);
@@ -84,16 +86,15 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
         this.command = command;
 
         // When Place() is called:
-        placementEvent.OnPlacementFinished += StartConstruction;
+        placementEvent.OnPlacementRequested += StartConstruction;
     }
 
-    private void StartConstruction(Vector3 buildingPosition)
+    private void StartConstruction(ITarget building)
     {
-        placementEvent.OnPlacementFinished -= StartConstruction; // one shot handler 
+        placementEvent.OnPlacementRequested -= StartConstruction; // one shot handler 
 
         blackBoard.constructionTime = command.generationTime;
-        blackBoard.nextStateAfterMove = stateMachine.ConstructState;
-        blackBoard.target = new Target(buildingPosition);
+        blackBoard.target = new Target(building);
 
         stateMachine.ChangeState<UnitMoveState>();
     }
@@ -110,6 +111,15 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
         float yaw = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0f, yaw, 0f);
     }
+    public int CaculateContactDistance(ITarget target)
+    {
+        if (target == null) return -1;
+        return target.GetData().RadiusOnTerrain + blackBoard.BaseData.RadiusOnTerrain;
+    }
+    public int CaculateContactDistance(Target target)
+    {
+        return CaculateContactDistance(target.Entity);
+    }
     #endregion
 
     #region NavMeshAgent
@@ -121,7 +131,8 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
     }
     public void ClearDestination() { agent.isStopped = true; }
     public float GetRemainingDistance() => agent.remainingDistance;
-    public bool HasArrived() => !agent.pathPending && agent.remainingDistance <= agent.stoppingDistance;
+    public bool HasArrived(float tolerance = 0.1f) => !agent.pathPending && agent.remainingDistance <= agent.stoppingDistance + tolerance;
+
     #endregion
 
     #region Animator

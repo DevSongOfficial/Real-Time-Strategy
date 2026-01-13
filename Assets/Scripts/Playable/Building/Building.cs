@@ -36,11 +36,11 @@ public class Building : Playable, ITarget
         stateMachine?.Update();
     }
 
-    public virtual Building SetUp(EntityData data, GameObject selectionIndicator)
+    public virtual Building SetUp(EntityData data, GameObject selectionIndicator, Team team)
     {
         this.data = data;
 
-        blackBoard = new BlackBoard(data, coroutineExecutor);
+        blackBoard = new BlackBoard(data, coroutineExecutor, team);
         stateMachine = new BuildingStateMachine(blackBoard);
 
         healthSystem = new HealthSystem(data.MaxHealth);

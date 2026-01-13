@@ -32,7 +32,7 @@ public class BuildingFactory : PlayableAbsFactory<Building>, IBuildingPreviewFac
         selectionIndicator.GetChild(0).localScale = (Vector3.one * data.RadiusOnTerrain).WithZ(1);
         selectionIndicator.gameObject.SetActive(false);
 
-        building.SetUp(data, selectionIndicator.gameObject);
+        building.SetUp(data, selectionIndicator.gameObject, Player.Team);
 
         // For those spawning units e.g., barracks
         if (building is IUnitGenerator unitGenerator)

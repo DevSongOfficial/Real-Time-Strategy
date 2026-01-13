@@ -1,8 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using Unity.AppUI.Core;
 using Unity.VisualScripting;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UIElements;
 
 public abstract class StateMachineBase
 {
@@ -48,8 +52,12 @@ public sealed class UnitStateMachine : StateMachineBase
     public UnitAttackState AttackState { get; private set; }
     public UnitConstructState ConstructState { get; private set; }
 
+    private BlackBoard blackBoard;
+
     public UnitStateMachine(IUnitStateContext stateContext, BlackBoard blackBoard)
     {
+        this.blackBoard = blackBoard;
+
         IdleState = new UnitIdleState(this, blackBoard, stateContext);
         MoveState = new UnitMoveState(this, blackBoard, stateContext);
         AttackState = new UnitAttackState(this, blackBoard, stateContext);
@@ -64,7 +72,25 @@ public sealed class UnitStateMachine : StateMachineBase
         ChangeState<UnitIdleState>();
     }
 
+    public UnitStateBase DetermineNextState()
+    {
+        Target target = blackBoard.target;
+
+        if (target.IsGround)
+            return IdleState;
+
+        if (target.Entity.GetTeam() != blackBoard.team)
+        {
+            if (target.Entity is IDamageable)
+                return AttackState;
+        }
+        else if (target.Entity is Building)
+            return ConstructState;
+
+        return IdleState;
+    }
 }
+
 public class BuildingStateMachine : StateMachineBase
 {
     public BuildingStateMachine(BlackBoard blackBoard)
@@ -91,9 +117,10 @@ public class BlackBoard
     // Events
     public Action OnConstructionFinished;
 
+    public Team team;
+
     // Move
     public Target target;
-    public UnitStateBase nextStateAfterMove; // some states require movement before conducting their logics.
 
     // Attack
     public float attackCooldown; // time left to attack
@@ -103,7 +130,7 @@ public class BlackBoard
 
     public CoroutineExecutor coroutineExecutor;
 
-    public BlackBoard(EntityData data, CoroutineExecutor coroutineExecutor)
+    public BlackBoard(EntityData data, CoroutineExecutor coroutineExecutor, Team team)
     {
         this.BaseData = data;
         this.coroutineExecutor = coroutineExecutor;

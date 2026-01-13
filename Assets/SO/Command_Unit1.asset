@@ -17,7 +17,9 @@ MonoBehaviour:
     icon: {fileID: 21300000, guid: 47a210e716ed90b46914b5ffc65ca857, type: 3}
     tooltip: Building Something
     entityToGenerate: {fileID: 11400000, guid: 0abf40482913615419e4c89cf938d6d5, type: 2}
+    generationTime: 4
   - type: 2
     icon: {fileID: 21300000, guid: e4817ebc697c3654eab8e3484ca5003c, type: 3}
     tooltip: Generate some units
     entityToGenerate: {fileID: 11400000, guid: 400b97f1b7a05b34ca9db82575080867, type: 2}
+    generationTime: 0

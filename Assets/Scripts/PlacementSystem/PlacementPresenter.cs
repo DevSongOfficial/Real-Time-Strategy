@@ -13,7 +13,8 @@ public interface IPlacementView
 
 public interface IPlacementEvent
 {
-    public event Action<Vector3> OnPlacementFinished;
+    event Action<ITarget> OnPlacementRequested; // ITarget: Requested Building that was initialized
+    event Action<Vector3> OnPlacementCanceled;
 }
 
 public enum PlacementMode { Idle, Placing }
@@ -34,7 +35,8 @@ public sealed class PlacementPresenter : IPlacementEvent
     private Vector3 snappedPosition;
     private Quaternion rotation;
 
-    public event Action<Vector3> OnPlacementFinished;
+    public event Action<ITarget> OnPlacementRequested; // ITarget: Requested Building that was initialized
+    public event Action<Vector3> OnPlacementCanceled;
 
     public PlacementPresenter(IPlacementView placementView, CommandPanel commandPanel, BuildingFactory buildingFactory, GridSystem gridSystem, InputManager inputManager)
     {
@@ -106,7 +108,7 @@ public sealed class PlacementPresenter : IPlacementEvent
         placementMode = PlacementMode.Idle;
 
         // Setup Building.
-        var building = buildingFactory.Create(selectedBuildingData, Player.Team);
+        Building building = buildingFactory.Create(selectedBuildingData, Player.Team);
         building.SetPosition(snappedPosition);
 
 
@@ -118,7 +120,7 @@ public sealed class PlacementPresenter : IPlacementEvent
 
         selectedBuildingData = null;
 
-        OnPlacementFinished?.Invoke(snappedPosition);
+        OnPlacementRequested?.Invoke(building);
     }
 
     public void Cancel()
@@ -132,6 +134,6 @@ public sealed class PlacementPresenter : IPlacementEvent
 
         selectedBuildingData = null;
 
-        OnPlacementFinished?.Invoke(inputManager.GetMousePosition());
+        OnPlacementCanceled?.Invoke(inputManager.GetMousePosition());
     }
 }

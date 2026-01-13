@@ -24,11 +24,11 @@ public class HybridBuilding : Building, ITargetor
         // agent.updatePosition = false;
     }
 
-    public override Building SetUp(EntityData data, GameObject selectionIndicator)
+    public override Building SetUp(EntityData data, GameObject selectionIndicator, Team team)
     {
         this.data = data;
 
-        blackBoard = new BlackBoard(data, coroutineExecutor);
+        blackBoard = new BlackBoard(data, coroutineExecutor, team);
         stateMachine = new HybridBuildingStateMachine(blackBoard, agent);
 
         healthSystem = new HealthSystem(data.MaxHealth);

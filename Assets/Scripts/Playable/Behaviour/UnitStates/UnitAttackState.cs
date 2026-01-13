@@ -14,7 +14,10 @@ public class UnitAttackState : UnitStateBase
     public override void Enter()
     {
         if (blackBoard.target.Entity is IDamageable target)
+        {
+            stateContext.LookAt(blackBoard.target.GetPosition());
             blackBoard.coroutineExecutor.Execute(AttackRoutine(target));
+        }
     }
 
     public override void Exit()
