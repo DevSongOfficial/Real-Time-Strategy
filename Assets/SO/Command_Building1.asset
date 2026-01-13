@@ -10,11 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 74e0b412dee5ff84097a909e12170e98, type: 3}
-  m_Name: Command_Unit1
+  m_Name: Command_Building1
   m_EditorClassIdentifier: 
   <Commands>k__BackingField:
-  - type: 1
-    icon: {fileID: 21300000, guid: 47a210e716ed90b46914b5ffc65ca857, type: 3}
-    tooltip: Building Something
-    entityToGenerate: {fileID: 11400000, guid: 0abf40482913615419e4c89cf938d6d5, type: 2}
+  - icon: {fileID: 21300000, guid: 47a210e716ed90b46914b5ffc65ca857, type: 3}
+    tooltip: Soldier
+    entityToGenerate: {fileID: 11400000, guid: dc1b73eb39b3afe49bfb14b45b824142, type: 2}
     generationTime: 4

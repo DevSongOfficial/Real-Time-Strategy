@@ -86,7 +86,8 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
         this.command = command;
 
         // When Place() is called:
-        placementEvent.OnPlacementRequested += StartConstruction;
+        if(command.Type == CommandType.Build)
+            placementEvent.OnPlacementRequested += StartConstruction;
     }
 
     private void StartConstruction(ITarget building)

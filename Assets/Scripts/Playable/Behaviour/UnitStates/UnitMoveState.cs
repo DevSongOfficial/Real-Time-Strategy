@@ -30,7 +30,7 @@ public class UnitMoveState : UnitStateBase
         base.Update();
 
         var nextState = stateMachine.DetermineNextState();
-        Debug.Log("Moving");
+        Debug.Log(nextState);
 
         if(nextState == stateMachine.AttackState)
         {

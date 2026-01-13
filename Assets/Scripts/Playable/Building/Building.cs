@@ -7,6 +7,8 @@ public class Building : Playable, ITarget
     // State Machine
     protected StateMachineBase stateMachine;
     protected BlackBoard blackBoard;
+    private Command command;
+
 
     [SerializeField] protected CoroutineExecutor coroutineExecutor;
 
@@ -59,6 +61,18 @@ public class Building : Playable, ITarget
     public override void OnDeselected()
     {
         selectionIndicator.SetActive(false);
+    }
+
+    public override void ExecuteCommand(Command command)
+    {
+        base.ExecuteCommand(command);
+
+        this.command = command;
+
+        if (command.Type == CommandType.Build)
+        {
+            // unitGenerator...
+        }
     }
 
     public override void SetPosition(Vector3 position)

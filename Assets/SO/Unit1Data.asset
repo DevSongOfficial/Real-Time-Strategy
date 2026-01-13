@@ -9,11 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e066dc7d067ee1e4b978b798d45d26d3, type: 3}
+  m_Script: {fileID: 11500000, guid: 3ebc18cd7c8eeca47acb8cd572befe38, type: 3}
   m_Name: Unit1Data
   m_EditorClassIdentifier: 
-  <Team>k__BackingField: 0
-  <DisplayName>k__BackingField: Tiny Cap
+  <DisplayName>k__BackingField: Soldier
   <RadiusOnTerrain>k__BackingField: 1
   <SelectionIndicatorPositionOffset>k__BackingField: {x: 0, y: 0.15, z: 0}
   <Prefab>k__BackingField: {fileID: 3707527734802741352, guid: 00e0d2fdf8a6b0e4aa3c6a9638ad32d1, type: 3}

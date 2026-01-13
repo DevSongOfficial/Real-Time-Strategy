@@ -7,8 +7,10 @@ public class CommandPanel : MonoBehaviour
     public static readonly int ButtonCount = 12;
     [SerializeField] private CommandButton[] commandButtons = new CommandButton[ButtonCount];
 
-    public Action OnCommandButtonClicked;
-    public Action<BuildingData> OnBuildingButtonClicked;
+    public event Action OnCommandButtonClicked;
+    public event Action<BuildingData> OnBuildingButtonClicked;
+    public event Action<UnitData> OnUnitButtonClicked;
+
 
     private ISelectable currentEntity;
     private CommandSetData currentCommandSet;
@@ -38,9 +40,17 @@ public class CommandPanel : MonoBehaviour
         }
     }
 
-    public ISelectable GetCurrentEntity()
+    public void HandleCommandButtonClick(Command command)
     {
-        return currentEntity;
+        OnCommandButtonClicked?.Invoke();
+
+        var entityData = command.entityToGenerate;
+
+        if (entityData is UnitData unitData)
+            OnUnitButtonClicked?.Invoke(unitData);
+        else if (entityData is BuildingData buildingData)
+            OnBuildingButtonClicked?.Invoke(buildingData);
+
+        currentEntity.ExecuteCommand(command);
     }
-    
 }

@@ -44,15 +44,6 @@ public class CommandButton : MonoBehaviour
 
     private void OnClicked()
     {
-        commandPanel.OnCommandButtonClicked?.Invoke();
-
-        if(command.type == CommandType.TrainUnit)
-        {
-        }
-        else if(command.type == CommandType.Build)
-        {
-            commandPanel.OnBuildingButtonClicked?.Invoke(command.entityToGenerate as BuildingData);
-            commandPanel.GetCurrentEntity().ExecuteCommand(command);
-        }
+        commandPanel.HandleCommandButtonClick(command);
     }
 }

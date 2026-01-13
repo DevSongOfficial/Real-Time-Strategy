@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "CommandSetData", menuName = "Scriptable Objects/CommandSetData")]
 public class CommandSetData : ScriptableObject
 {
-    [field: SerializeField]public List<Command> Commands { get; private set; } = new List<Command>();
+    [field: SerializeField] public List<Command> Commands { get; private set; } = new List<Command>();
 }
 
 public enum CommandType
@@ -18,7 +18,7 @@ public enum CommandType
 [Serializable]
 public class Command
 {
-    public CommandType type;
+    public CommandType Type => entityToGenerate is BuildingData ? CommandType.Build : CommandType.TrainUnit;
     public Sprite icon;
     public string tooltip;
 
