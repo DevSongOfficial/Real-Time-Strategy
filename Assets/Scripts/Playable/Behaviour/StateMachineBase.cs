@@ -134,5 +134,6 @@ public class BlackBoard
     {
         this.BaseData = data;
         this.coroutineExecutor = coroutineExecutor;
+        this.team = team;
     }
 }

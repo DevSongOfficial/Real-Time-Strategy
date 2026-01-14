@@ -7,11 +7,6 @@ using static UnityEngine.EventSystems.EventTrigger;
 [RequireComponent(typeof(NavMeshAgent))]
 public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
 {
-    // State Machine
-    private UnitStateMachine stateMachine;
-    private BlackBoard blackBoard;
-    private Command command;
-
     [SerializeField] private CoroutineExecutor coroutineExecutor;
     [SerializeField] private Animator animator;
     [SerializeField] private NavMeshAgent agent;

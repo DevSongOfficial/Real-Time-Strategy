@@ -13,6 +13,7 @@ public sealed class Player : MonoBehaviour
 
     [Header("Scene Refs")]
     [SerializeField] private Canvas canvas;
+    [SerializeField] private Transform healthBarContainer;
     [SerializeField] private RectTransform nonClickableArea;
     [SerializeField] private PlacementView placementView;
     [SerializeField] private CommandPanel commandPanel;
@@ -62,10 +63,10 @@ public sealed class Player : MonoBehaviour
 
         entityRegistry              = new EntityRegistry();
         selectionIndicatorFactory   = new SelectionIndicatorFactory();
-        healthBarGenerator          = new HealthBarGenerator(canvas.transform, cameraController.Camera);
+        healthBarGenerator          = new HealthBarGenerator(healthBarContainer, cameraController.Camera);
         
         moveMarkerFactory           = new MoveMakerFactory();
-        buildingFactory             = new BuildingFactory(unitGenerator, selectionIndicatorFactory);
+        buildingFactory             = new BuildingFactory(() => unitGenerator /* Lazy initialization */, selectionIndicatorFactory);
 
         dragEventHandler    = new DragEventHandler(entityRegistry.GetTransformsOfUnits(), cameraController.Camera, canvas, inputManager);
         selectionHandler    = new SelectionHandler(entityRegistry.GetSelectedEntities(), cameraController.Camera, commandPanel, moveMarkerFactory);
@@ -85,13 +86,13 @@ public sealed class Player : MonoBehaviour
         buildMode  = new BuildMode(inputManager, placementPresenter);
         SetMode(normalMode);
 
-        commandPanel.OnBuildingButtonClicked += OnStartBuilding;
+        commandPanel.OnBuildingConstructionButtonClicked += OnStartBuilding;
 
     }
 
     private void Start()
     {
-        unitGenerator.Generate(unitData, numberOfUnitOnStart);
+        unitGenerator.RandomGenerate(unitData, numberOfUnitOnStart);
     }
 
     private void Update()

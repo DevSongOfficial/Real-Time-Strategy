@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf6ada3da4d87ad4d839cb8f78bf0ed8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  commandSet: {fileID: 11400000, guid: 6f848b249f721c34e9d78969a1656f5c, type: 2}
   coroutineExecutor: {fileID: 4212199021706741241}
   collider: {fileID: 5660760795476879443}
 --- !u!114 &4212199021706741241

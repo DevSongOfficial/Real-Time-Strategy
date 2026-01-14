@@ -4,12 +4,6 @@ using UnityEngine;
 
 public class Building : Playable, ITarget
 {
-    // State Machine
-    protected StateMachineBase stateMachine;
-    protected BlackBoard blackBoard;
-    private Command command;
-
-
     [SerializeField] protected CoroutineExecutor coroutineExecutor;
 
     protected HealthSystem healthSystem;
@@ -41,6 +35,7 @@ public class Building : Playable, ITarget
     public virtual Building SetUp(EntityData data, GameObject selectionIndicator, Team team)
     {
         this.data = data;
+        this.team = team;
 
         blackBoard = new BlackBoard(data, coroutineExecutor, team);
         stateMachine = new BuildingStateMachine(blackBoard);
@@ -61,18 +56,6 @@ public class Building : Playable, ITarget
     public override void OnDeselected()
     {
         selectionIndicator.SetActive(false);
-    }
-
-    public override void ExecuteCommand(Command command)
-    {
-        base.ExecuteCommand(command);
-
-        this.command = command;
-
-        if (command.Type == CommandType.Build)
-        {
-            // unitGenerator...
-        }
     }
 
     public override void SetPosition(Vector3 position)

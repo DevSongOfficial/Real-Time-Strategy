@@ -8,8 +8,8 @@ public class CommandPanel : MonoBehaviour
     [SerializeField] private CommandButton[] commandButtons = new CommandButton[ButtonCount];
 
     public event Action OnCommandButtonClicked;
-    public event Action<BuildingData> OnBuildingButtonClicked;
-    public event Action<UnitData> OnUnitButtonClicked;
+    public event Action<BuildingData> OnBuildingConstructionButtonClicked;
+    public event Action<UnitData> OnUnitTrainButtonClicked;
 
 
     private ISelectable currentEntity;
@@ -47,9 +47,9 @@ public class CommandPanel : MonoBehaviour
         var entityData = command.entityToGenerate;
 
         if (entityData is UnitData unitData)
-            OnUnitButtonClicked?.Invoke(unitData);
+            OnUnitTrainButtonClicked?.Invoke(unitData);
         else if (entityData is BuildingData buildingData)
-            OnBuildingButtonClicked?.Invoke(buildingData);
+            OnBuildingConstructionButtonClicked?.Invoke(buildingData);
 
         currentEntity.ExecuteCommand(command);
     }

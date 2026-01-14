@@ -15,17 +15,23 @@ public class UnitGenerator
         this.unitRegistry = unitRegistry;
     }
 
-    public void Generate(EntityData unitData, int numberOfUnit = 1)
+    public void Generate(EntityData unitData, Team team, Vector3 position)
+    {
+        var newUnit = unitFactory.Create(unitData, team);
+        newUnit.SetPosition(position);
+        unitRegistry.RegisterUnit(newUnit);
+
+        Debug.Log("»ý¼º");
+
+        OnUnitGenerated?.Invoke(newUnit);
+    }
+
+    public void RandomGenerate(EntityData unitData, int numberOfUnit = 1)
     {
         for (int i = 0; i < numberOfUnit; i++)
         {
-            var newUnit = unitFactory.Create(unitData, i > 3 ? Team.Green : Team.Red);
             var randomPosition = new Vector3(Random.Range(26, 35), 2, Random.Range(20, 36));
-            newUnit.SetPosition(randomPosition);
-
-            unitRegistry.RegisterUnit(newUnit);
-
-            OnUnitGenerated.Invoke(newUnit);
+            Generate(unitData, i > numberOfUnit / 2 ? Team.Green : Team.Red, randomPosition);
         }
     }
 }

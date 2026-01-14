@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -11,12 +12,12 @@ public interface IBuildingPreviewFactory
 public class BuildingFactory : PlayableAbsFactory<Building>, IBuildingPreviewFactory
 {
     private SelectionIndicatorFactory selectionIndicatorFactory;
-    private UnitGenerator unitGenerator;
+    private event Func<UnitGenerator> getUnitGenerator;
 
-    public BuildingFactory(UnitGenerator unitGenerator, SelectionIndicatorFactory selectionIndicatorFactory)
+    public BuildingFactory(Func<UnitGenerator> getUnitGenerator, SelectionIndicatorFactory selectionIndicatorFactory)
     {
         this.selectionIndicatorFactory = selectionIndicatorFactory;
-        this.unitGenerator = unitGenerator;
+        this.getUnitGenerator = getUnitGenerator;
     }
 
     public override Building Create(EntityData data, Team team)
@@ -36,7 +37,7 @@ public class BuildingFactory : PlayableAbsFactory<Building>, IBuildingPreviewFac
 
         // For those spawning units e.g., barracks
         if (building is IUnitGenerator unitGenerator)
-            unitGenerator.Setup(this.unitGenerator);
+            unitGenerator.SetUnitGenerator(getUnitGenerator.Invoke());
 
         return building;
     }

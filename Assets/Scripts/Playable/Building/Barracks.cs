@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IUnitGenerator
 {
-    void Setup(UnitGenerator unitGenerator);
+    void SetUnitGenerator(UnitGenerator unitGenerator);
 }
 
 public class Barracks : Building, IUnitGenerator
@@ -14,14 +14,21 @@ public class Barracks : Building, IUnitGenerator
 
     [SerializeField] private Vector2 spawnPointOffset; // building.position + spawnPoint would be the spawn point.
 
-    public void Setup(UnitGenerator unitGenerator)
+    public void SetUnitGenerator(UnitGenerator unitGenerator)
     {
         this.unitGenerator = unitGenerator;
-        data = (BarracksData)base.data;
+        //data = (BarracksData)base.data;
     }
 
-    public void SpawnUnit()
+    public override void ExecuteCommand(Command command)
     {
-        
+        base.ExecuteCommand(command);
+
+        this.command = command;
+        if (command.Type == CommandType.TrainUnit)
+        {
+            Debug.Log("소환 요청");
+            unitGenerator.Generate(command.entityToGenerate, team, transform.position + new Vector3(spawnPointOffset.x, 0, spawnPointOffset.y));
+        }
     }
 }
