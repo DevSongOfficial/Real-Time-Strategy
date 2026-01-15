@@ -693,9 +693,11 @@ MonoBehaviour:
   <Camera>k__BackingField: {fileID: 330585545}
   edgeSize: 100
   movementSpeed: 3
-  zoomSpeed: 50
-  minZ: -130
-  maxZ: -115
+  zoomSpeed: 10
+  ZoomLevel: 4
+  defaultSize: 4
+  minSize: 2
+  maxSize: 7
 --- !u!1 &317390869
 GameObject:
   m_ObjectHideFlags: 0
@@ -1065,8 +1067,8 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 15
-  orthographic: 0
-  orthographic size: 5
+  orthographic: 1
+  orthographic size: 4
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -4662,7 +4664,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 330585545}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1

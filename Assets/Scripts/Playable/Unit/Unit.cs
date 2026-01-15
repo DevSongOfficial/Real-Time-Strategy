@@ -59,8 +59,6 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
     {
         selectionIndicator.SetActive(false);
         selectionIndicator.SetActive(true);
-
-        Debug.Log(GetTeam());
     }
 
     public override void OnDeselected()

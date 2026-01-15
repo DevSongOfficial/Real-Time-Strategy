@@ -11,19 +11,27 @@ public class CameraController : MonoBehaviour
     [SerializeField] [Range(0, 10)]  float movementSpeed = 3f;
 
     [Header("Camera Zoom In & Out")]
-    [SerializeField] private float zoomSpeed = 50f;
-    [Tooltip("Z position of Camera Rig")]
-    [SerializeField] private float minZ = -115f;
-    [SerializeField] private float maxZ = -130f;
+    [SerializeField] private float zoomSpeed = 5f;
+    [field: SerializeField] public float ZoomLevel = 4f;
+    [Space]
+    [Tooltip("Projection Size")]
+    [SerializeField] private float defaultSize = 4f;
+    [SerializeField] private float minSize = 2f;
+    [SerializeField] private float maxSize = 7f;
 
     private InputManager inputManager;
+
+    private void Awake()
+    {
+        Camera.orthographicSize = defaultSize;
+    }
 
     public void Setup(InputManager inputManager)
     {
         this.inputManager = inputManager;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         HandleCameraMovement();
         HandleZoom();
@@ -33,11 +41,21 @@ public class CameraController : MonoBehaviour
     {
         if (!inputManager.IsMouseScrolled(out MouseScrollType type)) return;
 
+        var size = Camera.orthographicSize + zoomSpeed * -(int)type * Time.deltaTime;
+        size = Mathf.Clamp(size, minSize, maxSize);
+
+        Camera.orthographicSize = size;
+    }
+
+    private void HandleZoom_Perspective()
+    {
+        if (!inputManager.IsMouseScrolled(out MouseScrollType type)) return;
+
         var direction = Camera.transform.forward * (int)type;
         var positionToMove = transform.position + direction * zoomSpeed * Time.deltaTime;
 
-        if(positionToMove.z > maxZ && type == MouseScrollType.Up) return;
-        if (positionToMove.z < minZ && type == MouseScrollType.Down) return;
+        // if(positionToMove.z > maxZ && type == MouseScrollType.Up) return;
+        // if (positionToMove.z < minZ && type == MouseScrollType.Down) return;
 
         transform.position = positionToMove;
     }

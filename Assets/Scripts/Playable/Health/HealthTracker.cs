@@ -3,20 +3,21 @@ using UnityEngine.UI;
 
 public class HealthTracker : MonoBehaviour
 {
-    private Image healthTracker;
+    private Image healthTracker; // health bar BG image
     [SerializeField] private Image healthBar;
     [SerializeField] private HealthBarSettings settings;
 
-    private new Camera camera;
+    private CameraController cameraController;
 
     private ITarget target;
 
-    public void SetUp(Camera camera, Target target)
+    public void SetUp(CameraController cameraController, ITarget target)
     {
-
-        this.camera = camera;
-        this.target = target.Entity;
+        this.cameraController = cameraController;
+        this.target = target;
         this.target.GetHealthSystem().OnHelathChanged += UpdateHealthBarLength;
+
+        healthBar.color = DetermineColor(target.GetTeam());
     }
 
     private void Awake()
@@ -25,7 +26,7 @@ public class HealthTracker : MonoBehaviour
         healthTracker.rectTransform.sizeDelta = settings.Size;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         UpdateHealthBarPosition();
     }
@@ -33,14 +34,25 @@ public class HealthTracker : MonoBehaviour
     private void UpdateHealthBarPosition()
     {
         Vector3 targetWorldPosition = target.GetPosition();
+        Vector3 screenPosition = cameraController.Camera.WorldToScreenPoint(targetWorldPosition);
+        float offsetScale = cameraController.ZoomLevel / cameraController.Camera.orthographicSize;
 
-        Vector3 screenPosition = camera.WorldToScreenPoint(targetWorldPosition);
-
-        healthTracker.rectTransform.position = screenPosition + settings.Offset;
+        healthTracker.rectTransform.position = screenPosition + settings.Offset * offsetScale;
     }
 
     private void UpdateHealthBarLength()
     {
         healthBar.fillAmount = (float)target.GetHealthSystem().CurrentHealth / target.GetHealthSystem().MaxHealth;
     }   
+
+    private Color DetermineColor(Team team)
+    {
+        switch (team)
+        {
+            case Team.Green: return settings.Color_GreenTeam;
+            case Team.Red: return settings.Color_RedTeam;
+            case Team.Blue: return settings.Color_BlueTeam;
+            default: return Color.black;
+        }
+    }
 }

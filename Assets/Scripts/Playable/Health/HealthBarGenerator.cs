@@ -4,18 +4,18 @@ using CustomResourceManagement;
 public class HealthBarGenerator
 {
     private Transform canvas;
-    private Camera mainCamera;
+    private CameraController cameraController;
 
-    public HealthBarGenerator(Transform canvas, Camera mainCamera)
+    public HealthBarGenerator(Transform canvas, CameraController cameraController)
     {
         this.canvas = canvas;
-        this.mainCamera = mainCamera;
+        this.cameraController = cameraController;
     }
 
-    public void GenerateAndSetTargetUnit(ITarget targetUnit)
+    public void GenerateAndSetTargetUnit(ITarget target)
     {
         var prefab_HealthBar = ResourceLoader.GetResource<HealthTracker>(Prefabs.UI.HealthTracker);
         var newHealthBar = GameObject.Instantiate<HealthTracker>(prefab_HealthBar, canvas.transform);
-        newHealthBar.SetUp(mainCamera, new Target(targetUnit));
+        newHealthBar.SetUp(cameraController, target);
     }
 }

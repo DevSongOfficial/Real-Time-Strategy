@@ -64,7 +64,7 @@ public sealed class Player : MonoBehaviour
 
         entityRegistry              = new EntityRegistry();
         selectionIndicatorFactory   = new SelectionIndicatorFactory();
-        healthBarGenerator          = new HealthBarGenerator(healthBarContainer, cameraController.Camera);
+        healthBarGenerator          = new HealthBarGenerator(healthBarContainer, cameraController);
         
         moveMarkerFactory           = new MoveMakerFactory();
         buildingFactory             = new BuildingFactory(() => unitGenerator, selectionHandler, selectionIndicatorFactory);

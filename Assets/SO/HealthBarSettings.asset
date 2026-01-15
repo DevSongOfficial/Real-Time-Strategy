@@ -14,3 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Offset>k__BackingField: {x: 0, y: 150, z: 0}
   <Size>k__BackingField: {x: 100, y: 20}
+  <Color_RedTeam>k__BackingField: {r: 0.9056604, g: 0.21929504, b: 0.21929504, a: 1}
+  <Color_GreenTeam>k__BackingField: {r: 0.047466353, g: 0.6037736, b: 0.10130248, a: 1}
+  <Color_BlueTeam>k__BackingField: {r: 0.11805301, g: 0.28197426, b: 0.7987421, a: 1}
