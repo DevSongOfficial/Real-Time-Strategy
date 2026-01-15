@@ -51,8 +51,13 @@ public struct Target
         return IsGround ? hitPoint : entity.GetPosition();
     }
 }
-public class SelectionHandler
+
+public interface ISelectionEvent { event Action<ISelectable> OnSelectEntity; }
+
+public class SelectionHandler : ISelectionEvent 
 {
+    public event Action<ISelectable> OnSelectEntity;
+
     private Camera camera;
     private CommandPanel commandPanel;
     private List<ISelectable> selectedEntities;
@@ -141,9 +146,8 @@ public class SelectionHandler
 
         // Select entity.
         selectedEntities.Add(entity);
-        entity.OnSelected();
-        commandPanel.OnEntitySelected(entity);
         currentSelectedTeam = entity.GetTeam();
+        OnSelectEntity?.Invoke(entity);
 
         return true;
     }

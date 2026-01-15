@@ -23,11 +23,9 @@ public class Barracks : Building, IUnitGenerator
     public override void ExecuteCommand(Command command)
     {
         base.ExecuteCommand(command);
-
         this.command = command;
         if (command.Type == CommandType.TrainUnit)
         {
-            Debug.Log("소환 요청");
             unitGenerator.Generate(command.entityToGenerate, team, transform.position + new Vector3(spawnPointOffset.x, 0, spawnPointOffset.y));
         }
     }

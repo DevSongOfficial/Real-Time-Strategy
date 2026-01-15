@@ -4,13 +4,14 @@ using static CustomResourceManagement.Prefabs.Playable;
 
 public class UnitFactory : PlayableAbsFactory<Unit>
 {
-    private SelectionIndicatorFactory selectionIndicatorFactory;
     private IPlacementEvent placementEvent;
 
-    public UnitFactory(SelectionIndicatorFactory selectionIndicatorFactory, IPlacementEvent placementEvent)
+    public UnitFactory(ISelectionEvent selectionEvent, SelectionIndicatorFactory selectionIndicatorFactory, IPlacementEvent placementEvent)
     {
         this.selectionIndicatorFactory = selectionIndicatorFactory;
         this.placementEvent = placementEvent;
+
+        base.Setup(selectionEvent, selectionIndicatorFactory);
     }
     public override Unit Create(EntityData data, Team team)
     {

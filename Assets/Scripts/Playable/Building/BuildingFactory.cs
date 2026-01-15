@@ -11,13 +11,13 @@ public interface IBuildingPreviewFactory
 
 public class BuildingFactory : PlayableAbsFactory<Building>, IBuildingPreviewFactory
 {
-    private SelectionIndicatorFactory selectionIndicatorFactory;
     private event Func<UnitGenerator> getUnitGenerator;
 
-    public BuildingFactory(Func<UnitGenerator> getUnitGenerator, SelectionIndicatorFactory selectionIndicatorFactory)
+    public BuildingFactory(Func<UnitGenerator> getUnitGenerator, ISelectionEvent selectionHandler, SelectionIndicatorFactory selectionIndicatorFactory)
     {
-        this.selectionIndicatorFactory = selectionIndicatorFactory;
         this.getUnitGenerator = getUnitGenerator;
+
+        base.Setup(selectionHandler, selectionIndicatorFactory);
     }
 
     public override Building Create(EntityData data, Team team)

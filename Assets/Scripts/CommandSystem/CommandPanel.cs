@@ -1,6 +1,7 @@
 using System;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class CommandPanel : MonoBehaviour
 {
@@ -26,18 +27,10 @@ public class CommandPanel : MonoBehaviour
         currentEntity = selectable;
         currentCommandSet = currentEntity.CommandSet;
 
-        for(int i = 0; i < ButtonCount;  i++)
-        {
-            var button = commandButtons[i];
-            if(currentCommandSet.Commands.Count <= i)
-            {
-                button.Disable();
-                continue;
-            }
-
-            var command = currentCommandSet.Commands[i];
-            button.Refresh(command);
-        }
+        if (selectable.GetTeam() == Player.Team)
+            RefreshCommandButtons();
+        else
+            DisableAllButtons();
     }
 
     public void HandleCommandButtonClick(Command command)
@@ -52,5 +45,27 @@ public class CommandPanel : MonoBehaviour
             OnBuildingConstructionButtonClicked?.Invoke(buildingData);
 
         currentEntity.ExecuteCommand(command);
+    }
+
+    private void RefreshCommandButtons()
+    {
+        for (int i = 0; i < ButtonCount; i++)
+        {
+            var button = commandButtons[i];
+            if (currentCommandSet.Commands.Count <= i)
+            {
+                button.Disable();
+                continue;
+            }
+
+            var command = currentCommandSet.Commands[i];
+            button.Refresh(command);
+        }
+    }
+
+    private void DisableAllButtons()
+    {
+        foreach (var button in commandButtons)
+            button.Disable();
     }
 }

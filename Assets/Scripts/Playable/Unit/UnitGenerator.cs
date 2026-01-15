@@ -21,8 +21,6 @@ public class UnitGenerator
         newUnit.SetPosition(position);
         unitRegistry.RegisterUnit(newUnit);
 
-        Debug.Log("»ý¼º");
-
         OnUnitGenerated?.Invoke(newUnit);
     }
 

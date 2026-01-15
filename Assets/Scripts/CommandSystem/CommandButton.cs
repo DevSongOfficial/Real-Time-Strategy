@@ -31,6 +31,7 @@ public class CommandButton : MonoBehaviour
         image.sprite = command.icon;
         textMeshPro.text = command.tooltip;
 
+        button.onClick.RemoveAllListeners();
         button.onClick.AddListener(OnClicked);
     }
 

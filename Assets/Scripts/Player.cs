@@ -1,7 +1,8 @@
+using BuildingSystem;
+using CustomResourceManagement;
 using System.Collections.Generic;
 using UnityEngine;
-using CustomResourceManagement;
-using BuildingSystem;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public sealed class Player : MonoBehaviour
 {
@@ -66,7 +67,7 @@ public sealed class Player : MonoBehaviour
         healthBarGenerator          = new HealthBarGenerator(healthBarContainer, cameraController.Camera);
         
         moveMarkerFactory           = new MoveMakerFactory();
-        buildingFactory             = new BuildingFactory(() => unitGenerator /* Lazy initialization */, selectionIndicatorFactory);
+        buildingFactory             = new BuildingFactory(() => unitGenerator, selectionHandler, selectionIndicatorFactory);
 
         dragEventHandler    = new DragEventHandler(entityRegistry.GetTransformsOfUnits(), cameraController.Camera, canvas, inputManager);
         selectionHandler    = new SelectionHandler(entityRegistry.GetSelectedEntities(), cameraController.Camera, commandPanel, moveMarkerFactory);
@@ -78,7 +79,7 @@ public sealed class Player : MonoBehaviour
         placementPresenter.OnPlacementCanceled += (Vector3 finishedPosition) => SetMode(normalMode);
         placementPresenter.OnPlacementRequested += (ITarget requestedBuilding) => SetMode(normalMode);
 
-        unitFactory                     = new UnitFactory(selectionIndicatorFactory, placementPresenter);
+        unitFactory                     = new UnitFactory(selectionHandler, selectionIndicatorFactory, placementPresenter);
         unitGenerator                   = new UnitGenerator(unitFactory, entityRegistry);
         unitGenerator.OnUnitGenerated   += healthBarGenerator.GenerateAndSetTargetUnit;
 
@@ -86,6 +87,8 @@ public sealed class Player : MonoBehaviour
         buildMode  = new BuildMode(inputManager, placementPresenter);
         SetMode(normalMode);
 
+
+        selectionHandler.OnSelectEntity += OnEntitySelected;
         commandPanel.OnBuildingConstructionButtonClicked += OnStartBuilding;
 
     }
@@ -112,5 +115,11 @@ public sealed class Player : MonoBehaviour
     {
         SetMode(buildMode);
         placementPresenter.SelectBuilding(data);
+    }
+
+    private void OnEntitySelected(ISelectable entity)
+    {
+        entity.OnSelected();
+        commandPanel.OnEntitySelected(entity);
     }
 }
