@@ -3,9 +3,8 @@ using UnityEngine;
 public class UnitConstructState : UnitStateBase
 {
     private IUnitStateContext stateContext;
-    private float timeLeft;
 
-    
+    private Building building; // Building to construct.
 
     public UnitConstructState(UnitStateMachine stateMachine, BlackBoard blackBoard, IUnitStateContext stateContext)
         : base(stateMachine, blackBoard)
@@ -15,29 +14,32 @@ public class UnitConstructState : UnitStateBase
 
     public override void Enter()
     {
-        timeLeft = blackBoard.constructionTime;
+        if (blackBoard.target.Entity is not Building building)
+        {
+            stateMachine.ChangeState<UnitIdleState>();
+            return;
+        }
+
+        this.building = building;
+        building.StartConstruction();
+        building.OnConstructionFinished += SwitchToIdleState;
+
         stateContext.CrossFadeAnimation("Construct", 0.05f, 0);
         stateContext.LookAt(blackBoard.target.GetPosition());
     }
 
-    public override void Exit()
-    {
-
-    }
+    public override void Exit() { }
 
     public override void Update()
     {
         base.Update();
-        
-        timeLeft -= Time.deltaTime;
-        //Debug.Log(timeLeft);
-        if(timeLeft <= 0)
-        {
-            // 건물 완성하면 실행할 코드...
-            Debug.Log("Complete!");
-            blackBoard.OnConstructionFinished?.Invoke();
-            blackBoard.OnConstructionFinished = null;
-            stateMachine.ChangeState<UnitIdleState>();
-        }
+
+        building.TickConstruction();
+    }
+
+    private void SwitchToIdleState()
+    {
+        building.OnConstructionFinished -= SwitchToIdleState;
+        stateMachine.ChangeState<UnitIdleState>();
     }
 }

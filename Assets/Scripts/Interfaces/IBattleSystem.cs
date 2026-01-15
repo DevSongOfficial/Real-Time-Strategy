@@ -17,3 +17,8 @@ public interface ITarget
     IHealthSystem GetHealthSystem();
     Team GetTeam();
 }
+
+public interface ITarget<out TData> : ITarget where TData : EntityData
+{
+    new TData GetData(); 
+}

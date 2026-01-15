@@ -2,15 +2,19 @@ using System;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Building : Playable, ITarget
+public class Building : Playable, ITarget<BuildingData>
 {
     [SerializeField] protected CoroutineExecutor coroutineExecutor;
-
+    [SerializeField] private new Collider collider;
     protected HealthSystem healthSystem;
 
-    [SerializeField] private new Collider collider;
-
     protected GameObject selectionIndicator;
+
+    // Construction
+    public bool IsConstructing { get; private set; }
+    private float leftConstructionTime;
+    public event Action OnConstructionStarted;
+    public event Action OnConstructionFinished;
 
     // TODO: I think it's better to put this variable in EntityData and write on my own. (not getting it through collider)
     public float PositionDeltaY { get; private set; }
@@ -58,6 +62,24 @@ public class Building : Playable, ITarget
         selectionIndicator.SetActive(false);
     }
 
+    // TODO: put these construction methods in building states
+    public void StartConstruction()
+    {
+        IsConstructing = true;
+        leftConstructionTime = GetData().ConsructionTime;
+        OnConstructionStarted?.Invoke();
+    }
+
+    public void TickConstruction()
+    {
+        leftConstructionTime -= Time.deltaTime;
+        if (leftConstructionTime <= 0)
+        {
+            IsConstructing = false;
+            OnConstructionFinished?.Invoke();
+        }
+    }
+
     public override void SetPosition(Vector3 position)
     {
         transform.position = position.WithY(PositionDeltaY);
@@ -73,10 +95,12 @@ public class Building : Playable, ITarget
         return healthSystem;
     }
 
-    public EntityData GetData()
+    public BuildingData GetData()
     {
-        return data;
+        return (BuildingData)data;
     }
+
+    EntityData ITarget.GetData() => GetData();
 
     // This is basically for ghost building.
     public virtual void MakeRenderOnly()

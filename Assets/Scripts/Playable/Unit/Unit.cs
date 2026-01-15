@@ -87,7 +87,6 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
     {
         placementEvent.OnPlacementRequested -= StartConstruction; // one shot handler 
 
-        blackBoard.constructionTime = command.generationTime;
         blackBoard.target = new Target(building);
 
         stateMachine.ChangeState<UnitMoveState>();

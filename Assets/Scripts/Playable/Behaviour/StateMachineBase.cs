@@ -114,9 +114,6 @@ public class BlackBoard
 {
     public EntityData BaseData { get; private set; }
 
-    // Events
-    public Action OnConstructionFinished;
-
     public Team team;
 
     // Move
@@ -125,8 +122,6 @@ public class BlackBoard
     // Attack
     public float attackCooldown; // time left to attack
 
-    // Construct building
-    public float constructionTime;
 
     public CoroutineExecutor coroutineExecutor;
 
