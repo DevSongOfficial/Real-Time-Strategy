@@ -14,11 +14,12 @@ public sealed class Player : MonoBehaviour
 
     [Header("Scene Refs")]
     [SerializeField] private Canvas canvas;
+    [SerializeField] private EntityProfilePanel profilePanel;
+    [SerializeField] private CommandPanel commandPanel;
     [SerializeField] private Transform healthBarContainer;
     [SerializeField] private RectTransform nonClickableArea;
     [SerializeField] private PlacementView placementView;
-    [SerializeField] private CommandPanel commandPanel;
-
+    [Space]
     [SerializeField] private CameraController cameraController;
     [SerializeField] private Grid grid;
     [SerializeField] private Mesh quadMesh;
@@ -67,7 +68,7 @@ public sealed class Player : MonoBehaviour
         healthBarGenerator          = new HealthBarGenerator(healthBarContainer, cameraController);
         
         moveMarkerFactory           = new MoveMakerFactory();
-        buildingFactory             = new BuildingFactory(() => unitGenerator, selectionHandler, selectionIndicatorFactory);
+        buildingFactory             = new BuildingFactory(() => unitGenerator, selectionHandler, selectionIndicatorFactory, profilePanel);
 
         dragEventHandler    = new DragEventHandler(entityRegistry.GetTransformsOfUnits(), cameraController.Camera, canvas, inputManager);
         selectionHandler    = new SelectionHandler(entityRegistry.GetSelectedEntities(), cameraController.Camera, commandPanel, moveMarkerFactory);

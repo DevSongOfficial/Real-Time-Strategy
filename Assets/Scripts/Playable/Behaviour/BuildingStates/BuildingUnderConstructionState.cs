@@ -4,14 +4,17 @@ using UnityEngine;
 
 public class BuildingUnderConstructionState: BuildingStateBase
 {
-    private float leftTime;
     public event Action OnFinished;
+
+    private new BuildingBlackBoard blackBoard;
+    private float leftTime;
 
     private bool isPaused;
 
     public BuildingUnderConstructionState(BuildingStateMachine stateMachine, BuildingBlackBoard blackBoard, IBuildingStateContext stateContext) 
         : base(stateMachine, blackBoard, stateContext)
     {
+        this.blackBoard = blackBoard;
         leftTime = blackBoard.BaseData.ConsructionTime;
     }
 
@@ -32,8 +35,11 @@ public class BuildingUnderConstructionState: BuildingStateBase
             return;
 
         leftTime -= Time.deltaTime;
+        blackBoard.progressRate = 1 - (leftTime / blackBoard.BaseData.ConsructionTime);
+        
         if (leftTime <= 0)
         {
+            blackBoard.progressRate = 0;
             stateMachine.ChangeState<BuildingIdleState>();
         }
     }

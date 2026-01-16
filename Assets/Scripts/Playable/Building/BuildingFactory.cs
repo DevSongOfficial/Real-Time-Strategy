@@ -12,10 +12,13 @@ public interface IBuildingPreviewFactory
 public class BuildingFactory : PlayableAbsFactory<Building>, IBuildingPreviewFactory
 {
     private event Func<UnitGenerator> getUnitGenerator;
+    private EntityProfilePanel profilePanel;
 
-    public BuildingFactory(Func<UnitGenerator> getUnitGenerator, ISelectionEvent selectionHandler, SelectionIndicatorFactory selectionIndicatorFactory)
+    public BuildingFactory(Func<UnitGenerator> getUnitGenerator, ISelectionEvent selectionHandler, 
+        SelectionIndicatorFactory selectionIndicatorFactory, EntityProfilePanel profilePanel)
     {
         this.getUnitGenerator = getUnitGenerator;
+        this.profilePanel = profilePanel;
 
         base.Setup(selectionHandler, selectionIndicatorFactory);
     }
@@ -33,7 +36,7 @@ public class BuildingFactory : PlayableAbsFactory<Building>, IBuildingPreviewFac
         selectionIndicator.GetChild(0).localScale = (Vector3.one * data.RadiusOnTerrain).WithZ(1);
         selectionIndicator.gameObject.SetActive(false);
 
-        building.SetUp(data, selectionIndicator.gameObject, Player.Team);
+        building.SetUp(data, selectionIndicator.gameObject, profilePanel, Player.Team);
 
         // For those spawning units e.g., barracks
         if (building is IUnitGenerator unitGenerator)

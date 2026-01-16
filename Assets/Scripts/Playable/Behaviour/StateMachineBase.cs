@@ -147,6 +147,8 @@ public class BuildingBlackBoard : BlackBoard
 {
     public new BuildingData BaseData => base.BaseData as BuildingData;
 
+    public float progressRate; // 0 ~ 1
+
     // For barracks
     public UnitGenerationInfo unitGenerationInfo;
 

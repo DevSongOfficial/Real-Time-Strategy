@@ -5,6 +5,7 @@ using UnityEngine;
 public class EntityData : ScriptableObject
 {
     [field: SerializeField] public string DisplayName { get; private set; }
+    [field: SerializeField] public Sprite ProfileSprite { get; private set; }
     [field: SerializeField] public int RadiusOnTerrain { get; private set; } // For selection indicator & offset when moving towards the target.
     [field: SerializeField] public Vector3 SelectionIndicatorPositionOffset { get; private set; }
     [field: SerializeField] public Transform Prefab { get; private set; }

@@ -8,6 +8,7 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext
     [SerializeField] private new Collider collider;
     protected HealthSystem healthSystem;
     protected GameObject selectionIndicator;
+    protected EntityProfilePanel profilePanel;
 
     protected new BuildingStateMachine stateMachine => base.stateMachine as BuildingStateMachine;
     protected new BuildingBlackBoard blackBoard;
@@ -35,7 +36,7 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext
         stateMachine?.Update();
     }
 
-    public virtual Building SetUp(EntityData data, GameObject selectionIndicator, Team team)
+    public virtual Building SetUp(EntityData data, GameObject selectionIndicator, EntityProfilePanel profilePanel, Team team)
     {
         this.data = data;
         this.team = team;
@@ -46,6 +47,7 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext
         healthSystem = new HealthSystem(data.MaxHealth);
 
         this.selectionIndicator = selectionIndicator;
+        this.profilePanel = profilePanel;
 
         return this;
     }
@@ -54,11 +56,19 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext
     {
         selectionIndicator.SetActive(false);
         selectionIndicator.SetActive(true);
+
+        profilePanel.RegisterEntity(this);
     }
 
     public override void OnDeselected()
     {
         selectionIndicator.SetActive(false);
+        profilePanel.UnregisterEntity();
+    }
+
+    public float GetProgressRate()
+    {
+        return Mathf.Clamp(blackBoard.progressRate, 0, 1);
     }
 
     #region Construction

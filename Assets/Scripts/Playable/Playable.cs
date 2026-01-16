@@ -30,12 +30,13 @@ public interface ITransformProvider
 
 public abstract class Playable : MonoBehaviour, ISelectable, ITransformProvider
 {
-    protected EntityData data;
     
     // State Machine
     protected StateMachineBase stateMachine;
     protected BlackBoard blackBoard;
     protected Command command;
+
+    protected EntityData data;
 
     public Team GetTeam() => team;
     protected Team team;
