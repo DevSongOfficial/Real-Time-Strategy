@@ -5,11 +5,13 @@ using static CustomResourceManagement.Prefabs.Playable;
 public class UnitFactory : PlayableAbsFactory<Unit>
 {
     private IPlacementEvent placementEvent;
+    private EntityProfilePanel profilePanel;
 
-    public UnitFactory(ISelectionEvent selectionEvent, SelectionIndicatorFactory selectionIndicatorFactory, IPlacementEvent placementEvent)
+    public UnitFactory(ISelectionEvent selectionEvent, SelectionIndicatorFactory selectionIndicatorFactory, IPlacementEvent placementEvent, EntityProfilePanel profilePanel)
     {
         this.selectionIndicatorFactory = selectionIndicatorFactory;
         this.placementEvent = placementEvent;
+        this.profilePanel = profilePanel;
 
         base.Setup(selectionEvent, selectionIndicatorFactory);
     }
@@ -25,6 +27,6 @@ public class UnitFactory : PlayableAbsFactory<Unit>
         selectionIndicator.GetChild(0).localScale = (Vector3.one * data.RadiusOnTerrain).WithZ(1);
         selectionIndicator.gameObject.SetActive(false);
 
-        return unit.SetUp(data, team, selectionIndicator.gameObject, placementEvent);
+        return unit.SetUp(data, team, selectionIndicator.gameObject, profilePanel, placementEvent);
     }
 }

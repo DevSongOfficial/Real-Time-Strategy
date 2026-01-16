@@ -17,6 +17,8 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
     private GameObject selectionIndicator;
     private IPlacementEvent placementEvent;
     private HealthSystem healthSystem;
+    protected EntityProfilePanel profilePanel;
+
 
     protected virtual void Awake()
     {
@@ -35,12 +37,13 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
         PositionDeltaY = collider.bounds.extents.y;
     }
 
-    public Unit SetUp(EntityData data, Team team, GameObject selectionIndicator, IPlacementEvent placementEvent)
+    public Unit SetUp(EntityData data, Team team, GameObject selectionIndicator, EntityProfilePanel profilePanel, IPlacementEvent placementEvent)
     {
         this.data = data;
         this.team = team;
         this.selectionIndicator = selectionIndicator;
         this.placementEvent = placementEvent;
+        this.profilePanel = profilePanel;
 
         blackBoard = new BlackBoard(data, coroutineExecutor, team);
         stateMachine = new UnitStateMachine(this, blackBoard);
@@ -57,12 +60,16 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
 
     public override void OnSelected()
     {
+        profilePanel.RegisterEntity(this);
+
         selectionIndicator.SetActive(false);
         selectionIndicator.SetActive(true);
     }
 
     public override void OnDeselected()
     {
+        profilePanel.UnregisterEntity();
+
         selectionIndicator.SetActive(false);
     }
 

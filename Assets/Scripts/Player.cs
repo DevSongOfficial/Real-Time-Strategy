@@ -80,7 +80,7 @@ public sealed class Player : MonoBehaviour
         placementPresenter.OnPlacementCanceled += (Vector3 finishedPosition) => SetMode(normalMode);
         placementPresenter.OnPlacementRequested += (ITarget requestedBuilding) => SetMode(normalMode);
 
-        unitFactory                     = new UnitFactory(selectionHandler, selectionIndicatorFactory, placementPresenter);
+        unitFactory                     = new UnitFactory(selectionHandler, selectionIndicatorFactory, placementPresenter, profilePanel);
         unitGenerator                   = new UnitGenerator(unitFactory, entityRegistry);
         unitGenerator.OnUnitGenerated   += healthBarGenerator.GenerateAndSetTargetUnit;
 

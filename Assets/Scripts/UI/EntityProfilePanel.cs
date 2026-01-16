@@ -26,8 +26,18 @@ public class EntityProfilePanel : MonoBehaviour
         if (!isSelected) return;
 
         if (currentEntity is Building building)
+        {
+            buildingPV.gameObject.SetActive(true);
+            unitPV.gameObject.SetActive(false);
+
             buildingPV.Refresh(building);
+        }
         else if (currentEntity is Unit unit)
+        {
+            unitPV.gameObject.SetActive(true);
+            buildingPV.gameObject.SetActive(false);
+            
             unitPV.Refresh(unit);
+        }
     }
 }

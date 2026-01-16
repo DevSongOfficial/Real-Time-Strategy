@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61594700613c48a4c83f2c31a8c39ff5, type: 3}
   m_Name: Building3Data
   m_EditorClassIdentifier: 
-  <Team>k__BackingField: 0
-  <DisplayName>k__BackingField: Building 3
+  <DisplayName>k__BackingField: Barracks
+  <ProfileSprite>k__BackingField: {fileID: 21300000, guid: 47a210e716ed90b46914b5ffc65ca857, type: 3}
   <RadiusOnTerrain>k__BackingField: 3
   <SelectionIndicatorPositionOffset>k__BackingField: {x: 0, y: 0, z: 0}
   <Prefab>k__BackingField: {fileID: 6404431195190590083, guid: 3e7ddadddd3047f49b7a73fe5997b3f3, type: 3}
   <MaxHealth>k__BackingField: 100
   <Combat>k__BackingField: {fileID: 11400000, guid: 6cb5b9cdf07257844966f082b6a892f4, type: 2}
   <CellSize>k__BackingField: {x: 2, y: 3}
+  <ConsructionTime>k__BackingField: 4

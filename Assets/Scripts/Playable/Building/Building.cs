@@ -66,10 +66,32 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext
         profilePanel.UnregisterEntity();
     }
 
+    #region State & Progress
     public float GetProgressRate()
     {
         return Mathf.Clamp(blackBoard.progressRate, 0, 1);
     }
+    public string GetProgressLabelName()
+    {
+        switch (stateMachine.CurrentState)
+        {
+            case BuildingUnderConstructionState:
+                return "Being constructed...";
+            case BuildingUnitTrainState:
+                return "Traning " + blackBoard.unitGenerationInfo.unitData.DisplayName + "...";
+        }
+
+        return string.Empty;
+    }
+
+    public Sprite GetTraningUnitSprite()
+    {
+        if(stateMachine.CurrentState is BuildingUnitTrainState)
+            return blackBoard.unitGenerationInfo.unitData.ProfileSprite;
+
+        return null;
+    }
+    #endregion
 
     #region Construction
     // TODO: refactor 

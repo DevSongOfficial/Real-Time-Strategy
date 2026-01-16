@@ -9,6 +9,7 @@ public class BuildingProfileView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI manaText;
     [Space]
     [SerializeField] private TextMeshProUGUI displayName;
+    [SerializeField] private Image progressInfoImage;
     [SerializeField] private TextMeshProUGUI progressLabelText;
     [SerializeField] private Image progressFill;
 
@@ -22,7 +23,8 @@ public class BuildingProfileView : MonoBehaviour
         
         // Set dynamic data
         healthText.text = $"{building.GetHealthSystem().CurrentHealth} / {data.MaxHealth}";
-        progressLabelText.text = $"...";
+        progressLabelText.text = building.GetProgressLabelName();
+        progressInfoImage.sprite = building.GetTraningUnitSprite();
         progressFill.fillAmount = building.GetProgressRate();
 
     }
