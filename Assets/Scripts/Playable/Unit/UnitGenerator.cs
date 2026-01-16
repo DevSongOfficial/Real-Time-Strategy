@@ -33,3 +33,17 @@ public class UnitGenerator
         }
     }
 }
+
+public struct UnitGenerationInfo
+{
+    public UnitData unitData;
+    public Team team;
+    public Vector3 spawnPosition;
+
+    public UnitGenerationInfo(UnitData unitData, Team team, Vector3 position)
+    {
+        this.unitData = unitData; 
+        this.team = team; 
+        this.spawnPosition = position;
+    }
+}

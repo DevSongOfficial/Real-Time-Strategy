@@ -2,13 +2,19 @@ using UnityEngine;
 
 public class BuildingUnitTrainState : BuildingStateBase
 {
-    public BuildingUnitTrainState(BuildingStateMachine stateMachine, BlackBoard blackBoard) : base(stateMachine, blackBoard)
-    {
+    private IUnitGenerator generator;
+    private new BuildingBlackBoard blackBoard;
 
+    public BuildingUnitTrainState(BuildingStateMachine stateMachine, BuildingBlackBoard blackBoard, IBuildingStateContext stateContext) : 
+        base(stateMachine, blackBoard, stateContext)
+    {
+        generator = stateContext.GetUnitGenerator();
+        this.blackBoard = blackBoard;
     }
 
     public override void Enter()
     {
+        generator.GenerateUnit(blackBoard.unitGenerationInfo);
     }
 
     public override void Exit()

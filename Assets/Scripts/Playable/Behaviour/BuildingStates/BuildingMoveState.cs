@@ -6,7 +6,7 @@ public class BuildingMoveState : BuildingStateBase
 {
     private NavMeshAgent agent;
 
-    public BuildingMoveState(BuildingStateMachine stateMachine, BlackBoard blackBoard, NavMeshAgent agent) : base(stateMachine, blackBoard)
+    public BuildingMoveState(BuildingStateMachine stateMachine, BlackBoard blackBoard, NavMeshAgent agent, IBuildingStateContext stateContext) : base(stateMachine, blackBoard, stateContext)
     {
         this.agent = agent;
     }

@@ -1,8 +1,10 @@
+using Unity.AppUI.Core;
 using UnityEngine;
 
 public class BuildingIdleState : BuildingStateBase
 {
-    public BuildingIdleState(BuildingStateMachine stateMachine, BlackBoard blackBoard) : base(stateMachine, blackBoard)
+    public BuildingIdleState(BuildingStateMachine stateMachine, BlackBoard blackBoard, IBuildingStateContext stateContext) 
+        : base(stateMachine, blackBoard, stateContext)
     {
     }
 

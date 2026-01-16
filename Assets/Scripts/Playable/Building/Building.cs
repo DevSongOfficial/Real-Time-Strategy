@@ -2,15 +2,17 @@ using System;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Building : Playable, ITarget<BuildingData>
+public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext
 {
     [SerializeField] protected CoroutineExecutor coroutineExecutor;
     [SerializeField] private new Collider collider;
     protected HealthSystem healthSystem;
-
     protected GameObject selectionIndicator;
 
-    private new BuildingStateMachine stateMachine => base.stateMachine as BuildingStateMachine;
+    protected new BuildingStateMachine stateMachine => base.stateMachine as BuildingStateMachine;
+    protected new BuildingBlackBoard blackBoard;
+
+    public bool CanExecuteCommand => (stateMachine.CurrentState != (stateMachine).ConstructionState);
 
 
     // TODO: I think it's better to put this variable in EntityData and write on my own. (not getting it through collider)
@@ -39,7 +41,7 @@ public class Building : Playable, ITarget<BuildingData>
         this.team = team;
 
         blackBoard = new BuildingBlackBoard(data, coroutineExecutor, team);
-        base.stateMachine = new BuildingStateMachine(blackBoard as BuildingBlackBoard);
+        base.stateMachine = new BuildingStateMachine(this, blackBoard);
 
         healthSystem = new HealthSystem(data.MaxHealth);
 
@@ -59,6 +61,7 @@ public class Building : Playable, ITarget<BuildingData>
         selectionIndicator.SetActive(false);
     }
 
+    #region Construction
     // TODO: refactor 
     public void StartConstruction(Action unitActionOnConsturctionFinished)
     {
@@ -70,7 +73,9 @@ public class Building : Playable, ITarget<BuildingData>
     {
         stateMachine.ConstructionState.PauseConstruction();
     }
+    #endregion
 
+    #region Transform
     public override void SetPosition(Vector3 position)
     {
         transform.position = position.WithY(PositionDeltaY);
@@ -79,6 +84,12 @@ public class Building : Playable, ITarget<BuildingData>
     public Vector3 GetPosition()
     {
         return transform.position;
+    }
+    #endregion
+    
+    public virtual IUnitGenerator GetUnitGenerator()
+    {
+        return null;
     }
 
     public IHealthSystem GetHealthSystem()

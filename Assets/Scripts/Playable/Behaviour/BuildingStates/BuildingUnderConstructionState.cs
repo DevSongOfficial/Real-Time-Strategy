@@ -1,5 +1,6 @@
-using UnityEngine;
 using System;
+using Unity.AppUI.Core;
+using UnityEngine;
 
 public class BuildingUnderConstructionState: BuildingStateBase
 {
@@ -8,7 +9,8 @@ public class BuildingUnderConstructionState: BuildingStateBase
 
     private bool isPaused;
 
-    public BuildingUnderConstructionState(BuildingStateMachine stateMachine, BuildingBlackBoard blackBoard) : base(stateMachine, blackBoard)
+    public BuildingUnderConstructionState(BuildingStateMachine stateMachine, BuildingBlackBoard blackBoard, IBuildingStateContext stateContext) 
+        : base(stateMachine, blackBoard, stateContext)
     {
         leftTime = blackBoard.BaseData.ConsructionTime;
     }

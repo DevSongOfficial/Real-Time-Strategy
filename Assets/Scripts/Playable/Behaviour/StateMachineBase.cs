@@ -47,10 +47,10 @@ public abstract class StateMachineBase
 
 public sealed class UnitStateMachine : StateMachineBase
 {
-    public UnitIdleState IdleState { get; private set; }
-    public UnitMoveState MoveState { get; private set; }
-    public UnitAttackState AttackState { get; private set; }
-    public UnitConstructState ConstructState { get; private set; }
+    public UnitIdleState        IdleState { get; private set; }
+    public UnitMoveState        MoveState { get; private set; }
+    public UnitAttackState      AttackState { get; private set; }
+    public UnitConstructState   ConstructState { get; private set; }
 
     private BlackBoard blackBoard;
 
@@ -58,10 +58,10 @@ public sealed class UnitStateMachine : StateMachineBase
     {
         this.blackBoard = blackBoard;
 
-        IdleState = new UnitIdleState(this, blackBoard, stateContext);
-        MoveState = new UnitMoveState(this, blackBoard, stateContext);
-        AttackState = new UnitAttackState(this, blackBoard, stateContext);
-        ConstructState = new UnitConstructState(this, blackBoard, stateContext);
+        IdleState       = new UnitIdleState(this, blackBoard, stateContext);
+        MoveState       = new UnitMoveState(this, blackBoard, stateContext);
+        AttackState     = new UnitAttackState(this, blackBoard, stateContext);
+        ConstructState  = new UnitConstructState(this, blackBoard, stateContext);
 
         RegisterState(IdleState);
         RegisterState(MoveState);
@@ -97,14 +97,15 @@ public class BuildingStateMachine : StateMachineBase
     public BuildingUnderConstructionState   ConstructionState { get; private set; }
     public BuildingUnitTrainState           UnitTrainState { get; private set; }
 
-    public BuildingStateMachine(BuildingBlackBoard blackBoard)
+    public BuildingStateMachine(IBuildingStateContext stateContext, BuildingBlackBoard blackBoard)
     {
-        IdleState               = new BuildingIdleState(this, blackBoard);
-        ConstructionState  = new BuildingUnderConstructionState(this, blackBoard);
-        UnitTrainState          = new BuildingUnitTrainState(this, blackBoard);
+        IdleState               = new BuildingIdleState(this, blackBoard, stateContext);
+        ConstructionState       = new BuildingUnderConstructionState(this, blackBoard, stateContext);
+        UnitTrainState          = new BuildingUnitTrainState(this, blackBoard, stateContext);
 
         RegisterState(IdleState);
         RegisterState(ConstructionState);
+        RegisterState(UnitTrainState);
 
         ChangeState<BuildingIdleState>();
     }
@@ -112,9 +113,9 @@ public class BuildingStateMachine : StateMachineBase
 
 public class HybridBuildingStateMachine : BuildingStateMachine
 {
-    public HybridBuildingStateMachine(BuildingBlackBoard blackBoard, NavMeshAgent agent) : base(blackBoard)
+    public HybridBuildingStateMachine(IBuildingStateContext stateContext, BuildingBlackBoard blackBoard, NavMeshAgent agent) : base(stateContext, blackBoard)
     {
-        RegisterState(new BuildingMoveState(this, blackBoard, agent));
+        RegisterState(new BuildingMoveState(this, blackBoard, agent, stateContext));
     }
 }
 
@@ -145,6 +146,9 @@ public class BlackBoard
 public class BuildingBlackBoard : BlackBoard
 {
     public new BuildingData BaseData => base.BaseData as BuildingData;
+
+    // For barracks
+    public UnitGenerationInfo unitGenerationInfo;
 
     public BuildingBlackBoard(EntityData data, CoroutineExecutor coroutineExecutor, Team team)
         :base(data, coroutineExecutor, team)

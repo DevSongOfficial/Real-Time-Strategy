@@ -29,7 +29,7 @@ public class HybridBuilding : Building, ITargetor
         this.data = data;
 
         blackBoard = new BuildingBlackBoard(data, coroutineExecutor, team);
-        stateMachine = new HybridBuildingStateMachine(blackBoard as BuildingBlackBoard, agent);
+        //stateMachine = new HybridBuildingStateMachine(this, blackBoard, agent);
 
         healthSystem = new HealthSystem(data.MaxHealth);
 

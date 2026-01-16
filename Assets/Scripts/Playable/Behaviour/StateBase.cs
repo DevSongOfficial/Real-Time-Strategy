@@ -36,5 +36,10 @@ public abstract class UnitStateBase : StateBase<UnitStateMachine>
 
 public abstract class BuildingStateBase : StateBase<BuildingStateMachine>
 {
-    public BuildingStateBase(BuildingStateMachine stateMachine, BlackBoard blackBoard) : base(stateMachine, blackBoard) { }
+    protected IBuildingStateContext stateContext;
+
+    public BuildingStateBase(BuildingStateMachine stateMachine, BlackBoard blackBoard, IBuildingStateContext stateContext) : base(stateMachine, blackBoard) 
+    {
+        this.stateContext = stateContext;
+    }
 }

@@ -22,3 +22,11 @@ public interface IUnitStateContext
     public void CrossFadeAnimation(string stateName, float normalizedTransitionDuration, int layer);
     public bool IsAnimationInProgress(string stateName, int layer = 0);
 }
+
+public interface IBuildingStateContext
+{
+    // Transform 
+    public Vector3 GetPosition();
+
+    IUnitGenerator GetUnitGenerator();
+}
