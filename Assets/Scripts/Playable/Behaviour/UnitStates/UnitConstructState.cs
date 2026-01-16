@@ -21,25 +21,24 @@ public class UnitConstructState : UnitStateBase
         }
 
         this.building = building;
-        building.StartConstruction();
-        building.OnConstructionFinished += SwitchToIdleState;
+        building.StartConstruction(SwitchToIdleState);
 
         stateContext.CrossFadeAnimation("Construct", 0.05f, 0);
         stateContext.LookAt(blackBoard.target.GetPosition());
     }
 
-    public override void Exit() { }
+    public override void Exit() 
+    {
+        building.PauseConstruction();
+    }
 
     public override void Update()
     {
         base.Update();
-
-        building.TickConstruction();
     }
 
     private void SwitchToIdleState()
     {
-        building.OnConstructionFinished -= SwitchToIdleState;
         stateMachine.ChangeState<UnitIdleState>();
     }
 }

@@ -10,11 +10,8 @@ public class Building : Playable, ITarget<BuildingData>
 
     protected GameObject selectionIndicator;
 
-    // Construction
-    public bool IsConstructing { get; private set; }
-    private float leftConstructionTime;
-    public event Action OnConstructionStarted;
-    public event Action OnConstructionFinished;
+    private new BuildingStateMachine stateMachine => base.stateMachine as BuildingStateMachine;
+
 
     // TODO: I think it's better to put this variable in EntityData and write on my own. (not getting it through collider)
     public float PositionDeltaY { get; private set; }
@@ -41,8 +38,8 @@ public class Building : Playable, ITarget<BuildingData>
         this.data = data;
         this.team = team;
 
-        blackBoard = new BlackBoard(data, coroutineExecutor, team);
-        stateMachine = new BuildingStateMachine(blackBoard);
+        blackBoard = new BuildingBlackBoard(data, coroutineExecutor, team);
+        base.stateMachine = new BuildingStateMachine(blackBoard as BuildingBlackBoard);
 
         healthSystem = new HealthSystem(data.MaxHealth);
 
@@ -62,22 +59,16 @@ public class Building : Playable, ITarget<BuildingData>
         selectionIndicator.SetActive(false);
     }
 
-    // TODO: put these construction methods in building states
-    public void StartConstruction()
+    // TODO: refactor 
+    public void StartConstruction(Action unitActionOnConsturctionFinished)
     {
-        IsConstructing = true;
-        leftConstructionTime = GetData().ConsructionTime;
-        OnConstructionStarted?.Invoke();
+        stateMachine.ConstructionState.OnFinished += unitActionOnConsturctionFinished;
+        stateMachine.ChangeState<BuildingUnderConstructionState>();
     }
-
-    public void TickConstruction()
+    // TODO: refactor 
+    public void PauseConstruction()
     {
-        leftConstructionTime -= Time.deltaTime;
-        if (leftConstructionTime <= 0)
-        {
-            IsConstructing = false;
-            OnConstructionFinished?.Invoke();
-        }
+        stateMachine.ConstructionState.PauseConstruction();
     }
 
     public override void SetPosition(Vector3 position)

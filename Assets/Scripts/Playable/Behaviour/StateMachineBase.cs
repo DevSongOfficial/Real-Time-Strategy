@@ -93,9 +93,18 @@ public sealed class UnitStateMachine : StateMachineBase
 
 public class BuildingStateMachine : StateMachineBase
 {
-    public BuildingStateMachine(BlackBoard blackBoard)
+    public BuildingIdleState                IdleState { get; private set; }
+    public BuildingUnderConstructionState   ConstructionState { get; private set; }
+    public BuildingUnitTrainState           UnitTrainState { get; private set; }
+
+    public BuildingStateMachine(BuildingBlackBoard blackBoard)
     {
-        RegisterState(new BuildingIdleState(this, blackBoard));
+        IdleState               = new BuildingIdleState(this, blackBoard);
+        ConstructionState  = new BuildingUnderConstructionState(this, blackBoard);
+        UnitTrainState          = new BuildingUnitTrainState(this, blackBoard);
+
+        RegisterState(IdleState);
+        RegisterState(ConstructionState);
 
         ChangeState<BuildingIdleState>();
     }
@@ -103,7 +112,7 @@ public class BuildingStateMachine : StateMachineBase
 
 public class HybridBuildingStateMachine : BuildingStateMachine
 {
-    public HybridBuildingStateMachine(BlackBoard blackBoard, NavMeshAgent agent) : base(blackBoard)
+    public HybridBuildingStateMachine(BuildingBlackBoard blackBoard, NavMeshAgent agent) : base(blackBoard)
     {
         RegisterState(new BuildingMoveState(this, blackBoard, agent));
     }
@@ -130,5 +139,16 @@ public class BlackBoard
         this.BaseData = data;
         this.coroutineExecutor = coroutineExecutor;
         this.team = team;
+    }
+}
+
+public class BuildingBlackBoard : BlackBoard
+{
+    public new BuildingData BaseData => base.BaseData as BuildingData;
+
+    public BuildingBlackBoard(EntityData data, CoroutineExecutor coroutineExecutor, Team team)
+        :base(data, coroutineExecutor, team)
+    {
+        
     }
 }

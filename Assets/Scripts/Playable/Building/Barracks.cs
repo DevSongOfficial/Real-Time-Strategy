@@ -7,9 +7,8 @@ public interface IUnitGenerator
     void SetUnitGenerator(UnitGenerator unitGenerator);
 }
 
-public class Barracks : Building, IUnitGenerator
+public class Barracks : Building, ITarget<BarracksData>, IUnitGenerator
 {
-    private new BarracksData data;
     private UnitGenerator unitGenerator;
 
     [SerializeField] private Vector2 spawnPointOffset; // building.position + spawnPoint would be the spawn point.
@@ -17,7 +16,6 @@ public class Barracks : Building, IUnitGenerator
     public void SetUnitGenerator(UnitGenerator unitGenerator)
     {
         this.unitGenerator = unitGenerator;
-        //data = (BarracksData)base.data;
     }
 
     public override void ExecuteCommand(Command command)
@@ -29,4 +27,10 @@ public class Barracks : Building, IUnitGenerator
             unitGenerator.Generate(command.entityToGenerate, team, transform.position + new Vector3(spawnPointOffset.x, 0, spawnPointOffset.y));
         }
     }
+
+    public new BarracksData GetData()
+    {
+        return (BarracksData)base.GetData();
+    }
+
 }
