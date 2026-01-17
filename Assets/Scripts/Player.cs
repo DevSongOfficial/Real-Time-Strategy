@@ -90,8 +90,8 @@ public sealed class Player : MonoBehaviour
 
 
         selectionHandler.OnSelectEntity += OnEntitySelected;
+        selectionHandler.OnDeselectEntity += OnEntityDeselected;
         commandPanel.OnBuildingConstructionButtonClicked += OnStartBuilding;
-
     }
 
     private void Start()
@@ -122,5 +122,11 @@ public sealed class Player : MonoBehaviour
     {
         entity.OnSelected();
         commandPanel.OnEntitySelected(entity);
+    }
+
+    private void OnEntityDeselected(ISelectable entity)
+    {
+        entity.OnDeselected();
+        commandPanel.DisableAllButtons();
     }
 }

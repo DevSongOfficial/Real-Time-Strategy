@@ -149,9 +149,6 @@ public class BuildingBlackBoard : BlackBoard
 
     public float progressRate; // 0 ~ 1
 
-    // For barracks
-    public UnitGenerationInfo unitGenerationInfo;
-
     public BuildingBlackBoard(EntityData data, CoroutineExecutor coroutineExecutor, Team team)
         :base(data, coroutineExecutor, team)
     {

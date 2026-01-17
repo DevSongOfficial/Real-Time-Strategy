@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -13,7 +14,8 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext
     protected new BuildingStateMachine stateMachine => base.stateMachine as BuildingStateMachine;
     protected new BuildingBlackBoard blackBoard;
 
-    public bool CanExecuteCommand => (stateMachine.CurrentState != (stateMachine).ConstructionState);
+    public bool IsUnderConstruction => (stateMachine.CurrentState is BuildingUnderConstructionState);
+    public IState CurrentState => stateMachine.CurrentState;
 
 
     // TODO: I think it's better to put this variable in EntityData and write on my own. (not getting it through collider)
@@ -71,24 +73,16 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext
     {
         return Mathf.Clamp(blackBoard.progressRate, 0, 1);
     }
-    public string GetProgressLabelName()
+    public virtual string GetProgressLabelName()
     {
-        switch (stateMachine.CurrentState)
-        {
-            case BuildingUnderConstructionState:
-                return "Being constructed...";
-            case BuildingUnitTrainState:
-                return "Traning " + blackBoard.unitGenerationInfo.unitData.DisplayName + "...";
-        }
+        if(stateMachine.CurrentState is BuildingUnderConstructionState)
+            return "Being constructed...";
 
         return string.Empty;
     }
 
-    public Sprite GetTraningUnitSprite()
+    public virtual IEnumerable<Sprite> GetTraningUnitSprites()
     {
-        if(stateMachine.CurrentState is BuildingUnitTrainState)
-            return blackBoard.unitGenerationInfo.unitData.ProfileSprite;
-
         return null;
     }
     #endregion

@@ -32,10 +32,12 @@ public sealed class NormalMode : ModeBase
 
     public override void HandleInput()
     {
-        if (inputManager.GetMouseButtonDown(0) && inputManager.IsPointerInClickableArea())
-            selectionHandler.SelectEntity(inputManager.GetMousePosition(), additive: inputManager.GetKey(KeyCode.LeftShift));
+        if (!inputManager.IsPointerInClickableArea())
+            return;
 
-        if (inputManager.GetMouseButtonDown(1) && inputManager.IsPointerInClickableArea())
+        if (inputManager.GetMouseButtonDown(0))
+            selectionHandler.SelectEntity(inputManager.GetMousePosition(), additive: inputManager.GetKey(KeyCode.LeftShift));
+        else if (inputManager.GetMouseButtonDown(1))
             selectionHandler.SelectTarget(inputManager.GetMousePosition());
     }
 }

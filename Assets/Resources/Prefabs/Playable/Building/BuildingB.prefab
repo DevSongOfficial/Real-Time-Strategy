@@ -266,6 +266,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b79b6644b2a8b794ca4eb55ca890c856, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  commandSet: {fileID: 11400000, guid: 6f848b249f721c34e9d78969a1656f5c, type: 2}
   coroutineExecutor: {fileID: -6059184529129133698}
   collider: {fileID: 429833249483436969}
   agent: {fileID: 4060409900883155254}

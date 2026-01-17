@@ -34,15 +34,15 @@ public class UnitGenerator
     }
 }
 
-public struct UnitGenerationInfo
+public class UnitGenerationInfo
 {
-    public UnitData unitData;
+    public UnitData Data;
     public Team team;
     public Vector3 spawnPosition;
 
     public UnitGenerationInfo(UnitData unitData, Team team, Vector3 position)
     {
-        this.unitData = unitData; 
+        this.Data = unitData; 
         this.team = team; 
         this.spawnPosition = position;
     }

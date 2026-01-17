@@ -57,6 +57,7 @@ public interface ISelectionEvent { event Action<ISelectable> OnSelectEntity; }
 public class SelectionHandler : ISelectionEvent 
 {
     public event Action<ISelectable> OnSelectEntity;
+    public event Action<ISelectable> OnDeselectEntity;
 
     private Camera camera;
     private CommandPanel commandPanel;
@@ -110,15 +111,16 @@ public class SelectionHandler : ISelectionEvent
     // Select an entity to control. (Mouse 0)
     public ISelectable SelectEntity(Vector2 screenPos, bool additive)
     {
-        if (!additive) DeselectAllUnits();
+        if (!additive) DeselectAllEntities();
 
         var ray = camera.ScreenPointToRay(screenPos);
         // TODO: Only allow selection of same team units.
-        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, Layer.Selectable.ToLayerMask()))
+        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, Layer.Selectable.ToLayerMask())
+            || !hit.transform.parent.TryGetComponent(out ISelectable entity))
+        {
+            DeselectAllEntities();
             return null;
-
-        if (!hit.transform.parent.TryGetComponent(out ISelectable entity))
-            return null;
+        }
 
         bool selectionSucceeded = SelectEntity(entity);
         return selectionSucceeded ? entity : null;
@@ -141,7 +143,7 @@ public class SelectionHandler : ISelectionEvent
             if(currentSelectedTeam == Player.Team)
                 return false;
             else if(entity.GetTeam() == Player.Team)
-                DeselectAllUnits();
+                DeselectAllEntities();
         }
 
         // Select entity.
@@ -152,18 +154,18 @@ public class SelectionHandler : ISelectionEvent
         return true;
     }
 
-    private void DeselectUnit(ISelectable unit)
+    private void DeselectEntity(ISelectable entity)
     {
-        if (selectedEntities.Contains(unit))
-            selectedEntities.Remove(unit);
+        if (selectedEntities.Contains(entity))
+            selectedEntities.Remove(entity);
 
-        unit.OnDeselected();
+        OnDeselectEntity?.Invoke(entity);
     }
 
-    private void DeselectAllUnits()
+    private void DeselectAllEntities()
     {
         for (int i = selectedEntities.Count - 1; i >= 0; i--)
-            DeselectUnit(selectedEntities[i]);
+            DeselectEntity(selectedEntities[i]);
 
         currentSelectedTeam = Team.None;
     }

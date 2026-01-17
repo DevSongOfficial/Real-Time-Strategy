@@ -47,6 +47,12 @@ public class CommandPanel : MonoBehaviour
         currentEntity.ExecuteCommand(command);
     }
 
+    public void DisableAllButtons()
+    {
+        foreach (var button in commandButtons)
+            button.Disable();
+    }
+
     private void RefreshCommandButtons()
     {
         for (int i = 0; i < ButtonCount; i++)
@@ -61,11 +67,5 @@ public class CommandPanel : MonoBehaviour
             var command = currentCommandSet.Commands[i];
             button.Refresh(command);
         }
-    }
-
-    private void DisableAllButtons()
-    {
-        foreach (var button in commandButtons)
-            button.Disable();
     }
 }

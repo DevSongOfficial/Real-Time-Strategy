@@ -13,12 +13,19 @@ public class EntityProfilePanel : MonoBehaviour
     {
         currentEntity = entity;
         isSelected = true;
+
+        var isBuilding = currentEntity is Building;
+        buildingPV.gameObject.SetActive(isBuilding);
+        unitPV.gameObject.SetActive(!isBuilding);
     }
 
     public void UnregisterEntity()
     {
         currentEntity = null;
         isSelected = false;
+
+        buildingPV.gameObject.SetActive(false);
+        unitPV.gameObject.SetActive(false);
     }
 
     private void LateUpdate()
@@ -26,18 +33,8 @@ public class EntityProfilePanel : MonoBehaviour
         if (!isSelected) return;
 
         if (currentEntity is Building building)
-        {
-            buildingPV.gameObject.SetActive(true);
-            unitPV.gameObject.SetActive(false);
-
             buildingPV.Refresh(building);
-        }
         else if (currentEntity is Unit unit)
-        {
-            unitPV.gameObject.SetActive(true);
-            buildingPV.gameObject.SetActive(false);
-            
             unitPV.Refresh(unit);
-        }
     }
 }

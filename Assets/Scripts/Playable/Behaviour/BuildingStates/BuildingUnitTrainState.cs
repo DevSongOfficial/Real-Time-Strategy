@@ -4,10 +4,8 @@ public class BuildingUnitTrainState : BuildingStateBase
 {
     private new BuildingBlackBoard blackBoard;
     private IUnitGenerator generator;
+    private float generationTime;
     private float leftTime;
-
-    // TODO: Move this to Unit SO
-    private float timeToGenerateAUnit = 4;
 
     public BuildingUnitTrainState(BuildingStateMachine stateMachine, BuildingBlackBoard blackBoard, IBuildingStateContext stateContext) : 
         base(stateMachine, blackBoard, stateContext)
@@ -18,24 +16,34 @@ public class BuildingUnitTrainState : BuildingStateBase
 
     public override void Enter()
     {
-        leftTime = timeToGenerateAUnit;
+        generationTime = generator.PeekNextUnit().Data.TrainingTime;
+        leftTime = generationTime;
     }
 
     public override void Exit()
     {
+        blackBoard.progressRate = 0;
     }
 
     public override void Update()
     {
-        leftTime -= Time.deltaTime;
-        blackBoard.progressRate = 1 - (leftTime / timeToGenerateAUnit);
-
-        if(leftTime <= 0)
+        if(generator.GetUnitCount() == 0)
         {
-            blackBoard.progressRate = 0;
-
-            generator.GenerateUnit(blackBoard.unitGenerationInfo);
             stateMachine.ChangeState<BuildingIdleState>();
+            return;
         }
+
+        leftTime -= Time.deltaTime;
+        blackBoard.progressRate = 1 - (leftTime / generationTime);
+
+        if (leftTime > 0) return;
+
+        var unitInfo = generator.DequeueUnit();
+        generator.GenerateUnit(unitInfo);
+
+        if(generator.GetUnitCount() > 0)
+            stateMachine.ChangeState<BuildingUnitTrainState>();
+        else
+            stateMachine.ChangeState<BuildingIdleState>();
     }
 }
