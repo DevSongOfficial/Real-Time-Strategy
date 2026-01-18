@@ -99,15 +99,20 @@ public class BuildingStateMachine : StateMachineBase
 
     public BuildingStateMachine(IBuildingStateContext stateContext, BuildingBlackBoard blackBoard)
     {
-        IdleState               = new BuildingIdleState(this, blackBoard, stateContext);
+        // Default State
         ConstructionState       = new BuildingUnderConstructionState(this, blackBoard, stateContext);
+
+        // States after construction's done.
+        IdleState               = new BuildingIdleState(this, blackBoard, stateContext);
         UnitTrainState          = new BuildingUnitTrainState(this, blackBoard, stateContext);
 
         RegisterState(IdleState);
         RegisterState(ConstructionState);
         RegisterState(UnitTrainState);
 
-        ChangeState<BuildingIdleState>();
+        // Start default state, but have it wait til a unit start construction.
+        ChangeState<BuildingUnderConstructionState>();
+        ConstructionState.PauseConstruction();
     }
 }
 

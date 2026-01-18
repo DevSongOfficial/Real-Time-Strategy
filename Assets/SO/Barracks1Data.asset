@@ -19,6 +19,6 @@ MonoBehaviour:
   <Prefab>k__BackingField: {fileID: 6404431195190590083, guid: 3e7ddadddd3047f49b7a73fe5997b3f3, type: 3}
   <MaxHealth>k__BackingField: 250
   <Combat>k__BackingField: {fileID: 11400000, guid: 6cb5b9cdf07257844966f082b6a892f4, type: 2}
-  <CellSize>k__BackingField: {x: 0, y: 0}
+  <CellSize>k__BackingField: {x: 2, y: 3}
   <ConsructionTime>k__BackingField: 4
   GenerationSlotCount: 4

@@ -103,7 +103,7 @@ public class SelectionHandler : ISelectionEvent
         else // When the target is entity
         {
             foreach (var unit in selectedEntities)
-                if (unit is ITargetor targetor && unit.GetTeam() == Player.Team && Player.Team != target.Entity.GetTeam())
+                if (unit is ITargetor targetor && unit.GetTeam() == Player.Team)
                     targetor.SetTarget(target);
         }
     }

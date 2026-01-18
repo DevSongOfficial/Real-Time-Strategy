@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static CustomResourceManagement.Prefabs.Playable;
 
 public class BuildingProfileView : MonoBehaviour
 {
@@ -34,30 +33,34 @@ public class BuildingProfileView : MonoBehaviour
 
     private void FillTrainingSprites(Building building)
     {
-        Barracks barracks = building as Barracks;
-        if(barracks.CurrentState is not BuildingUnitTrainState)
+        if (building is not Barracks barracks  || 
+            building.CurrentState is BuildingUnderConstructionState || 
+            building.CurrentState is BuildingIdleState )
         {
             for (int i = 0; i < progressInfoImages.Count; i++)
             {
                 progressInfoImages[i].sprite = null;
                 progressInfoImages[i].enabled = false;
             }
-
-            return;
         }
-
-        int j = 0;
-        foreach (var sprite in building.GetTraningUnitSprites())
+        else
         {
-            progressInfoImages[j].sprite = sprite;
-            progressInfoImages[j].enabled = true;
+            for (int i = 0; i < progressInfoImages.Count; i++)
+            {
+                var maxCount = barracks.GetData().GenerationSlotCount;
+                progressInfoImages[i].enabled = i < maxCount;
+            }
+            int j = 0;
+            foreach (var sprite in building.GetTraningUnitSprites())
+            {
+                progressInfoImages[j].sprite = sprite;
 
-            j++;
-        }
-        for (; j < barracks.GetData().GenerationSlotCount; j++)
-        {
-            progressInfoImages[j].enabled = true;
-            progressInfoImages[j].sprite = null;
+                j++;
+            }
+            for (; j < barracks.GetData().GenerationSlotCount; j++)
+            {
+                progressInfoImages[j].sprite = null;
+            }
         }
     }
 }

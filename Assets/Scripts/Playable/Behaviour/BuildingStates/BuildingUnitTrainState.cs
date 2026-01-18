@@ -3,8 +3,11 @@ using UnityEngine;
 public class BuildingUnitTrainState : BuildingStateBase
 {
     private new BuildingBlackBoard blackBoard;
+    
     private IUnitGenerator generator;
     private float generationTime;
+
+    private UnitGenerationInfo previouslyRequestedUnit;
     private float leftTime;
 
     public BuildingUnitTrainState(BuildingStateMachine stateMachine, BuildingBlackBoard blackBoard, IBuildingStateContext stateContext) : 
@@ -16,8 +19,14 @@ public class BuildingUnitTrainState : BuildingStateBase
 
     public override void Enter()
     {
-        generationTime = generator.PeekNextUnit().Data.TrainingTime;
+        UnitGenerationInfo newlyRequestedUnit = generator.PeekNextUnit();
+        if (newlyRequestedUnit == previouslyRequestedUnit)
+            return;
+
+        generationTime = newlyRequestedUnit.Data.TrainingTime;
         leftTime = generationTime;
+
+        previouslyRequestedUnit = newlyRequestedUnit;
     }
 
     public override void Exit()

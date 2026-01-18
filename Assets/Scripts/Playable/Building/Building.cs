@@ -91,8 +91,7 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext
     // TODO: refactor 
     public void StartConstruction(Action unitActionOnConsturctionFinished)
     {
-        stateMachine.ConstructionState.OnFinished += unitActionOnConsturctionFinished;
-        stateMachine.ChangeState<BuildingUnderConstructionState>();
+        stateMachine.ConstructionState.ResumeConstruction(unitActionOnConsturctionFinished);
     }
     // TODO: refactor 
     public void PauseConstruction()

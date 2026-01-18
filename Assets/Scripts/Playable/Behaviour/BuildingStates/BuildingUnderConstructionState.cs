@@ -44,6 +44,12 @@ public class BuildingUnderConstructionState: BuildingStateBase
         }
     }
 
+    public void ResumeConstruction(Action unitActionOnConsturctionFinished)
+    {
+        isPaused = false;
+        OnFinished += unitActionOnConsturctionFinished;
+    }
+
     public void PauseConstruction()
     {
         isPaused = true;
