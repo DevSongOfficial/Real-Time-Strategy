@@ -4,7 +4,8 @@ public enum CommandType
 {
     None,
     Build,
-    UnitTrain,
+    Train,
+    Utility,
 }
 
 public abstract class CommandData : ScriptableObject // Each button in the Command Panel corresponds to each command SO.

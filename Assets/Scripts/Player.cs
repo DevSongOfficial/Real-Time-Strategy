@@ -55,8 +55,13 @@ public sealed class Player : MonoBehaviour
     private ModeBase currentMode;
     private ModeBase normalMode;
     private ModeBase buildMode;
+    private ModeBase spawnPositionSetMode;
 
-    private PlacementPresenter placementPresenter;
+    private PlacementPresenter  placementPresenter;
+
+    // Spawning position controller for unit-generatable buildings.
+    private SpawnPositionSetter spawnPositionSetter;
+    [SerializeField] private Transform spawnPositionIndicator;
 
     private void Awake()
     {
@@ -67,8 +72,11 @@ public sealed class Player : MonoBehaviour
         selectionIndicatorFactory   = new SelectionIndicatorFactory();
         healthBarGenerator          = new HealthBarGenerator(healthBarContainer, cameraController);
         
+        spawnPositionSetter                 = new SpawnPositionSetter(spawnPositionIndicator);
+        spawnPositionSetter.OnExitRequested += OnStopSettingSpawnPosition;
+
         moveMarkerFactory           = new MoveMakerFactory();
-        buildingFactory             = new BuildingFactory(() => unitGenerator, selectionHandler, selectionIndicatorFactory, profilePanel);
+        buildingFactory             = new BuildingFactory(() => unitGenerator, selectionHandler, selectionIndicatorFactory, profilePanel, spawnPositionSetter);
 
         dragEventHandler    = new DragEventHandler(entityRegistry.GetTransformsOfUnits(), cameraController.Camera, canvas, inputManager);
         selectionHandler    = new SelectionHandler(entityRegistry.GetSelectedEntities(), cameraController.Camera, commandPanel, moveMarkerFactory);
@@ -80,18 +88,21 @@ public sealed class Player : MonoBehaviour
         placementPresenter.OnPlacementCanceled += (Vector3 finishedPosition) => SetMode(normalMode);
         placementPresenter.OnPlacementRequested += (ITarget requestedBuilding) => SetMode(normalMode);
 
+
         unitFactory                     = new UnitFactory(selectionHandler, selectionIndicatorFactory, placementPresenter, profilePanel);
         unitGenerator                   = new UnitGenerator(unitFactory, entityRegistry);
         unitGenerator.OnUnitGenerated   += healthBarGenerator.GenerateAndSetTargetUnit;
 
-        normalMode = new NormalMode(inputManager, selectionHandler, dragEventHandler);
-        buildMode  = new BuildMode(inputManager, placementPresenter);
+        normalMode              = new NormalMode(inputManager, selectionHandler, dragEventHandler);
+        buildMode               = new BuildMode(inputManager, placementPresenter);
+        spawnPositionSetMode    = new SetPositionMode(inputManager, spawnPositionSetter);
         SetMode(normalMode);
 
 
         selectionHandler.OnSelectEntity += OnEntitySelected;
         selectionHandler.OnDeselectEntity += OnEntityDeselected;
         commandPanel.OnBuildingConstructionButtonClicked += OnStartBuilding;
+        commandPanel.OnSpawnPositionSetButtonClicked += OnStartSettingSpawnPosition;
     }
 
     private void Start()
@@ -116,6 +127,16 @@ public sealed class Player : MonoBehaviour
     {
         SetMode(buildMode);
         placementPresenter.SelectBuilding(data);
+    }
+
+    private void OnStartSettingSpawnPosition(IUnitGenerator unitGenerator)
+    {
+        SetMode(spawnPositionSetMode);
+    }
+
+    private void OnStopSettingSpawnPosition()
+    {
+        SetMode(normalMode);
     }
 
     private void OnEntitySelected(ISelectable entity)

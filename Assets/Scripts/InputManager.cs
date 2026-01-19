@@ -68,8 +68,8 @@ public sealed class InputManager
     public Vector3 GetSelectedMapPosition()
     {
         Ray ray = camera.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out var hitInfo, Mathf.Infinity, Layer.Ground.ToLayerMask()))
-            lastPosition = hitInfo.point;
+        if (Physics.Raycast(ray, out var hit, Mathf.Infinity, Layer.Ground.ToLayerMask()))
+            lastPosition = hit.point;
 
         return lastPosition;
     }

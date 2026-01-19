@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 11481c071ed833b438100da1552f6fa5, type: 3}
-  m_Name: C_BuildBarracks
+  m_Name: BuildBarracks
   m_EditorClassIdentifier: 
   <Icon>k__BackingField: {fileID: 21300000, guid: 47a210e716ed90b46914b5ffc65ca857, type: 3}
   <Tooltip>k__BackingField: Build default barracks

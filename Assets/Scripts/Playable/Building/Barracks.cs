@@ -8,12 +8,17 @@ using UnityEngine;
 public interface IUnitGenerator
 {
     void SetUnitGenerator(UnitGenerator unitGenerator);
+    void SetSpawnPositionSetter(SpawnPositionSetter setter);
+
     void GenerateUnit(UnitGenerationInfo unitGenerationInfo);
 
     void EnqueueUnit(UnitGenerationInfo unitInfo);
     UnitGenerationInfo DequeueUnit();
     UnitGenerationInfo PeekNextUnit();
     int GetUnitCount();
+
+    Vector3 GetUnitSpawnPosition();
+    void SetUnitSpawnPosition(Vector3 spawnPosition);
 }
 
 public class Barracks : Building, ITarget<BarracksData>, IUnitGenerator
@@ -21,8 +26,16 @@ public class Barracks : Building, ITarget<BarracksData>, IUnitGenerator
     private UnitGenerator unitGenerator;
     private Queue<UnitGenerationInfo> unitGenerationQueue; // Waiting list for units to be generated
 
-    [SerializeField] private Vector2 spawnPointOffset; // building.position + spawnPoint would be the spawn point.
+    private SpawnPositionSetter spawnPositionSetter;
+    private Vector3 unitSpawnPosition;
+    
+    public override Building SetUp(EntityData data, GameObject selectionIndicator, EntityProfilePanel profilePanel, Team team)
+    {
+        // TODO: Set Initial Position
+        unitSpawnPosition = transform.position + new Vector3(3, 0, 3);
 
+        return base.SetUp(data, selectionIndicator, profilePanel, team);
+    }
 
     public override void ExecuteCommand(CommandData command)
     {
@@ -36,10 +49,8 @@ public class Barracks : Building, ITarget<BarracksData>, IUnitGenerator
 
         if (command is UnitTrainCommandData unitTrainCommand)
         {
-            var unitGenerationInfo = new UnitGenerationInfo(
-                unitTrainCommand.UnitData, 
-                team, 
-                transform.position + new Vector3(spawnPointOffset.x, 0, spawnPointOffset.y));
+            var unitGenerationInfo 
+                = new UnitGenerationInfo(unitTrainCommand.UnitData, team, unitSpawnPosition);
 
             EnqueueUnit(unitGenerationInfo);
 
@@ -53,6 +64,18 @@ public class Barracks : Building, ITarget<BarracksData>, IUnitGenerator
 
         this.unitGenerator = unitGenerator;
         unitGenerationQueue = new Queue<UnitGenerationInfo>();
+    }
+
+    public void SetSpawnPositionSetter(SpawnPositionSetter setter)
+    {
+        this.spawnPositionSetter = setter;
+    }
+
+    public override void OnSelected()
+    {
+        base.OnSelected();
+
+        spawnPositionSetter.SetSpawner(this);
     }
 
     public void GenerateUnit(UnitGenerationInfo info)
@@ -83,6 +106,14 @@ public class Barracks : Building, ITarget<BarracksData>, IUnitGenerator
     }
 
     public int GetUnitCount() => unitGenerationQueue.Count;
+
+    public void SetUnitSpawnPosition(Vector3 position)
+    {
+        unitSpawnPosition = position;
+    }
+
+    public Vector3 GetUnitSpawnPosition() => unitSpawnPosition;
+
 
     public override string GetProgressLabelName()
     {

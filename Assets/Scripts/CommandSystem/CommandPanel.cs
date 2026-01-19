@@ -9,9 +9,10 @@ public class CommandPanel : MonoBehaviour
     public static readonly int ButtonCount = 12;
     [SerializeField] private CommandButton[] commandButtons = new CommandButton[ButtonCount];
 
-    public event Action OnCommandButtonClicked;
-    public event Action<BuildingData> OnBuildingConstructionButtonClicked;
-    public event Action<UnitData> OnUnitTrainButtonClicked;
+    public event Action                     OnCommandButtonClicked;
+    public event Action<BuildingData>       OnBuildingConstructionButtonClicked;
+    public event Action<UnitData>           OnUnitTrainButtonClicked;
+    public event Action<IUnitGenerator>     OnSpawnPositionSetButtonClicked;
 
 
     private ISelectable currentEntity;
@@ -34,19 +35,22 @@ public class CommandPanel : MonoBehaviour
             DisableAllButtons();
     }
 
-    public void HandleCommandButtonClick(CommandData command)
+    public void HandleCommandButtonClick(CommandData commandRequested)
     {
         OnCommandButtonClicked?.Invoke();
 
-        switch (command)
+        switch (commandRequested)
         {
-            case BuildCommandData buildCommand:
-                OnBuildingConstructionButtonClicked?.Invoke(buildCommand.BuildingData);
+            case BuildCommandData command:
+                OnBuildingConstructionButtonClicked?.Invoke(command.BuildingData);
                 currentEntity.ExecuteCommand(command);
                 break;
-            case UnitTrainCommandData unitTrainCommand:
-                OnUnitTrainButtonClicked?.Invoke(unitTrainCommand.UnitData);
+            case UnitTrainCommandData command:
+                OnUnitTrainButtonClicked?.Invoke(command.UnitData);
                 currentEntity.ExecuteCommand(command);
+                break;
+            case SpawnPositionSetCommandData:
+                OnSpawnPositionSetButtonClicked?.Invoke(currentEntity as IUnitGenerator);
                 break;
         }
     }

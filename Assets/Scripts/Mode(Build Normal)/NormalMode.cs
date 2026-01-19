@@ -20,6 +20,7 @@ public sealed class NormalMode : ModeBase
     {
         dragEventHandler.OnUnitDetectedInDragArea += selectionHandler.SelectEntities;
     }
+
     public override void Exit() 
     {
         dragEventHandler.OnUnitDetectedInDragArea -= selectionHandler.SelectEntities;

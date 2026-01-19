@@ -109,11 +109,11 @@ public class SelectionHandler : ISelectionEvent
     }
 
     // Select an entity to control. (Mouse 0)
-    public ISelectable SelectEntity(Vector2 screenPos, bool additive)
+    public ISelectable SelectEntity(Vector2 screenPosition, bool additive)
     {
         if (!additive) DeselectAllEntities();
 
-        var ray = camera.ScreenPointToRay(screenPos);
+        var ray = camera.ScreenPointToRay(screenPosition);
         // TODO: Only allow selection of same team units.
         if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, Layer.Selectable.ToLayerMask())
             || !hit.transform.parent.TryGetComponent(out ISelectable entity))

@@ -7,7 +7,6 @@ public interface IPlacementView
     void ToggleUIPreview(bool enable);
     void ToggleBuildingPreview(bool enable, BuildingData selectedBuilding = null);
     void SetMouseIndicatorPosition(Vector3 position);
-    void SetCellPosition(Vector3 position);
     void SetBuildingPreviewPosition(Vector3 position);
 }
 
@@ -65,11 +64,9 @@ public sealed class PlacementPresenter : IPlacementEvent
 
         placementView.SetMouseIndicatorPosition(mouseWorld);
 
-        var mouseCell3 = gridSystem.WorldToCell(mouseWorld);
-        Vector2Int mouseCell = mouseCell3.ToVector2Int();
-
-        Vector3 mouseCellWorld = gridSystem.CellToWorld(mouseCell3);
-        placementView.SetCellPosition(mouseCellWorld);
+        Vector3Int  mouseCell3      = gridSystem.WorldToCell(mouseWorld);
+        Vector2Int  mouseCell       = mouseCell3.ToVector2Int();
+        Vector3     mouseCellWorld  = gridSystem.CellToWorld(mouseCell3);
 
         if (selectedBuildingData == null) return;
 

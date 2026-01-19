@@ -13,8 +13,6 @@ namespace BuildingSystem
         private IBuildingPreviewFactory factory;
         private Building buildingPreview; // Building that is created temporarily for preview.
 
-        private Vector3 currentCellWorldPosition;
-
         public void SetUp(IBuildingPreviewFactory factory)
         {
             this.factory = factory;
@@ -39,11 +37,6 @@ namespace BuildingSystem
         public void SetMouseIndicatorPosition(Vector3 position)
         {
             mouseIndicator.position = position;
-        }
-
-        public void SetCellPosition(Vector3 position)
-        {
-            currentCellWorldPosition = position;
         }
 
         public void SetBuildingPreviewPosition(Vector3 position)

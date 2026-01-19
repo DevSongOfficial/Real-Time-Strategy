@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74e0b412dee5ff84097a909e12170e98, type: 3}
-  m_Name: CS_Building1
+  m_Script: {fileID: 11500000, guid: 1cc37ff1d1f671540baf8a45ed8cc1e3, type: 3}
+  m_Name: SetSpawnpoint
   m_EditorClassIdentifier: 
-  <Commands>k__BackingField:
-  - {fileID: 11400000, guid: b6832e66701b1ef4cb4d6b5fd84ff98f, type: 2}
+  <Icon>k__BackingField: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+  <Tooltip>k__BackingField: Set Spawnpoint

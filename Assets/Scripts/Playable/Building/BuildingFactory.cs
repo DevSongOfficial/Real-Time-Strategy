@@ -13,12 +13,14 @@ public class BuildingFactory : PlayableAbsFactory<Building>, IBuildingPreviewFac
 {
     private event Func<UnitGenerator> getUnitGenerator;
     private EntityProfilePanel profilePanel;
+    private SpawnPositionSetter spawnPositionSetter;
 
     public BuildingFactory(Func<UnitGenerator> getUnitGenerator, ISelectionEvent selectionHandler, 
-        SelectionIndicatorFactory selectionIndicatorFactory, EntityProfilePanel profilePanel)
+        SelectionIndicatorFactory selectionIndicatorFactory, EntityProfilePanel profilePanel, SpawnPositionSetter spawnPositionSetter)
     {
         this.getUnitGenerator = getUnitGenerator;
         this.profilePanel = profilePanel;
+        this.spawnPositionSetter = spawnPositionSetter;
 
         base.Setup(selectionHandler, selectionIndicatorFactory);
     }
@@ -40,7 +42,10 @@ public class BuildingFactory : PlayableAbsFactory<Building>, IBuildingPreviewFac
 
         // For those spawning units e.g., barracks
         if (building is IUnitGenerator unitGenerator)
+        {
             unitGenerator.SetUnitGenerator(getUnitGenerator.Invoke());
+            unitGenerator.SetSpawnPositionSetter(spawnPositionSetter);
+        }
 
         return building;
     }
