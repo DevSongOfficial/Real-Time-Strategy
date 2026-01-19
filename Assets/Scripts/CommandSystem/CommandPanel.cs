@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.EventSystems.EventTrigger;
@@ -14,7 +15,7 @@ public class CommandPanel : MonoBehaviour
 
 
     private ISelectable currentEntity;
-    private CommandSetData currentCommandSet;
+    private List<CommandData> currentCommands;
 
     private void Awake()
     {
@@ -25,7 +26,7 @@ public class CommandPanel : MonoBehaviour
     public void OnEntitySelected(ISelectable selectable)
     {
         currentEntity = selectable;
-        currentCommandSet = currentEntity.CommandSet;
+        currentCommands = currentEntity.GetData().CommandSet;
 
         if (selectable.GetTeam() == Player.Team)
             RefreshCommandButtons();
@@ -33,18 +34,21 @@ public class CommandPanel : MonoBehaviour
             DisableAllButtons();
     }
 
-    public void HandleCommandButtonClick(Command command)
+    public void HandleCommandButtonClick(CommandData command)
     {
         OnCommandButtonClicked?.Invoke();
 
-        var entityData = command.entityToGenerate;
-
-        if (entityData is UnitData unitData)
-            OnUnitTrainButtonClicked?.Invoke(unitData);
-        else if (entityData is BuildingData buildingData)
-            OnBuildingConstructionButtonClicked?.Invoke(buildingData);
-
-        currentEntity.ExecuteCommand(command);
+        switch (command)
+        {
+            case BuildCommandData buildCommand:
+                OnBuildingConstructionButtonClicked?.Invoke(buildCommand.BuildingData);
+                currentEntity.ExecuteCommand(command);
+                break;
+            case UnitTrainCommandData unitTrainCommand:
+                OnUnitTrainButtonClicked?.Invoke(unitTrainCommand.UnitData);
+                currentEntity.ExecuteCommand(command);
+                break;
+        }
     }
 
     public void DisableAllButtons()
@@ -58,13 +62,13 @@ public class CommandPanel : MonoBehaviour
         for (int i = 0; i < ButtonCount; i++)
         {
             var button = commandButtons[i];
-            if (currentCommandSet.Commands.Count <= i)
+            if (currentCommands.Count <= i)
             {
                 button.Disable();
                 continue;
             }
 
-            var command = currentCommandSet.Commands[i];
+            var command = currentCommands[i];
             button.Refresh(command);
         }
     }

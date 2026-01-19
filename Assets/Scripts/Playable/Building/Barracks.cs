@@ -23,7 +23,8 @@ public class Barracks : Building, ITarget<BarracksData>, IUnitGenerator
 
     [SerializeField] private Vector2 spawnPointOffset; // building.position + spawnPoint would be the spawn point.
 
-    public override void ExecuteCommand(Command command)
+
+    public override void ExecuteCommand(CommandData command)
     {
         if(IsUnderConstruction)
             return;
@@ -31,13 +32,12 @@ public class Barracks : Building, ITarget<BarracksData>, IUnitGenerator
         if (GetUnitCount() >= GetData().GenerationSlotCount) 
             return;
 
-
         base.ExecuteCommand(command);
-        this.command = command;
-        if (command.Type == CommandType.TrainUnit)
+
+        if (command is UnitTrainCommandData unitTrainCommand)
         {
             var unitGenerationInfo = new UnitGenerationInfo(
-                (UnitData)command.entityToGenerate, 
+                unitTrainCommand.UnitData, 
                 team, 
                 transform.position + new Vector3(spawnPointOffset.x, 0, spawnPointOffset.y));
 
@@ -103,7 +103,7 @@ public class Barracks : Building, ITarget<BarracksData>, IUnitGenerator
 
     public new BarracksData GetData()
     {
-        return (BarracksData)base.GetData();
+        return base.GetData() as BarracksData;
     }
 
     public override IUnitGenerator GetUnitGenerator()

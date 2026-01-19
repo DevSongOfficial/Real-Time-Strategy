@@ -34,8 +34,7 @@ public class BuildingProfileView : MonoBehaviour
     private void FillTrainingSprites(Building building)
     {
         if (building is not Barracks barracks  || 
-            building.CurrentState is BuildingUnderConstructionState || 
-            building.CurrentState is BuildingIdleState )
+            building.CurrentState is BuildingUnderConstructionState)
         {
             for (int i = 0; i < progressInfoImages.Count; i++)
             {

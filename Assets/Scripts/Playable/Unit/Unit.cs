@@ -79,14 +79,12 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
         stateMachine.ChangeState<UnitMoveState>();
     }
 
-    public override void ExecuteCommand(Command command)
+    public override void ExecuteCommand(CommandData command)
     {
         base.ExecuteCommand(command);
 
-        this.command = command;
-
         // When Place() is called:
-        if(command.Type == CommandType.Build)
+        if(command is BuildCommandData)
             placementEvent.OnPlacementRequested += StartConstruction;
     }
 
@@ -162,8 +160,8 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
     }
     #endregion
 
-    public EntityData GetData()
+    public new UnitData GetData()
     {
-        return data;
+        return data as UnitData;
     }
 }

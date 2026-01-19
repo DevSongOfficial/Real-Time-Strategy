@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8fafcf2e8d51a64ca3c8ac9a17acf4f, type: 3}
+  m_Name: C_TrainSoldier
+  m_EditorClassIdentifier: 
+  <Icon>k__BackingField: {fileID: 21300000, guid: 2e4b42f5ecef19444aa30f66b09d3f02, type: 3}
+  <Tooltip>k__BackingField: Train default soldier
+  <UnitData>k__BackingField: {fileID: 11400000, guid: dc1b73eb39b3afe49bfb14b45b824142, type: 2}
+  <GenerationTime>k__BackingField: 3

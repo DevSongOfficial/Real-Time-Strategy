@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11481c071ed833b438100da1552f6fa5, type: 3}
+  m_Name: C_BuildBarracks
+  m_EditorClassIdentifier: 
+  <Icon>k__BackingField: {fileID: 21300000, guid: 47a210e716ed90b46914b5ffc65ca857, type: 3}
+  <Tooltip>k__BackingField: Build default barracks
+  <BuildingData>k__BackingField: {fileID: 11400000, guid: 29f8308226c5d13459224aefcc86f64b, type: 2}
+  <GenerationTime>k__BackingField: 5

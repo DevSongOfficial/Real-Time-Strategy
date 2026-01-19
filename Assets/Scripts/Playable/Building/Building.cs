@@ -122,7 +122,7 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext
         return healthSystem;
     }
 
-    public BuildingData GetData()
+    public new BuildingData GetData()
     {
         return (BuildingData)data;
     }

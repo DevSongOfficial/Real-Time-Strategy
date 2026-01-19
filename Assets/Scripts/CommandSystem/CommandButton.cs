@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class CommandButton : MonoBehaviour
 {
     private CommandPanel commandPanel;
-    private Command command; // current command
+    private CommandData command; // current command
 
     [SerializeField] private Button button;
     [SerializeField] private Image image;
@@ -24,12 +24,12 @@ public class CommandButton : MonoBehaviour
             image = GetComponent<Image>();
     }
 
-    public void Refresh(Command command)
+    public void Refresh(CommandData command)
     {
         this.command = command;
 
-        image.sprite = command.icon;
-        textMeshPro.text = command.tooltip;
+        image.sprite = command.Icon;
+        textMeshPro.text = command.Tooltip;
 
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(OnClicked);
