@@ -23,6 +23,7 @@ public sealed class Player : MonoBehaviour
     [SerializeField] private CameraController cameraController;
     [SerializeField] private Grid grid;
     [SerializeField] private Mesh quadMesh;
+    [SerializeField] private Transform mouseIndicator_World;
 
     // Team
     public static Team Team = Team.Green;
@@ -114,6 +115,12 @@ public sealed class Player : MonoBehaviour
     {
         currentMode?.Update();
         currentMode?.HandleInput();
+        Debug.Log(currentMode);
+    }
+
+    private void LateUpdate()
+    {
+        UpdateMouseIndicatorPosition();
     }
 
     private void SetMode(ModeBase newMode)
@@ -132,11 +139,13 @@ public sealed class Player : MonoBehaviour
     private void OnStartSettingSpawnPosition(IUnitGenerator unitGenerator)
     {
         SetMode(spawnPositionSetMode);
+        mouseIndicator_World.gameObject.SetActive(true);
     }
 
     private void OnStopSettingSpawnPosition()
     {
-        SetMode(normalMode);
+        SetMode(normalMode); 
+        mouseIndicator_World.gameObject.SetActive(false);
     }
 
     private void OnEntitySelected(ISelectable entity)
@@ -149,5 +158,14 @@ public sealed class Player : MonoBehaviour
     {
         entity.OnDeselected();
         commandPanel.DisableAllButtons();
+    }
+
+    // Mouse Indicator
+    private void UpdateMouseIndicatorPosition()
+    {
+        var mousePosition = inputManager.GetMousePosition();
+        Ray ray = cameraController.Camera.ScreenPointToRay(mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, Layer.Ground.ToLayerMask()))
+            mouseIndicator_World.position = hit.point;
     }
 }

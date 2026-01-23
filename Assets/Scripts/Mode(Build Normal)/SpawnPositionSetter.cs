@@ -4,7 +4,7 @@ using UnityEngine;
 public class SpawnPositionSetter
 {
     private Transform positionIndicator;
-    private IUnitGenerator building;
+    public IUnitGenerator Building {  get; private set; }
 
     public event Action OnExitRequested;
 
@@ -16,24 +16,23 @@ public class SpawnPositionSetter
 
     public void SetSpawner(IUnitGenerator building)
     {
-        this.building = building;
+        Building = building;
         positionIndicator.position = building.GetUnitSpawnPosition();
         positionIndicator.gameObject.SetActive(true);
     }
 
     public void StopSettingSpawnerPosition()
     {
-        building = null;
+        Building = null;
         positionIndicator.gameObject.SetActive(false);
-
         OnExitRequested?.Invoke();
     }
 
     public void UpdatePosition(Vector3 position)
     {
-        if (building == null) return;
+        if (Building == null) return;
 
         positionIndicator.position = position;
-        building.SetUnitSpawnPosition(position);
+        Building.SetUnitSpawnPosition(position);
     }
 }

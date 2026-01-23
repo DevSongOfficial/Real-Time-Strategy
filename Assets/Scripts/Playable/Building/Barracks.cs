@@ -78,6 +78,13 @@ public class Barracks : Building, ITarget<BarracksData>, IUnitGenerator
         spawnPositionSetter.SetSpawner(this);
     }
 
+    public override void OnDeselected()
+    {
+        base.OnDeselected();
+
+        spawnPositionSetter.StopSettingSpawnerPosition();
+    }
+
     public void GenerateUnit(UnitGenerationInfo info)
     {
         unitGenerator.Generate(info.Data, info.team, info.spawnPosition);
