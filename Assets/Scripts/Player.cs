@@ -59,7 +59,7 @@ public sealed class Player : MonoBehaviour
 
     // Spawning position controller for unit-generatable buildings.
     private SpawnPositionSetter spawnPositionSetter;
-    [SerializeField] private Transform spawnPositionIndicator;
+    [SerializeField] private Transform mouseWorldPositionIndicator;
 
     private void Awake()
     {
@@ -70,7 +70,7 @@ public sealed class Player : MonoBehaviour
         selectionIndicatorFactory   = new SelectionIndicatorFactory();
         healthBarGenerator          = new HealthBarGenerator(healthBarContainer, cameraController);
         
-        spawnPositionSetter                 = new SpawnPositionSetter(spawnPositionIndicator);
+        spawnPositionSetter                 = new SpawnPositionSetter(mouseWorldPositionIndicator);
         spawnPositionSetter.OnExitRequested += OnStopSettingSpawnPosition;
 
         moveMarkerFactory           = new MoveMakerFactory();
@@ -95,7 +95,8 @@ public sealed class Player : MonoBehaviour
         var normalMode              = new NormalMode(inputManager, selectionHandler, dragEventHandler);
         var buildMode               = new BuildMode(inputManager, placementPresenter);
         var spawnPositionSetMode    = new SetPositionMode(inputManager, spawnPositionSetter);
-        stateMachine = new PlayerStateMachine(normalMode, buildMode, spawnPositionSetMode);
+        var selectTargetMode = new SelectTargetMode(inputManager, selectionHandler, mouseWorldPositionIndicator);
+        stateMachine = new PlayerStateMachine(normalMode, buildMode, spawnPositionSetMode, selectTargetMode);
         stateMachine.SetMode(normalMode);
 
 
@@ -103,6 +104,7 @@ public sealed class Player : MonoBehaviour
         selectionHandler.OnDeselectEntity += OnEntityDeselected;
         commandPanel.OnBuildingConstructionButtonClicked += OnStartBuilding;
         commandPanel.OnSpawnPositionSetButtonClicked += OnStartSettingSpawnPosition;
+        commandPanel.OnSelectTargetButtonClicked += () => stateMachine.RequestTransition(Mode.SelectTarget); // refactoring..
     }
 
     private void Start()
@@ -154,7 +156,7 @@ public sealed class Player : MonoBehaviour
     // Mouse Indicator
     private void UpdateMouseIndicatorPosition()
     {
-        var mousePosition = inputManager.GetMousePosition();
+        var mousePosition = inputManager.GetMousePositionOnCanvas();
         Ray ray = cameraController.Camera.ScreenPointToRay(mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, Layer.Ground.ToLayerMask()))
             mouseIndicator_World.position = hit.point;

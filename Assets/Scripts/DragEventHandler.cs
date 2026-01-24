@@ -37,7 +37,7 @@ public sealed class DragEventHandler
     {
         if (inputManager.GetMouseButtonDown(0) && inputManager.IsPointerInClickableArea())
         {
-            startPosition = inputManager.GetMousePosition();
+            startPosition = inputManager.GetMousePositionOnCanvas();
             isDragging = true;
         }
 
@@ -45,7 +45,7 @@ public sealed class DragEventHandler
 
         if (inputManager.GetMouseButton(0))
         {
-            endPosition = inputManager.GetMousePosition();
+            endPosition = inputManager.GetMousePositionOnCanvas();
 
             DrawSelectionBox();
         }

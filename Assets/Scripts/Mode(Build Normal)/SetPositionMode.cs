@@ -25,7 +25,7 @@ public class SetPositionMode : ModeBase
         if (!inputManager.IsPointerInClickableArea()) return;
 
         if (inputManager.GetMouseButtonDown(0))
-            controller.UpdatePosition(inputManager.GetSelectedMapPosition());
+            controller.UpdatePosition(inputManager.GetMousePositionOnGround());
 
         if (inputManager.GetMouseButtonDown(1))
             ExitTheMode();

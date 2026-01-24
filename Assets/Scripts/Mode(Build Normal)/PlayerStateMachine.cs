@@ -6,7 +6,7 @@ public interface IModeTransitionRequester
 }
 
 // Add only the modes that outside systems may request via RequestTransition().
-public enum Mode { Normal, Build, SetSpawnPoint }
+public enum Mode { Normal, Build, SetSpawnPoint, SelectTarget }
 
 public class PlayerStateMachine : IModeTransitionRequester
 {
@@ -15,12 +15,14 @@ public class PlayerStateMachine : IModeTransitionRequester
     private ModeBase normalMode;
     private ModeBase buildMode;
     private ModeBase spawnPositionSetMode;
+    private ModeBase selectTargetMode;
 
-    public PlayerStateMachine(NormalMode normalMode, BuildMode buildMode, SetPositionMode spawnPositionSetMode)
+    public PlayerStateMachine(NormalMode normalMode, BuildMode buildMode, SetPositionMode spawnPositionSetMode, SelectTargetMode selectTargetMode)
     {
         this.normalMode = normalMode;
         this.buildMode = buildMode;
         this.spawnPositionSetMode = spawnPositionSetMode;
+        this.selectTargetMode = selectTargetMode;
     }
 
     public void SetMode(ModeBase newMode)
@@ -52,6 +54,9 @@ public class PlayerStateMachine : IModeTransitionRequester
                 break;
             case Mode.SetSpawnPoint:
                 SetMode(spawnPositionSetMode);
+                break;
+            case Mode.SelectTarget:
+                SetMode(selectTargetMode);
                 break;
         }
     }

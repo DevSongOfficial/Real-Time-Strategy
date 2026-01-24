@@ -27,7 +27,7 @@ public sealed class BuildMode : ModeBase
 
     public override void Update()
     {
-        var mousePosition = inputManager.GetSelectedMapPosition();
+        var mousePosition = inputManager.GetMousePositionOnGround();
         presenter.UpdatePreview(mousePosition);
     }
 

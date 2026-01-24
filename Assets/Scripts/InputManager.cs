@@ -39,9 +39,18 @@ public sealed class InputManager
         return Input.GetKeyDown(keyCode);
     }
 
-    public Vector3 GetMousePosition()
+    public Vector3 GetMousePositionOnCanvas()
     {
         return Input.mousePosition;
+    }
+
+    public Vector3 GetMousePositionOnGround()
+    {
+        Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out var hit, Mathf.Infinity, Layer.Ground.ToLayerMask()))
+            lastPosition = hit.point;
+
+        return lastPosition;
     }
 
     public bool IsMouseScrolled(out MouseScrollType type)
@@ -65,14 +74,6 @@ public sealed class InputManager
         }
     }
 
-    public Vector3 GetSelectedMapPosition()
-    {
-        Ray ray = camera.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out var hit, Mathf.Infinity, Layer.Ground.ToLayerMask()))
-            lastPosition = hit.point;
-
-        return lastPosition;
-    }
 
     public bool IsPointerOverUI()
     {

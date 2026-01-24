@@ -37,8 +37,8 @@ public sealed class NormalMode : ModeBase
             return;
 
         if (inputManager.GetMouseButtonDown(0))
-            selectionHandler.SelectTargetor(inputManager.GetMousePosition(), additive: inputManager.GetKey(KeyCode.LeftShift));
+            selectionHandler.SelectTargetor(inputManager.GetMousePositionOnCanvas(), additive: inputManager.GetKey(KeyCode.LeftShift));
         else if (inputManager.GetMouseButtonDown(1))
-            selectionHandler.SelectTarget(inputManager.GetMousePosition());
+            selectionHandler.SelectTarget(inputManager.GetMousePositionOnCanvas());
     }
 }

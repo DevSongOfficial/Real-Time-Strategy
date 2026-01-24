@@ -13,6 +13,7 @@ public class CommandPanel : MonoBehaviour
     public event Action<BuildingData>       OnBuildingConstructionButtonClicked;
     public event Action<UnitData>           OnUnitTrainButtonClicked;
     public event Action<IUnitGenerator>     OnSpawnPositionSetButtonClicked;
+    public event Action                     OnSelectTargetButtonClicked ;
 
 
     private ISelectable currentEntity;
@@ -52,6 +53,10 @@ public class CommandPanel : MonoBehaviour
             case SpawnPositionSetCommandData:
                 OnSpawnPositionSetButtonClicked?.Invoke(currentEntity as IUnitGenerator);
                 break;
+            case SelectTargetCommandData:
+                OnSelectTargetButtonClicked?.Invoke();
+                break;
+
         }
     }
 

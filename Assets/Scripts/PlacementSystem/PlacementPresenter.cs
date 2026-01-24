@@ -128,6 +128,6 @@ public sealed class PlacementPresenter : IPlacementEvent
 
         selectedBuildingData = null;
 
-        OnPlacementCanceled?.Invoke(inputManager.GetMousePosition());
+        OnPlacementCanceled?.Invoke(inputManager.GetMousePositionOnCanvas());
     }
 }
