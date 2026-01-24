@@ -46,19 +46,16 @@ public sealed class Player : MonoBehaviour
     private SelectionIndicatorFactory selectionIndicatorFactory;
     private MoveMakerFactory moveMarkerFactory;
 
+    private PlacementPresenter  placementPresenter;
+    
     // Grid System for building placement.
     private GridSystem gridSystem;
 
     private UnitGenerator unitGenerator;
     private HealthBarGenerator healthBarGenerator;
 
-    // Game Mode (Normal / Build)
-    private ModeBase currentMode;
-    private ModeBase normalMode;
-    private ModeBase buildMode;
-    private ModeBase spawnPositionSetMode;
-
-    private PlacementPresenter  placementPresenter;
+    // FSM 
+    private PlayerStateMachine stateMachine;
 
     // Spawning position controller for unit-generatable buildings.
     private SpawnPositionSetter spawnPositionSetter;
@@ -86,18 +83,20 @@ public sealed class Player : MonoBehaviour
         placementView.ToggleUIPreview(false);
         gridSystem          = new GridSystem(grid, quadMesh);
         placementPresenter  = new PlacementPresenter(placementView, commandPanel, buildingFactory, gridSystem, inputManager);
-        placementPresenter.OnPlacementCanceled += (Vector3 finishedPosition) => SetMode(normalMode);
-        placementPresenter.OnPlacementRequested += (ITarget requestedBuilding) => SetMode(normalMode);
+        placementPresenter.OnPlacementCanceled += (Vector3 finishedPosition) => stateMachine.RequestTransition(Mode.Normal);
+        placementPresenter.OnPlacementRequested += (ITarget requestedBuilding) => stateMachine.RequestTransition(Mode.Normal);
 
 
         unitFactory                     = new UnitFactory(selectionHandler, selectionIndicatorFactory, placementPresenter, profilePanel);
         unitGenerator                   = new UnitGenerator(unitFactory, entityRegistry);
         unitGenerator.OnUnitGenerated   += healthBarGenerator.GenerateAndSetTargetUnit;
 
-        normalMode              = new NormalMode(inputManager, selectionHandler, dragEventHandler);
-        buildMode               = new BuildMode(inputManager, placementPresenter);
-        spawnPositionSetMode    = new SetPositionMode(inputManager, spawnPositionSetter);
-        SetMode(normalMode);
+        // Finite State Machine
+        var normalMode              = new NormalMode(inputManager, selectionHandler, dragEventHandler);
+        var buildMode               = new BuildMode(inputManager, placementPresenter);
+        var spawnPositionSetMode    = new SetPositionMode(inputManager, spawnPositionSetter);
+        stateMachine = new PlayerStateMachine(normalMode, buildMode, spawnPositionSetMode);
+        stateMachine.SetMode(normalMode);
 
 
         selectionHandler.OnSelectEntity += OnEntitySelected;
@@ -113,9 +112,8 @@ public sealed class Player : MonoBehaviour
 
     private void Update()
     {
-        currentMode?.Update();
-        currentMode?.HandleInput();
-        Debug.Log(currentMode);
+        stateMachine.Update();
+        stateMachine.HandleInput();
     }
 
     private void LateUpdate()
@@ -123,28 +121,21 @@ public sealed class Player : MonoBehaviour
         UpdateMouseIndicatorPosition();
     }
 
-    private void SetMode(ModeBase newMode)
-    {
-        currentMode?.Exit();
-        currentMode = newMode;
-        currentMode.Enter();
-    }
-
     private void OnStartBuilding(BuildingData data)
     {
-        SetMode(buildMode);
+        stateMachine.RequestTransition(Mode.Build);
         placementPresenter.SelectBuilding(data);
     }
 
     private void OnStartSettingSpawnPosition(IUnitGenerator unitGenerator)
     {
-        SetMode(spawnPositionSetMode);
+        stateMachine.RequestTransition(Mode.SetSpawnPoint);
         mouseIndicator_World.gameObject.SetActive(true);
     }
 
     private void OnStopSettingSpawnPosition()
     {
-        SetMode(normalMode); 
+        stateMachine.RequestTransition(Mode.Normal);
         mouseIndicator_World.gameObject.SetActive(false);
     }
 

@@ -28,14 +28,14 @@ public class SetPositionMode : ModeBase
             controller.UpdatePosition(inputManager.GetSelectedMapPosition());
 
         if (inputManager.GetMouseButtonDown(1))
-            ExitPositionSettingMode();
+            ExitTheMode();
     }
 
     public override void Update()
     {        
     }
 
-    private void ExitPositionSettingMode()
+    private void ExitTheMode()
     {
         var building = controller.Building;
         controller.StopSettingSpawnerPosition();
@@ -43,4 +43,4 @@ public class SetPositionMode : ModeBase
     }
 }
 
-}
+

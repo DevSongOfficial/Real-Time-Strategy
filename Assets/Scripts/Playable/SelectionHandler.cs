@@ -79,7 +79,7 @@ public class SelectionHandler : ISelectionEvent
     public void SelectTarget(Vector2 screenPosition)
     {
         var ray = camera.ScreenPointToRay(screenPosition);
-        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, Utility.GetLayerMask(Layer.Ground, Layer.Selectable) /*, TODO: LayerMask: Ground || Entity */))
+        if (!Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, Utility.GetLayerMask(Layer.Ground, Layer.Selectable)))
             return;
 
         var target = new Target(hit);
@@ -109,7 +109,7 @@ public class SelectionHandler : ISelectionEvent
     }
 
     // Select an entity to control. (Mouse 0)
-    public ISelectable SelectEntity(Vector2 screenPosition, bool additive)
+    public ISelectable SelectTargetor(Vector2 screenPosition, bool additive)
     {
         if (!additive) DeselectAllEntities();
 

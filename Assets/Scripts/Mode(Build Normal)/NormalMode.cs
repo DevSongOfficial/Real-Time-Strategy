@@ -16,12 +16,12 @@ public sealed class NormalMode : ModeBase
         this.inputManager = inputManager;
     }
 
-    public override void Enter() 
+    public override void Enter()
     {
         dragEventHandler.OnUnitDetectedInDragArea += selectionHandler.SelectEntities;
     }
 
-    public override void Exit() 
+    public override void Exit()
     {
         dragEventHandler.OnUnitDetectedInDragArea -= selectionHandler.SelectEntities;
     }
@@ -37,7 +37,7 @@ public sealed class NormalMode : ModeBase
             return;
 
         if (inputManager.GetMouseButtonDown(0))
-            selectionHandler.SelectEntity(inputManager.GetMousePosition(), additive: inputManager.GetKey(KeyCode.LeftShift));
+            selectionHandler.SelectTargetor(inputManager.GetMousePosition(), additive: inputManager.GetKey(KeyCode.LeftShift));
         else if (inputManager.GetMouseButtonDown(1))
             selectionHandler.SelectTarget(inputManager.GetMousePosition());
     }

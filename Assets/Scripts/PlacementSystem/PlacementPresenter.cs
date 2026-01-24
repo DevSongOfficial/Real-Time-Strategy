@@ -54,8 +54,6 @@ public sealed class PlacementPresenter : IPlacementEvent
     public void Exit()
     {
         Cancel();
-
-
     }
 
     public void UpdatePreview(Vector3 mouseWorld)
@@ -79,7 +77,6 @@ public sealed class PlacementPresenter : IPlacementEvent
 
         gridSystem.DrawFootprintCells(mouseCell, size);
     }
-
 
     public void SelectBuilding(BuildingData data)
     {
