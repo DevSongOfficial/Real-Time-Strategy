@@ -15,10 +15,12 @@ public sealed class SelectTargetMode : ModeBase
 
     public override void Enter()
     {
+        mousePositionIndicator.gameObject.SetActive(true);
     }
 
     public override void Exit()
     {
+        mousePositionIndicator.gameObject.SetActive(false);
     }
 
     public override void Update()
@@ -32,7 +34,9 @@ public sealed class SelectTargetMode : ModeBase
             return;
 
         if (inputManager.GetMouseButtonDown(0))
+        {
             selectionHandler.SelectTarget(inputManager.GetMousePositionOnCanvas());
-            // Swith Mode
+            transitionRequester.RequestTransition(Mode.Normal);
+        }
     }
 }

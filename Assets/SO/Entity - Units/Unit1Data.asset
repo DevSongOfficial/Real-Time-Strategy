@@ -19,6 +19,7 @@ MonoBehaviour:
   <SelectionIndicatorPositionOffset>k__BackingField: {x: 0, y: 0.15, z: 0}
   <CommandSet>k__BackingField:
   - {fileID: 11400000, guid: 2d0e9ae1d29937e49b98f065619d7e98, type: 2}
+  - {fileID: 11400000, guid: 056daaf9362228145b746818f7cc5a82, type: 2}
   <MaxHealth>k__BackingField: 200
   <Combat>k__BackingField: {fileID: 11400000, guid: 58d8226b328a96b49ba764f54c373837, type: 2}
   <TrainingTime>k__BackingField: 4

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Unit Train", menuName = "Scriptable Objects/UnitTrainCommandData")]
+[CreateAssetMenu(fileName = "Unit Train", menuName = "Scriptable Objects/Command/Train Unit")]
 public class UnitTrainCommandData : CommandData
 {
     public override CommandType Type => CommandType.Train;

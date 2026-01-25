@@ -1,5 +1,5 @@
-using Unity.VisualScripting;
-using UnityEngine;
+using System.Collections.Generic;
+
 public interface IModeTransitionRequester
 {
     void RequestTransition(Mode mode);
@@ -12,10 +12,10 @@ public class PlayerStateMachine : IModeTransitionRequester
 {
     public ModeBase CurrentMode { get; private set; }
 
-    private ModeBase normalMode;
-    private ModeBase buildMode;
-    private ModeBase spawnPositionSetMode;
-    private ModeBase selectTargetMode;
+    private readonly ModeBase normalMode;
+    private readonly ModeBase buildMode;
+    private readonly ModeBase spawnPositionSetMode;
+    private readonly ModeBase selectTargetMode;
 
     public PlayerStateMachine(NormalMode normalMode, BuildMode buildMode, SetPositionMode spawnPositionSetMode, SelectTargetMode selectTargetMode)
     {
@@ -23,6 +23,11 @@ public class PlayerStateMachine : IModeTransitionRequester
         this.buildMode = buildMode;
         this.spawnPositionSetMode = spawnPositionSetMode;
         this.selectTargetMode = selectTargetMode;
+        
+        normalMode.Setup(this);
+        buildMode.Setup(this);
+        spawnPositionSetMode.Setup(this);
+        selectTargetMode.Setup(this);
     }
 
     public void SetMode(ModeBase newMode)

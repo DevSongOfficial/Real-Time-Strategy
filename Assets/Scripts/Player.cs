@@ -59,7 +59,7 @@ public sealed class Player : MonoBehaviour
 
     // Spawning position controller for unit-generatable buildings.
     private SpawnPositionSetter spawnPositionSetter;
-    [SerializeField] private Transform mouseWorldPositionIndicator;
+    [SerializeField] private Transform spawnPositionIndicator;
 
     private void Awake()
     {
@@ -70,11 +70,9 @@ public sealed class Player : MonoBehaviour
         selectionIndicatorFactory   = new SelectionIndicatorFactory();
         healthBarGenerator          = new HealthBarGenerator(healthBarContainer, cameraController);
         
-        spawnPositionSetter                 = new SpawnPositionSetter(mouseWorldPositionIndicator);
-        spawnPositionSetter.OnExitRequested += OnStopSettingSpawnPosition;
-
-        moveMarkerFactory           = new MoveMakerFactory();
-        buildingFactory             = new BuildingFactory(() => unitGenerator, selectionHandler, selectionIndicatorFactory, profilePanel, spawnPositionSetter);
+        spawnPositionSetter = new SpawnPositionSetter(spawnPositionIndicator, mouseIndicator_World);
+        moveMarkerFactory    = new MoveMakerFactory();
+        buildingFactory      = new BuildingFactory(() => unitGenerator, selectionHandler, selectionIndicatorFactory, profilePanel, spawnPositionSetter);
 
         dragEventHandler    = new DragEventHandler(entityRegistry.GetTransformsOfUnits(), cameraController.Camera, canvas, inputManager);
         selectionHandler    = new SelectionHandler(entityRegistry.GetSelectedEntities(), cameraController.Camera, commandPanel, moveMarkerFactory);
@@ -91,20 +89,20 @@ public sealed class Player : MonoBehaviour
         unitGenerator                   = new UnitGenerator(unitFactory, entityRegistry);
         unitGenerator.OnUnitGenerated   += healthBarGenerator.GenerateAndSetTargetUnit;
 
-        // Finite State Machine
+        // FSM
         var normalMode              = new NormalMode(inputManager, selectionHandler, dragEventHandler);
         var buildMode               = new BuildMode(inputManager, placementPresenter);
         var spawnPositionSetMode    = new SetPositionMode(inputManager, spawnPositionSetter);
-        var selectTargetMode = new SelectTargetMode(inputManager, selectionHandler, mouseWorldPositionIndicator);
-        stateMachine = new PlayerStateMachine(normalMode, buildMode, spawnPositionSetMode, selectTargetMode);
+        var selectTargetMode        = new SelectTargetMode(inputManager, selectionHandler, mouseIndicator_World);
+        
+        stateMachine                = new PlayerStateMachine(normalMode, buildMode, spawnPositionSetMode, selectTargetMode);
+        commandPanel.Setup(stateMachine);
         stateMachine.SetMode(normalMode);
 
 
         selectionHandler.OnSelectEntity += OnEntitySelected;
         selectionHandler.OnDeselectEntity += OnEntityDeselected;
-        commandPanel.OnBuildingConstructionButtonClicked += OnStartBuilding;
-        commandPanel.OnSpawnPositionSetButtonClicked += OnStartSettingSpawnPosition;
-        commandPanel.OnSelectTargetButtonClicked += () => stateMachine.RequestTransition(Mode.SelectTarget); // refactoring..
+        commandPanel.OnBuildingConstructionButtonClicked += (BuildingData data) => placementPresenter.SelectBuilding(data);
     }
 
     private void Start()
@@ -121,24 +119,6 @@ public sealed class Player : MonoBehaviour
     private void LateUpdate()
     {
         UpdateMouseIndicatorPosition();
-    }
-
-    private void OnStartBuilding(BuildingData data)
-    {
-        stateMachine.RequestTransition(Mode.Build);
-        placementPresenter.SelectBuilding(data);
-    }
-
-    private void OnStartSettingSpawnPosition(IUnitGenerator unitGenerator)
-    {
-        stateMachine.RequestTransition(Mode.SetSpawnPoint);
-        mouseIndicator_World.gameObject.SetActive(true);
-    }
-
-    private void OnStopSettingSpawnPosition()
-    {
-        stateMachine.RequestTransition(Mode.Normal);
-        mouseIndicator_World.gameObject.SetActive(false);
     }
 
     private void OnEntitySelected(ISelectable entity)

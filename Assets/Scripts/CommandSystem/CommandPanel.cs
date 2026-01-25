@@ -9,11 +9,10 @@ public class CommandPanel : MonoBehaviour
     public static readonly int ButtonCount = 12;
     [SerializeField] private CommandButton[] commandButtons = new CommandButton[ButtonCount];
 
+    private IModeTransitionRequester transitionRequester;
+
     public event Action                     OnCommandButtonClicked;
     public event Action<BuildingData>       OnBuildingConstructionButtonClicked;
-    public event Action<UnitData>           OnUnitTrainButtonClicked;
-    public event Action<IUnitGenerator>     OnSpawnPositionSetButtonClicked;
-    public event Action                     OnSelectTargetButtonClicked ;
 
 
     private ISelectable currentEntity;
@@ -23,6 +22,11 @@ public class CommandPanel : MonoBehaviour
     {
         foreach (var button in commandButtons)
             button.Setup(this);
+    }
+
+    public void Setup(IModeTransitionRequester transitionRequester)
+    {
+        this.transitionRequester = transitionRequester;
     }
 
     public void OnEntitySelected(ISelectable selectable)
@@ -44,19 +48,18 @@ public class CommandPanel : MonoBehaviour
         {
             case BuildCommandData command:
                 OnBuildingConstructionButtonClicked?.Invoke(command.BuildingData);
+                transitionRequester.RequestTransition(Mode.Build);
                 currentEntity.ExecuteCommand(command);
                 break;
             case UnitTrainCommandData command:
-                OnUnitTrainButtonClicked?.Invoke(command.UnitData);
                 currentEntity.ExecuteCommand(command);
                 break;
             case SpawnPositionSetCommandData:
-                OnSpawnPositionSetButtonClicked?.Invoke(currentEntity as IUnitGenerator);
+                transitionRequester.RequestTransition(Mode.SetSpawnPoint);
                 break;
             case SelectTargetCommandData:
-                OnSelectTargetButtonClicked?.Invoke();
+                transitionRequester.RequestTransition(Mode.SelectTarget);
                 break;
-
         }
     }
 

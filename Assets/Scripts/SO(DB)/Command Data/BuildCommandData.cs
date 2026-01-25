@@ -1,7 +1,7 @@
 
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Build Command", menuName = "Scriptable Objects/BuildCommandData")]
+[CreateAssetMenu(fileName = "Build Command", menuName = "Scriptable Objects/Command/Build")]
 public class BuildCommandData : CommandData
 {
     public override CommandType Type => CommandType.Build;

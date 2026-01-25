@@ -14,10 +14,12 @@ public class SetPositionMode : ModeBase
 
     public override void Enter()
     {
+        controller.StartSettingSpawnPoint();
     }
 
     public override void Exit()
     {
+        controller.StopSettingSpawnPoint();
     }
 
     public override void HandleInput()
@@ -25,21 +27,14 @@ public class SetPositionMode : ModeBase
         if (!inputManager.IsPointerInClickableArea()) return;
 
         if (inputManager.GetMouseButtonDown(0))
-            controller.UpdatePosition(inputManager.GetMousePositionOnGround());
+            controller.UpdateSpawnPoint(inputManager.GetMousePositionOnGround());
 
         if (inputManager.GetMouseButtonDown(1))
-            ExitTheMode();
+            transitionRequester.RequestTransition(Mode.Normal);
     }
 
     public override void Update()
     {        
-    }
-
-    private void ExitTheMode()
-    {
-        var building = controller.Building;
-        controller.StopSettingSpawnerPosition();
-        controller.SetSpawner(building);
     }
 }
 
