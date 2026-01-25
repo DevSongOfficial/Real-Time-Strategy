@@ -45,9 +45,9 @@ public class HybridBuilding : Building, ITargetor
         stateMachine.ChangeState<BuildingMoveState>();
     }
 
-    public override void MakeRenderOnly()
+    public override void SetToPreview()
     {
         agent.enabled = false;
-        base.MakeRenderOnly();
+        base.SetToPreview();
     }
 }

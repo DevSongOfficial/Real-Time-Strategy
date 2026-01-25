@@ -1015,7 +1015,7 @@ GameObject:
   - component: {fileID: 213441870}
   - component: {fileID: 213441869}
   m_Layer: 0
-  m_Name: Spawn Position Indicator
+  m_Name: Rally Point Indicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6665,7 +6665,7 @@ MonoBehaviour:
   grid: {fileID: 1795782375}
   quadMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
   mouseIndicator_World: {fileID: 2029056884}
-  spawnPositionIndicator: {fileID: 213441872}
+  rallyPointIndicator: {fileID: 213441872}
 --- !u!4 &1511205668
 Transform:
   m_ObjectHideFlags: 0

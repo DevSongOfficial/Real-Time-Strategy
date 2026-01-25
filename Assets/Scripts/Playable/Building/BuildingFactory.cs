@@ -13,10 +13,10 @@ public class BuildingFactory : PlayableAbsFactory<Building>, IBuildingPreviewFac
 {
     private event Func<UnitGenerator> getUnitGenerator;
     private EntityProfilePanel profilePanel;
-    private SpawnPositionSetter spawnPositionSetter;
+    private RallyPointSetter spawnPositionSetter;
 
     public BuildingFactory(Func<UnitGenerator> getUnitGenerator, ISelectionEvent selectionHandler, 
-        SelectionIndicatorFactory selectionIndicatorFactory, EntityProfilePanel profilePanel, SpawnPositionSetter spawnPositionSetter)
+        SelectionIndicatorFactory selectionIndicatorFactory, EntityProfilePanel profilePanel, RallyPointSetter spawnPositionSetter)
     {
         this.getUnitGenerator = getUnitGenerator;
         this.profilePanel = profilePanel;
@@ -54,7 +54,7 @@ public class BuildingFactory : PlayableAbsFactory<Building>, IBuildingPreviewFac
     {
         var buildingData = data.Prefab.GetComponent<Building>();
         var building = GameObject.Instantiate<Building>(buildingData);
-        building.MakeRenderOnly();
+        building.SetToPreview();
 
         return building;
     }

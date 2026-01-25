@@ -17,7 +17,7 @@ public class PlayerStateMachine : IModeTransitionRequester
     private readonly ModeBase spawnPositionSetMode;
     private readonly ModeBase selectTargetMode;
 
-    public PlayerStateMachine(NormalMode normalMode, BuildMode buildMode, SetPositionMode spawnPositionSetMode, SelectTargetMode selectTargetMode)
+    public PlayerStateMachine(NormalMode normalMode, BuildMode buildMode, SetRallyPointMode spawnPositionSetMode, SelectTargetMode selectTargetMode)
     {
         this.normalMode = normalMode;
         this.buildMode = buildMode;

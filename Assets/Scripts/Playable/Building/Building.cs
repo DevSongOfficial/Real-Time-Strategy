@@ -14,6 +14,8 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext
     protected new BuildingStateMachine stateMachine => base.stateMachine as BuildingStateMachine;
     protected new BuildingBlackBoard blackBoard;
 
+    public bool IsPreview { get; private set; }
+
     public bool IsUnderConstruction => (stateMachine.CurrentState is BuildingUnderConstructionState);
     public IState CurrentState => stateMachine.CurrentState;
 
@@ -124,15 +126,52 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext
 
     public new BuildingData GetData()
     {
-        return (BuildingData)data;
+        return data as BuildingData;
     }
 
     EntityData ITarget.GetData() => GetData();
 
     // This is basically for ghost building.
-    public virtual void MakeRenderOnly()
+    public virtual void SetToPreview()
     {
+        IsPreview = true;
         enabled = false;
         gameObject.SetLayer(Layer.IgnoreCollision);
+    }
+
+    protected enum SpawnPositionType { TopLeft, TopRight, BottomLeft, BottomRight, Random }
+    protected Vector3 CalculateSpawnPosition(SpawnPositionType type)
+    {
+        int xSign = 0; 
+        int ySign = 0;
+
+        switch (type)
+        {
+            case SpawnPositionType.TopLeft:
+                xSign = -1;
+                ySign = 1;
+                break;
+            case SpawnPositionType.TopRight:
+                xSign = 1;
+                ySign = 1;
+                break;
+            case SpawnPositionType.BottomLeft:
+                xSign = -1;
+                ySign = -1;
+                break;
+            case SpawnPositionType.BottomRight:
+                xSign = 1;
+                ySign = -1;
+                break;
+            case SpawnPositionType.Random:
+                xSign = UnityEngine.Random.Range(0, 2) == 0 ? -1 : 1;
+                ySign = UnityEngine.Random.Range(0, 2) == 0 ? -1 : 1;
+                break;
+        }
+
+        int x = xSign * GetData().CellSize.x;
+        int y = ySign * GetData().CellSize.y;
+
+        return transform.position + new Vector3(x, 0, y);
     }
 }

@@ -58,8 +58,8 @@ public sealed class Player : MonoBehaviour
     private PlayerStateMachine stateMachine;
 
     // Spawning position controller for unit-generatable buildings.
-    private SpawnPositionSetter spawnPositionSetter;
-    [SerializeField] private Transform spawnPositionIndicator;
+    private RallyPointSetter rallyPointSetter;
+    [SerializeField] private Transform rallyPointIndicator;
 
     private void Awake()
     {
@@ -70,9 +70,9 @@ public sealed class Player : MonoBehaviour
         selectionIndicatorFactory   = new SelectionIndicatorFactory();
         healthBarGenerator          = new HealthBarGenerator(healthBarContainer, cameraController);
         
-        spawnPositionSetter = new SpawnPositionSetter(spawnPositionIndicator, mouseIndicator_World);
+        rallyPointSetter = new RallyPointSetter(rallyPointIndicator, mouseIndicator_World);
         moveMarkerFactory    = new MoveMakerFactory();
-        buildingFactory      = new BuildingFactory(() => unitGenerator, selectionHandler, selectionIndicatorFactory, profilePanel, spawnPositionSetter);
+        buildingFactory      = new BuildingFactory(() => unitGenerator, selectionHandler, selectionIndicatorFactory, profilePanel, rallyPointSetter);
 
         dragEventHandler    = new DragEventHandler(entityRegistry.GetTransformsOfUnits(), cameraController.Camera, canvas, inputManager);
         selectionHandler    = new SelectionHandler(entityRegistry.GetSelectedEntities(), cameraController.Camera, commandPanel, moveMarkerFactory);
@@ -92,10 +92,10 @@ public sealed class Player : MonoBehaviour
         // FSM
         var normalMode              = new NormalMode(inputManager, selectionHandler, dragEventHandler);
         var buildMode               = new BuildMode(inputManager, placementPresenter);
-        var spawnPositionSetMode    = new SetPositionMode(inputManager, spawnPositionSetter);
+        var rallyPointSetMode       = new SetRallyPointMode(inputManager, rallyPointSetter);
         var selectTargetMode        = new SelectTargetMode(inputManager, selectionHandler, mouseIndicator_World);
         
-        stateMachine                = new PlayerStateMachine(normalMode, buildMode, spawnPositionSetMode, selectTargetMode);
+        stateMachine                = new PlayerStateMachine(normalMode, buildMode, rallyPointSetMode, selectTargetMode);
         commandPanel.Setup(stateMachine);
         stateMachine.SetMode(normalMode);
 

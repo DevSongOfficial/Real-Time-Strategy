@@ -1,12 +1,12 @@
 using System;
 using UnityEngine;
 
-public class SetPositionMode : ModeBase
+public class SetRallyPointMode : ModeBase
 {
-    private readonly SpawnPositionSetter controller;
+    private readonly RallyPointSetter controller;
     private readonly InputManager inputManager;
 
-    public SetPositionMode(InputManager inputManager, SpawnPositionSetter controller)
+    public SetRallyPointMode(InputManager inputManager, RallyPointSetter controller)
     {
         this.controller = controller;
         this.inputManager = inputManager;
@@ -14,12 +14,12 @@ public class SetPositionMode : ModeBase
 
     public override void Enter()
     {
-        controller.StartSettingSpawnPoint();
+        controller.StartSettingRallyPoint();
     }
 
     public override void Exit()
     {
-        controller.StopSettingSpawnPoint();
+        controller.StopSettingRallyPoint();
     }
 
     public override void HandleInput()
@@ -27,13 +27,11 @@ public class SetPositionMode : ModeBase
         if (!inputManager.IsPointerInClickableArea()) return;
 
         if (inputManager.GetMouseButtonDown(0))
-            controller.SetSpawnPoint(inputManager.GetMousePositionOnGround());
+            controller.SetRallyPoint(inputManager.GetMousePositionOnGround());
 
         if (inputManager.GetMouseButtonDown(1))
             transitionRequester.RequestTransition(Mode.Normal);
     }
 
-    public override void Update()
-    {        
-    }
+    public override void Update() {}
 }

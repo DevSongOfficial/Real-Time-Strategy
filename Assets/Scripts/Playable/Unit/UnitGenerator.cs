@@ -15,12 +15,14 @@ public class UnitGenerator
         this.unitRegistry = unitRegistry;
     }
 
-    public void Generate(EntityData unitData, Team team, Vector3 position)
+    public void Generate(EntityData unitData, Team team, Vector3 spawnPosition, Vector3? rallyPoint = null)
     {
         var newUnit = unitFactory.Create(unitData, team);
         unitRegistry.RegisterUnit(newUnit);
-        newUnit.SetPosition(position);
-        //newUnit.SetDestination(position);
+        newUnit.SetPosition(spawnPosition);
+
+        if(rallyPoint.HasValue)
+            newUnit.SetTarget(new Target(rallyPoint.Value));
 
         OnUnitGenerated?.Invoke(newUnit);
     }
@@ -39,12 +41,12 @@ public class UnitGenerationInfo
 {
     public UnitData Data;
     public Team team;
-    public Vector3 spawnPosition;
+    public Vector3 rallyPosition;
 
     public UnitGenerationInfo(UnitData unitData, Team team, Vector3 position)
     {
         this.Data = unitData; 
         this.team = team; 
-        this.spawnPosition = position;
+        this.rallyPosition = position;
     }
 }
