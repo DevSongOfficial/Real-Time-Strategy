@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public class CommandPanel : MonoBehaviour
 {
@@ -13,7 +12,6 @@ public class CommandPanel : MonoBehaviour
 
     public event Action                     OnCommandButtonClicked;
     public event Action<BuildingData>       OnBuildingConstructionButtonClicked;
-
 
     private ISelectable currentEntity;
     private List<CommandData> currentCommands;
