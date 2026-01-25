@@ -27,7 +27,7 @@ public class SetPositionMode : ModeBase
         if (!inputManager.IsPointerInClickableArea()) return;
 
         if (inputManager.GetMouseButtonDown(0))
-            controller.UpdateSpawnPoint(inputManager.GetMousePositionOnGround());
+            controller.SetSpawnPoint(inputManager.GetMousePositionOnGround());
 
         if (inputManager.GetMouseButtonDown(1))
             transitionRequester.RequestTransition(Mode.Normal);
@@ -37,5 +37,3 @@ public class SetPositionMode : ModeBase
     {        
     }
 }
-
-

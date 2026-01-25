@@ -22,22 +22,18 @@ public class SpawnPositionSetter
 
     public void StartSettingSpawnPoint()
     {
-        if (Building == null) return;
-
+        spawnPositionIndicator.gameObject.SetActive(true);
         mousePositionIndicator.gameObject.SetActive(true);
     }
 
-    public void UpdateSpawnPoint(Vector3 position)
+    public void SetSpawnPoint(Vector3 position)
     {
-        if (Building == null) return;
-
         spawnPositionIndicator.position = position;
         Building.SetUnitSpawnPosition(position);
     }
 
     public void StopSettingSpawnPoint()
     {
-        Building = null;
         spawnPositionIndicator.gameObject.SetActive(false);
         mousePositionIndicator.gameObject.SetActive(false);
     }

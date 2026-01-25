@@ -18,8 +18,9 @@ public class UnitGenerator
     public void Generate(EntityData unitData, Team team, Vector3 position)
     {
         var newUnit = unitFactory.Create(unitData, team);
-        newUnit.SetPosition(position);
         unitRegistry.RegisterUnit(newUnit);
+        newUnit.SetPosition(position);
+        //newUnit.SetDestination(position);
 
         OnUnitGenerated?.Invoke(newUnit);
     }
