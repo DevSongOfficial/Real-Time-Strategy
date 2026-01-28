@@ -44,7 +44,7 @@ public sealed class Player : MonoBehaviour
     private BuildingFactory buildingFactory;
     private UnitFactory unitFactory;
     private SelectionIndicatorFactory selectionIndicatorFactory;
-    private MoveMakerFactory moveMarkerFactory;
+    private MoveMarkerFactory moveMarkerFactory;
 
     private PlacementPresenter  placementPresenter;
     
@@ -71,7 +71,7 @@ public sealed class Player : MonoBehaviour
         healthBarGenerator          = new HealthBarGenerator(healthBarContainer, cameraController);
         
         rallyPointSetter = new RallyPointSetter(rallyPointIndicator, mouseIndicator_World);
-        moveMarkerFactory    = new MoveMakerFactory();
+        moveMarkerFactory    = new MoveMarkerFactory();
         buildingFactory      = new BuildingFactory(() => unitGenerator, selectionHandler, selectionIndicatorFactory, profilePanel, rallyPointSetter);
 
         dragEventHandler    = new DragEventHandler(entityRegistry.GetTransformsOfUnits(), cameraController.Camera, canvas, inputManager);
@@ -131,6 +131,7 @@ public sealed class Player : MonoBehaviour
     {
         entity.OnDeselected();
         commandPanel.DisableAllButtons();
+        rallyPointSetter.HideRallyPositionIndicator();
     }
 
     // Mouse Indicator

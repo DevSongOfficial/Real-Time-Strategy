@@ -34,7 +34,11 @@ public class RallyPointSetter
 
     public void StopSettingRallyPoint()
     {
-        rallyPositionIndicator.gameObject.SetActive(false);
         mousePositionIndicator.gameObject.SetActive(false);
+    }
+
+    public void HideRallyPositionIndicator()
+    {
+        rallyPositionIndicator.gameObject.SetActive(false);
     }
 }

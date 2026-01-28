@@ -3,5 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "UnitData", menuName = "Scriptable Objects/UnitData")]
 public class UnitData : EntityData
 {
+    [field: SerializeField] public int RequiredFood { get; private set; } = 0;
+
     [field: SerializeField] public float TrainingTime { get; set; } = 4;
 }

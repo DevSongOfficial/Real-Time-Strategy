@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 
 // TODO: Make markers fade away when released
-public class MoveMakerFactory
+public class MoveMarkerFactory
 {
     private Transform prefab;
     private List<Transform> markerPool;
 
-    public MoveMakerFactory()
+    public MoveMarkerFactory()
     {
         markerPool = new List<Transform>();
         prefab = ResourceLoader.GetResource<Transform>(Prefabs.Effect.MoveMarker);

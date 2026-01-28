@@ -169,8 +169,8 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext
                 break;
         }
 
-        int x = xSign * GetData().CellSize.x;
-        int y = ySign * GetData().CellSize.y;
+        int x = Mathf.CeilToInt((GetData().CellSize.x / 2f)) * xSign;
+        int y = Mathf.CeilToInt((GetData().CellSize.y / 2f)) * ySign;
 
         return transform.position + new Vector3(x, 0, y);
     }

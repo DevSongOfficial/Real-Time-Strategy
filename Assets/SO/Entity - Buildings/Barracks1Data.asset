@@ -23,5 +23,7 @@ MonoBehaviour:
   <MaxHealth>k__BackingField: 250
   <Combat>k__BackingField: {fileID: 11400000, guid: 6cb5b9cdf07257844966f082b6a892f4, type: 2}
   <CellSize>k__BackingField: {x: 2, y: 3}
+  <RequiredGold>k__BackingField: 30
+  <RequiredWood>k__BackingField: 0
   <ConsructionTime>k__BackingField: 4
   GenerationSlotCount: 4

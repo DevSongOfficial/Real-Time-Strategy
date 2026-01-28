@@ -62,12 +62,12 @@ public class SelectionHandler : ISelectionEvent
     private Camera camera;
     private CommandPanel commandPanel;
     private List<ISelectable> selectedEntities;
-    private MoveMakerFactory moveMarkerFactory;
+    private MoveMarkerFactory moveMarkerFactory;
 
 
     private Team currentSelectedTeam; // The team of the currently selected entity; this matters since it's not allowed to select multiple teams' units at a time.
 
-    public SelectionHandler(List<ISelectable> selectedEntities, Camera camera, CommandPanel commandPanel, MoveMakerFactory moveMarkerFactory)
+    public SelectionHandler(List<ISelectable> selectedEntities, Camera camera, CommandPanel commandPanel, MoveMarkerFactory moveMarkerFactory)
     {
         this.selectedEntities = selectedEntities;
         this.camera = camera;
