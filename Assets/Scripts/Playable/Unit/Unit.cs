@@ -19,6 +19,9 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
     private HealthSystem healthSystem;
     protected EntityProfilePanel profilePanel;
 
+    // Resource
+    protected ResourceBank teamResourceBank; 
+    protected ResourceBank resourceBank; // For managing this unit's currently holding resources.
 
     protected virtual void Awake()
     {
@@ -37,18 +40,20 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
         PositionDeltaY = collider.bounds.extents.y;
     }
 
-    public Unit SetUp(EntityData data, Team team, GameObject selectionIndicator, EntityProfilePanel profilePanel, IPlacementEvent placementEvent)
+    public Unit SetUp(EntityData data, Team team, ResourceBank resourceBank, GameObject selectionIndicator, EntityProfilePanel profilePanel, IPlacementEvent placementEvent)
     {
         this.data = data;
         this.team = team;
         this.selectionIndicator = selectionIndicator;
         this.placementEvent = placementEvent;
         this.profilePanel = profilePanel;
+        this.teamResourceBank = resourceBank;
 
         blackBoard = new BlackBoard(data, coroutineExecutor, team);
         stateMachine = new UnitStateMachine(this, blackBoard);
 
         healthSystem = new HealthSystem(data.MaxHealth);
+        this.resourceBank = new ResourceBank();
 
         return this;
     }
@@ -88,6 +93,7 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
             placementEvent.OnPlacementRequested += StartConstruction;
     }
 
+    // Construction  
     private void StartConstruction(ITarget building)
     {
         placementEvent.OnPlacementRequested -= StartConstruction; // one shot handler 
@@ -96,6 +102,27 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
 
         stateMachine.ChangeState<UnitMoveState>();
     }
+
+    // Resource Management
+    public void CarryResource(ResourceType type, int amount)
+    {
+        resourceBank.AddResource(type, amount);
+    }
+
+    public int DepositResource(ResourceType type)
+    {
+        var depositAmount = resourceBank.GetResourceAmount(type);
+        resourceBank.SpendResource(type, depositAmount);
+
+        return depositAmount;
+    }
+
+    public bool IsCarryingResources()
+    {
+        return resourceBank.GetResourceAmount(ResourceType.Gold) > 0 
+            || resourceBank.GetResourceAmount(ResourceType.Wood) > 0;
+    }
+
 
     #region Transform
     // Transform

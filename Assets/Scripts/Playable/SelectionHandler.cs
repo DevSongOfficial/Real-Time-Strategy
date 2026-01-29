@@ -86,19 +86,21 @@ public class SelectionHandler : ISelectionEvent
 
         if (target.IsGround)
         {
-            // Show destination marker.
-            moveMarkerFactory.Spawn(target.GetPosition());
-
-            // Make slots for the formation to move
+            // Count the number of ITargetors
             int count = 0;
             foreach(var unit in selectedEntities)
                 if (unit is ITargetor) 
                     count++;
 
+            // Make slots for the formation to move
             var slots = BuildGridSlots(target.GetPosition(), count, 1f);
             for(int i = 0; i < selectedEntities.Count; i++)
                 if (selectedEntities[i] is ITargetor targetor)
                     targetor.SetTarget(new Target(slots[i]));
+
+            // Show destination marker.
+            if(count > 0)
+                moveMarkerFactory.Spawn(target.GetPosition());
         }
         else // When the target is entity
         {

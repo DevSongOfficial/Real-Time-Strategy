@@ -27,6 +27,6 @@ public class UnitFactory : PlayableAbsFactory<Unit>
         selectionIndicator.GetChild(0).localScale = (Vector3.one * data.RadiusOnTerrain).WithZ(1);
         selectionIndicator.gameObject.SetActive(false);
 
-        return unit.SetUp(data, team, selectionIndicator.gameObject, profilePanel, placementEvent);
+        return unit.SetUp(data, team, Player.ResourceBank, selectionIndicator.gameObject, profilePanel, placementEvent);
     }
 }

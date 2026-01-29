@@ -57,6 +57,24 @@ public class UnitMoveState : UnitStateBase
             return;
         }
 
+        if(nextState == stateMachine.HarvestState)
+        {
+            var contactDistance = stateContext.CaculateContactDistance(blackBoard.target);
+            if (stateContext.HasArrived(contactDistance * 0.5f))
+            {
+                stateMachine.ChangeState<UnitHarvestState>();
+            }
+        }
+
+        if(nextState == stateMachine.DepositState)
+        {
+            var contactDistance = stateContext.CaculateContactDistance(blackBoard.target);
+            if (stateContext.HasArrived(contactDistance * 0.5f))
+            {
+                stateMachine.ChangeState<UnitDepositState>();
+            }
+        }
+
         if(nextState == stateMachine.IdleState)
         {
             if(stateContext.HasArrived())

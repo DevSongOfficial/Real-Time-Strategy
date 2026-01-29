@@ -10,9 +10,12 @@ public sealed class Player : MonoBehaviour
     [Header("Spawn(temp)")]
     [SerializeField, Range(0, 99)] private int numberOfUnitOnStart = 3;
     [SerializeField] private EntityData unitData;
-    
+    [SerializeField] private ResourceProviderData goldMineData;
+
 
     [Header("Scene Refs")]
+    [SerializeField] private BarracksData headquartersData;
+    [Space]
     [SerializeField] private Canvas canvas;
     [SerializeField] private EntityProfilePanel profilePanel;
     [SerializeField] private CommandPanel commandPanel;
@@ -21,15 +24,24 @@ public sealed class Player : MonoBehaviour
     [SerializeField] private PlacementView placementView;
     [Space]
     [SerializeField] private CameraController cameraController;
+    
+    [Header("Grid System")]
     [SerializeField] private Grid grid;
     [SerializeField] private Mesh quadMesh;
+
+    // GameObject following mouse cursor position
     [SerializeField] private Transform mouseIndicator_World;
 
     // Team
-    public static Team Team = Team.Green;
+    public readonly static Team Team = Team.Green;
+    public static HeadQuarters HQ { get;  private set; }
 
     // Entity Regsitry includes diffrent type of entity containers.
     private EntityRegistry entityRegistry;
+
+    // Manages resources such as Gold, Wood, Food.
+    private static ResourceBank resourceBank;
+    public static ResourceBank ResourceBank => resourceBank; // TEMP: Each team must have a single resourcebank
 
     // Mouse drag event.
     private DragEventHandler dragEventHandler;
@@ -89,6 +101,8 @@ public sealed class Player : MonoBehaviour
         unitGenerator                   = new UnitGenerator(unitFactory, entityRegistry);
         unitGenerator.OnUnitGenerated   += healthBarGenerator.GenerateAndSetTargetUnit;
 
+        resourceBank = new ResourceBank();
+
         // FSM
         var normalMode              = new NormalMode(inputManager, selectionHandler, dragEventHandler);
         var buildMode               = new BuildMode(inputManager, placementPresenter);
@@ -108,6 +122,12 @@ public sealed class Player : MonoBehaviour
     private void Start()
     {
         unitGenerator.RandomGenerate(unitData, numberOfUnitOnStart);
+
+        HQ = buildingFactory.Create(headquartersData, Team) as HeadQuarters;
+        HQ.SetPosition(new Vector3(30, 0.5f, 30));
+
+        var mine = buildingFactory.Create(goldMineData, Team);
+        mine.SetPosition(new Vector3(33, 0.5f, 33));
     }
 
     private void Update()

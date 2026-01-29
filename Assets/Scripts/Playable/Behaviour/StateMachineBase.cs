@@ -51,22 +51,30 @@ public sealed class UnitStateMachine : StateMachineBase
     public UnitMoveState        MoveState { get; private set; }
     public UnitAttackState      AttackState { get; private set; }
     public UnitConstructState   ConstructState { get; private set; }
+    public UnitHarvestState     HarvestState {  get; private set; }
+    public UnitDepositState     DepositState { get; private set; }
 
     private BlackBoard blackBoard;
+    private IUnitStateContext stateContext;
 
     public UnitStateMachine(IUnitStateContext stateContext, BlackBoard blackBoard)
     {
         this.blackBoard = blackBoard;
+        this.stateContext = stateContext;
 
         IdleState       = new UnitIdleState(this, blackBoard, stateContext);
         MoveState       = new UnitMoveState(this, blackBoard, stateContext);
         AttackState     = new UnitAttackState(this, blackBoard, stateContext);
         ConstructState  = new UnitConstructState(this, blackBoard, stateContext);
+        HarvestState    = new UnitHarvestState(this, blackBoard, stateContext);
+        DepositState    = new UnitDepositState(this, blackBoard, stateContext);
 
         RegisterState(IdleState);
         RegisterState(MoveState);
         RegisterState(AttackState);
         RegisterState(ConstructState);
+        RegisterState(HarvestState);
+        RegisterState(DepositState);
 
         // Initial State
         ChangeState<UnitIdleState>();
@@ -84,8 +92,17 @@ public sealed class UnitStateMachine : StateMachineBase
             if (target.Entity is IDamageable)
                 return AttackState;
         }
+        
+        
+        if (target.Entity is ResourceProvider) // means the target is GoldMine or Tree
+            return HarvestState;
         else if (target.Entity is Building)
+        {
+            if (target.Entity is HeadQuarters)
+                return DepositState;
+
             return ConstructState;
+        }
 
         return IdleState;
     }
@@ -128,8 +145,8 @@ public class HybridBuildingStateMachine : BuildingStateMachine
 public class BlackBoard
 {
     public EntityData BaseData { get; private set; }
-
     public Team team;
+    public HeadQuarters hq;
 
     // Move
     public Target target;

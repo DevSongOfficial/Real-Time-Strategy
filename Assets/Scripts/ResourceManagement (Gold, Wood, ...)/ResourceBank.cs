@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 public enum ResourceType
 {
-    Gold, Wood, Food
+    Gold, Wood,
 }
 
 public class ResourceBank
@@ -15,7 +15,6 @@ public class ResourceBank
         {
             { ResourceType.Gold, 0 },
             { ResourceType.Wood, 0 },
-            { ResourceType.Food, 0 }
         };
     }
 
