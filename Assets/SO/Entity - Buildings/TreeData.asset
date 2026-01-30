@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 988b72154a432ea408aa7ebd242a17c0, type: 3}
-  m_Name: GoldMineData
+  m_Name: TreeData
   m_EditorClassIdentifier: 
-  <Prefab>k__BackingField: {fileID: 6404431195190590083, guid: 50e06ebbe1061a341bbf1df45a6949f0, type: 3}
-  <DisplayName>k__BackingField: Gold Mine
+  <Prefab>k__BackingField: {fileID: 6404431195190590083, guid: d913dabe6080fbc449548098958582e2, type: 3}
+  <DisplayName>k__BackingField: Tree
   <ProfileSprite>k__BackingField: {fileID: 21300000, guid: 32c5298c995db7c47b5a3b5cb7836f62, type: 3}
   <RadiusOnTerrain>k__BackingField: 1
   <SelectionIndicatorPositionOffset>k__BackingField: {x: 0, y: 0, z: 0}
@@ -24,8 +24,8 @@ MonoBehaviour:
   <ConsructionTime>k__BackingField: 0
   <RequiredGold>k__BackingField: 0
   <RequiredWood>k__BackingField: 0
-  <ResourceType>k__BackingField: 0
-  <TotalAmount>k__BackingField: 4
-  <AmountPerAction>k__BackingField: 3
-  <TimeToHarvest>k__BackingField: 5
-  <DestroyOnResourceDepleted>k__BackingField: 0
+  <ResourceType>k__BackingField: 1
+  <TotalAmount>k__BackingField: 15
+  <AmountPerAction>k__BackingField: 4
+  <TimeToHarvest>k__BackingField: 4
+  <DestroyOnResourceDepleted>k__BackingField: 1

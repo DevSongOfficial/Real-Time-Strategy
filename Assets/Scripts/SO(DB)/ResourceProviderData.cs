@@ -8,4 +8,7 @@ public class ResourceProviderData : BuildingData
     [field: SerializeField] public int TotalAmount { get; private set; }
     [field: SerializeField] public int AmountPerAction { get; private set; }
     [field: SerializeField] public int TimeToHarvest { get; private set; }
+    [field:Space]
+    [field: SerializeField] public bool DestroyOnResourceDepleted {  get; private set; }
+
 }

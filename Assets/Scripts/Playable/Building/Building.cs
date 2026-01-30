@@ -71,7 +71,7 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext
     }
 
     #region State & Progress
-    public float GetProgressRate()
+    public virtual float GetProgressRate()
     {
         return Mathf.Clamp(blackBoard.progressRate, 0, 1);
     }

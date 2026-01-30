@@ -87,16 +87,16 @@ public sealed class UnitStateMachine : StateMachineBase
         if (target.IsGround)
             return IdleState;
 
+        if (target.Entity is ResourceProvider) // means the target is GoldMine or Tree
+            return HarvestState;
+
         if (target.Entity.GetTeam() != blackBoard.team)
         {
             if (target.Entity is IDamageable)
                 return AttackState;
         }
         
-        
-        if (target.Entity is ResourceProvider) // means the target is GoldMine or Tree
-            return HarvestState;
-        else if (target.Entity is Building)
+        if (target.Entity is Building)
         {
             if (target.Entity is HeadQuarters)
                 return DepositState;
@@ -131,6 +131,7 @@ public class BuildingStateMachine : StateMachineBase
         ChangeState<BuildingUnderConstructionState>();
         ConstructionState.PauseConstruction();
     }
+
 }
 
 public class HybridBuildingStateMachine : BuildingStateMachine

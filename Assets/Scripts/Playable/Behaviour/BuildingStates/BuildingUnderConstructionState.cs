@@ -20,6 +20,12 @@ public class BuildingUnderConstructionState: BuildingStateBase
 
     public override void Enter()
     {
+        if (leftTime <= 0)
+        {
+            stateMachine.ChangeState<BuildingIdleState>();
+            return;
+        }
+
         isPaused = false;
     }
 
