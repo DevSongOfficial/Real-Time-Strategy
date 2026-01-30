@@ -15,7 +15,7 @@ public class BuildingMoveState : BuildingStateBase
     {
         Debug.Log($"enabled={agent.enabled}, isOnNavMesh={agent.isOnNavMesh}");
         agent.isStopped = false;
-        agent.SetDestination(blackBoard.target.GetPosition());
+        agent.SetDestination(blackBoard.Target.GetPosition());
     }
 
     public override void Exit()
@@ -25,10 +25,10 @@ public class BuildingMoveState : BuildingStateBase
 
     public override void Update()
     {
-        if (!blackBoard.target.IsGround)
+        if (!blackBoard.Target.IsGround)
         {
-            var contactDistance = blackBoard.target.Entity.GetData().RadiusOnTerrain + blackBoard.BaseData.RadiusOnTerrain;
-            agent.SetDestination(blackBoard.target.GetPosition());
+            var contactDistance = blackBoard.Target.Entity.GetData().RadiusOnTerrain + blackBoard.BaseData.RadiusOnTerrain;
+            agent.SetDestination(blackBoard.Target.GetPosition());
 
             if (agent.remainingDistance < contactDistance * 0.5f)
                 stateMachine.ChangeState<BuildingIdleState>();

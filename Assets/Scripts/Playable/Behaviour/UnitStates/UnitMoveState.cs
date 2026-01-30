@@ -14,7 +14,7 @@ public class UnitMoveState : UnitStateBase
 
     public override void Enter()
     {
-        stateContext.SetDestination(blackBoard.target.GetPosition());
+        stateContext.SetDestination(blackBoard.Target.GetPosition());
 
         if (stateMachine.PreviousState != stateMachine.CurrentState)
             stateContext.CrossFadeAnimation("Run", 0.1f, 0);
@@ -33,8 +33,8 @@ public class UnitMoveState : UnitStateBase
 
         if (nextState == stateMachine.AttackState)
         {
-            var contactDistance = stateContext.CaculateContactDistance(blackBoard.target);
-            stateContext.SetDestination(blackBoard.target.GetPosition());
+            var contactDistance = stateContext.CaculateContactDistance(blackBoard.Target);
+            stateContext.SetDestination(blackBoard.Target.GetPosition());
             if (stateContext.GetRemainingDistance() - contactDistance * 0.5f < blackBoard.BaseData.Combat.AttackRange)
             {
                 if (blackBoard.attackCooldown <= 0)
@@ -48,7 +48,7 @@ public class UnitMoveState : UnitStateBase
 
         if (nextState == stateMachine.ConstructState)
         {
-            var contactDistance = stateContext.CaculateContactDistance(blackBoard.target);
+            var contactDistance = stateContext.CaculateContactDistance(blackBoard.Target);
             if (stateContext.HasArrived(contactDistance * 0.5f))
             {
                 stateMachine.ChangeState<UnitConstructState>();
@@ -59,7 +59,7 @@ public class UnitMoveState : UnitStateBase
 
         if(nextState == stateMachine.HarvestState)
         {
-            var contactDistance = stateContext.CaculateContactDistance(blackBoard.target);
+            var contactDistance = stateContext.CaculateContactDistance(blackBoard.Target);
             if (stateContext.HasArrived(contactDistance * 0.5f))
             {
                 stateMachine.ChangeState<UnitHarvestState>();
@@ -68,7 +68,7 @@ public class UnitMoveState : UnitStateBase
 
         if(nextState == stateMachine.DepositState)
         {
-            var contactDistance = stateContext.CaculateContactDistance(blackBoard.target);
+            var contactDistance = stateContext.CaculateContactDistance(blackBoard.Target);
             if (stateContext.HasArrived(contactDistance * 0.5f))
             {
                 stateMachine.ChangeState<UnitDepositState>();

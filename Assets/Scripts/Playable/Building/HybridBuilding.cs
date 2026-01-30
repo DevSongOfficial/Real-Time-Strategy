@@ -41,7 +41,7 @@ public class HybridBuilding : Building, ITargetor
 
     public void SetTarget(Target target)
     {
-        blackBoard.target = target;
+        blackBoard.SetTarget(target);
         stateMachine.ChangeState<BuildingMoveState>();
     }
 

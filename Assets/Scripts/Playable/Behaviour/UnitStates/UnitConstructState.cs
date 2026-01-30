@@ -14,7 +14,7 @@ public class UnitConstructState : UnitStateBase
 
     public override void Enter()
     {
-        if (blackBoard.target.Entity is not Building building)
+        if (blackBoard.Target.Entity is not Building building)
         {
             stateMachine.ChangeState<UnitIdleState>();
             return;
@@ -24,7 +24,7 @@ public class UnitConstructState : UnitStateBase
         building.StartConstruction(SwitchToIdleState);
 
         stateContext.CrossFadeAnimation("Construct", 0.05f, 0);
-        stateContext.LookAt(blackBoard.target.GetPosition());
+        stateContext.LookAt(blackBoard.Target.GetPosition());
     }
 
     public override void Exit() 

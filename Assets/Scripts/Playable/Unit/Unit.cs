@@ -80,7 +80,7 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
 
     public void SetTarget(Target target)
     {
-        blackBoard.target = target;
+        blackBoard.SetTarget(target);
         stateMachine.ChangeState<UnitMoveState>();
     }
 
@@ -98,7 +98,7 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
     {
         placementEvent.OnPlacementRequested -= StartConstruction; // one shot handler 
 
-        blackBoard.target = new Target(building);
+        blackBoard.SetTarget(new Target(building));
 
         stateMachine.ChangeState<UnitMoveState>();
     }

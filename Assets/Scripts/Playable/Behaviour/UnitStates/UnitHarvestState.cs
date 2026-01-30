@@ -13,7 +13,8 @@ public class UnitHarvestState : UnitStateBase
 
     public override void Enter()
     {
-        if (blackBoard.target.Entity is not ResourceProvider building)
+        if (blackBoard.Target.Entity is not ResourceProvider building ||
+            building.RemainingAmount == 0)
         {
             stateMachine.ChangeState<UnitIdleState>();
             return;
@@ -21,6 +22,7 @@ public class UnitHarvestState : UnitStateBase
 
         this.building = building;
         harvestTime = building.GetData().TimeToHarvest;
+        stateContext.CrossFadeAnimation("Dig", 0.5f, 0);
     }
 
     public override void Update()
@@ -28,20 +30,25 @@ public class UnitHarvestState : UnitStateBase
         base.Update();
 
         harvestTime -= Time.deltaTime;
-        if (harvestTime <= 0)
-        {
-            // Harvest and carry the resource.
-            var resourceType = building.GetData().ResourceType;
-            var amount = building.GetData().AmountPerAction;
-            stateContext.CarryResource(resourceType, amount);
-
-            blackBoard.target = new Target(Player.HQ);
-            stateMachine.ChangeState<UnitMoveState>();
+        if (harvestTime > 0)
             return;
-        }
+
+        HarvestResource();
+        CarryResourceToHQ();
     }
 
-    public override void Exit()
+    public override void Exit() { }
+
+    private void HarvestResource()
     {
+        var resourceType = building.GetData().ResourceType;
+        var amount = building.TakeResource();
+        stateContext.CarryResource(resourceType, amount);
+    }
+
+    private void CarryResourceToHQ()
+    {
+        blackBoard.SetTarget(new Target(Player.HQ));
+        stateMachine.ChangeState<UnitMoveState>();
     }
 }

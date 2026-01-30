@@ -11,10 +11,30 @@ public class UnitDepositState : UnitStateBase
 
     public override void Enter()
     {
+        if (!stateContext.IsCarryingResources())
+        {
+            stateMachine.ChangeState<UnitIdleState>();
+            return;
+        }
+
         stateContext.DepositResource(ResourceType.Gold);
         stateContext.DepositResource(ResourceType.Wood);
 
-        stateMachine.ChangeState<UnitIdleState>();
+        if(blackBoard.PreviousTarget.Entity is not ResourceProvider provider)
+        {
+            stateMachine.ChangeState<UnitIdleState>();
+            return;
+        }
+        
+        if(provider != null && provider.RemainingAmount > 0)
+        {
+            blackBoard.SetTarget(blackBoard.PreviousTarget);
+            stateMachine.ChangeState<UnitMoveState>();
+        }
+        else
+        {
+            stateMachine.ChangeState<UnitIdleState>();
+        }
     }
 
     public override void Exit()

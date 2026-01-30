@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 988b72154a432ea408aa7ebd242a17c0, type: 3}
-  m_Name: ResourceProviderData
+  m_Name: GoldMineData
   m_EditorClassIdentifier: 
   <Prefab>k__BackingField: {fileID: 6404431195190590083, guid: 50e06ebbe1061a341bbf1df45a6949f0, type: 3}
   <DisplayName>k__BackingField: GoldMine
@@ -21,9 +21,10 @@ MonoBehaviour:
   <MaxHealth>k__BackingField: 0
   <Combat>k__BackingField: {fileID: 11400000, guid: 6cb5b9cdf07257844966f082b6a892f4, type: 2}
   <CellSize>k__BackingField: {x: 1, y: 1}
+  <ConsructionTime>k__BackingField: 0
   <RequiredGold>k__BackingField: 0
   <RequiredWood>k__BackingField: 0
-  <ConsructionTime>k__BackingField: 4
   <ResourceType>k__BackingField: 0
-  <AmountPerAction>k__BackingField: 0
-  <TimeToHarvest>k__BackingField: 0
+  <TotalAmount>k__BackingField: 4
+  <AmountPerAction>k__BackingField: 3
+  <TimeToHarvest>k__BackingField: 5

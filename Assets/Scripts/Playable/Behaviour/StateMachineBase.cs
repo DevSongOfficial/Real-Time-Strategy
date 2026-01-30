@@ -82,7 +82,7 @@ public sealed class UnitStateMachine : StateMachineBase
 
     public UnitStateBase DetermineNextState()
     {
-        Target target = blackBoard.target;
+        Target target = blackBoard.Target;
 
         if (target.IsGround)
             return IdleState;
@@ -149,7 +149,13 @@ public class BlackBoard
     public HeadQuarters hq;
 
     // Move
-    public Target target;
+    public Target Target { get; private set; }
+    public Target PreviousTarget { get; private set; }
+    public void SetTarget(Target target)
+    {
+        PreviousTarget = Target;
+        Target = target;
+    }
 
     // Attack
     public float attackCooldown; // time left to attack
