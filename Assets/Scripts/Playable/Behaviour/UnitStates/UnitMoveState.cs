@@ -30,7 +30,6 @@ public class UnitMoveState : UnitStateBase
         base.Update();
 
         var nextState = stateMachine.DetermineNextState();
-
         if (nextState == stateMachine.AttackState)
         {
             var contactDistance = stateContext.CaculateContactDistance(blackBoard.Target);
@@ -77,7 +76,7 @@ public class UnitMoveState : UnitStateBase
 
         if(nextState == stateMachine.IdleState)
         {
-            if(stateContext.HasArrived())
+            if (stateContext.HasArrived())
                 stateMachine.ChangeState<UnitIdleState>();
         }
     }

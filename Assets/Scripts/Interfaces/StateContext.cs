@@ -21,11 +21,6 @@ public interface IUnitStateContext
     void PlayAnimation(string stateName, int layer, float normalizedTime);
     void CrossFadeAnimation(string stateName, float normalizedTransitionDuration, int layer);
     bool IsAnimationInProgress(string stateName, int layer = 0);
-
-    // Resource
-    void CarryResource(ResourceType type, int amount);
-    int DepositResource(ResourceType type);
-    bool IsCarryingResources();
 }
 
 public interface IBuildingStateContext

@@ -22,3 +22,12 @@ public interface ITarget<out TData> : ITarget where TData : EntityData
 {
     new TData GetData(); 
 }
+
+public interface IResourceCarrier
+{
+    void CarryResource(ResourceType type, int amount);
+    int DepositResource(ResourceType type);
+    bool IsCarryingResources();
+}
+
+public interface IConstructor { }

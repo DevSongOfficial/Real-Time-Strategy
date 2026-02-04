@@ -3,12 +3,16 @@ using UnityEngine;
 public class UnitHarvestState : UnitStateBase
 {
     private IUnitStateContext stateContext;
+    private IResourceCarrier resourceCarrier;
+
     private ResourceProvider building; // mine or tree
     private float harvestTime;
 
-    public UnitHarvestState(UnitStateMachine stateMachine, BlackBoard blackBoard, IUnitStateContext stateContext) : base(stateMachine, blackBoard)
+
+    public UnitHarvestState(UnitStateMachine stateMachine, BlackBoard blackBoard, IUnitStateContext stateContext, IResourceCarrier resourceCarrier) : base(stateMachine, blackBoard)
     {
         this.stateContext = stateContext;
+        this.resourceCarrier = resourceCarrier;
     }
 
     public override void Enter()
@@ -43,7 +47,7 @@ public class UnitHarvestState : UnitStateBase
     {
         var resourceType = building.GetData().ResourceType;
         var amount = building.TakeResource();
-        stateContext.CarryResource(resourceType, amount);
+        resourceCarrier.CarryResource(resourceType, amount);
     }
 
     private void CarryResourceToHQ()

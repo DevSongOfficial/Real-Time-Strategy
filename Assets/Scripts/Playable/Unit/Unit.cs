@@ -15,8 +15,8 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
 
 
     private GameObject selectionIndicator;
-    private IPlacementEvent placementEvent;
     private HealthSystem healthSystem;
+    protected IPlacementEvent placementEvent;
     protected EntityProfilePanel profilePanel;
 
     // Resource
@@ -84,45 +84,6 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
         stateMachine.ChangeState<UnitMoveState>();
     }
 
-    public override void ExecuteCommand(CommandData command)
-    {
-        base.ExecuteCommand(command);
-
-        // When Place() is called:
-        if(command is BuildCommandData)
-            placementEvent.OnPlacementRequested += StartConstruction;
-    }
-
-    // Construction  
-    private void StartConstruction(ITarget building)
-    {
-        placementEvent.OnPlacementRequested -= StartConstruction; // one shot handler 
-
-        blackBoard.SetTarget(new Target(building));
-
-        stateMachine.ChangeState<UnitMoveState>();
-    }
-
-    // Resource Management
-    public void CarryResource(ResourceType type, int amount)
-    {
-        resourceBank.AddResource(type, amount);
-    }
-
-    public int DepositResource(ResourceType type)
-    {
-        var depositAmount = resourceBank.GetResourceAmount(type);
-        resourceBank.SpendResource(type, depositAmount);
-
-        return depositAmount;
-    }
-
-    public bool IsCarryingResources()
-    {
-        return resourceBank.GetResourceAmount(ResourceType.Gold) > 0 
-            || resourceBank.GetResourceAmount(ResourceType.Wood) > 0;
-    }
-
 
     #region Transform
     // Transform
@@ -154,7 +115,11 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
         agent.isStopped = false;
         agent?.SetDestination(destination);
     }
-    public void ClearDestination() { agent.isStopped = true; }
+    public void ClearDestination() 
+    { 
+        agent.isStopped = true;
+        agent.ResetPath();
+    }
     public float GetRemainingDistance() => agent.remainingDistance;
     public bool HasArrived(float tolerance = 0.1f) => !agent.pathPending && agent.remainingDistance <= agent.stoppingDistance + tolerance;
 

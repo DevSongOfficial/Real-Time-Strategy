@@ -16,9 +16,13 @@ namespace CustomResourceManagement
 				BuildingA,
 				BuildingB,
 				BuildingC,
+				GoldMine,
+				Headquarters,
+				Tree,
 			}
 			public enum Unit{
-				Unit_1,
+				Swordsman,
+				Worker,
 			}
 		}
 		public enum UI{

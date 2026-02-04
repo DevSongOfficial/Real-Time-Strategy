@@ -1102,11 +1102,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3707527734802741352}
-  - component: {fileID: 6102522405486375181}
+  - component: {fileID: -4352409647281352681}
   - component: {fileID: 4218467719968248146}
   - component: {fileID: 8561416345021431147}
   m_Layer: 0
-  m_Name: Unit_1
+  m_Name: Worker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1128,7 +1128,7 @@ Transform:
   - {fileID: 1919197102742833591}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6102522405486375181
+--- !u!114 &-4352409647281352681
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1137,10 +1137,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4322145303269854381}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19c1746e83bc73d44930a297a11f069f, type: 3}
+  m_Script: {fileID: 11500000, guid: df72f46847b48bb49b989d4266b85354, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  commandSet: {fileID: 11400000, guid: dfaa5a567056d2444868f852139c6e48, type: 2}
   coroutineExecutor: {fileID: 8561416345021431147}
   animator: {fileID: 7860768189610645962}
   agent: {fileID: 4218467719968248146}

@@ -27,12 +27,12 @@ public class UnitGenerator
         OnUnitGenerated?.Invoke(newUnit);
     }
 
-    public void RandomGenerate(EntityData unitData, int numberOfUnit = 1)
+    public void GenerateWithRandomPosition(EntityData unitData, Team team, int numberOfUnit = 1)
     {
         for (int i = 0; i < numberOfUnit; i++)
         {
             var randomPosition = new Vector3(Random.Range(26, 35), 2, Random.Range(20, 36));
-            Generate(unitData, i > numberOfUnit / 2 ? Team.Green : Team.Red, randomPosition);
+            Generate(unitData, team, randomPosition);
         }
     }
 }

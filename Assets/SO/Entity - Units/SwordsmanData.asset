@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3ebc18cd7c8eeca47acb8cd572befe38, type: 3}
-  m_Name: Unit1Data
+  m_Name: SwordsmanData
   m_EditorClassIdentifier: 
-  <Prefab>k__BackingField: {fileID: 3707527734802741352, guid: 00e0d2fdf8a6b0e4aa3c6a9638ad32d1, type: 3}
+  <Prefab>k__BackingField: {fileID: 3707527734802741352, guid: fe9b723d80a68d444bd0b89791940517, type: 3}
   <DisplayName>k__BackingField: Soldier
   <ProfileSprite>k__BackingField: {fileID: 21300000, guid: 2e4b42f5ecef19444aa30f66b09d3f02, type: 3}
   <RadiusOnTerrain>k__BackingField: 1
   <SelectionIndicatorPositionOffset>k__BackingField: {x: 0, y: 0.15, z: 0}
   <CommandSet>k__BackingField:
-  - {fileID: 11400000, guid: 2d0e9ae1d29937e49b98f065619d7e98, type: 2}
   - {fileID: 11400000, guid: 056daaf9362228145b746818f7cc5a82, type: 2}
   <MaxHealth>k__BackingField: 200
   <Combat>k__BackingField: {fileID: 11400000, guid: 58d8226b328a96b49ba764f54c373837, type: 2}
+  <RequiredFood>k__BackingField: 0
   <TrainingTime>k__BackingField: 4

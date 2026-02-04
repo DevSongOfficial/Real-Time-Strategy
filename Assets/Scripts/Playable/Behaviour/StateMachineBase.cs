@@ -55,19 +55,23 @@ public sealed class UnitStateMachine : StateMachineBase
     public UnitDepositState     DepositState { get; private set; }
 
     private BlackBoard blackBoard;
-    private IUnitStateContext stateContext;
+    private Unit unit;
 
-    public UnitStateMachine(IUnitStateContext stateContext, BlackBoard blackBoard)
+
+    public UnitStateMachine(Unit unit, BlackBoard blackBoard)
     {
+        this.unit = unit;
         this.blackBoard = blackBoard;
-        this.stateContext = stateContext;
 
-        IdleState       = new UnitIdleState(this, blackBoard, stateContext);
-        MoveState       = new UnitMoveState(this, blackBoard, stateContext);
-        AttackState     = new UnitAttackState(this, blackBoard, stateContext);
-        ConstructState  = new UnitConstructState(this, blackBoard, stateContext);
-        HarvestState    = new UnitHarvestState(this, blackBoard, stateContext);
-        DepositState    = new UnitDepositState(this, blackBoard, stateContext);
+        var resourceCarrier = unit as IResourceCarrier;
+
+        IdleState       = new UnitIdleState(this, blackBoard, unit);
+        MoveState       = new UnitMoveState(this, blackBoard, unit);
+        AttackState     = new UnitAttackState(this, blackBoard, unit);
+        ConstructState  = new UnitConstructState(this, blackBoard, unit);
+
+        HarvestState    = new UnitHarvestState(this, blackBoard, unit, resourceCarrier);
+        DepositState    = new UnitDepositState(this, blackBoard, unit, resourceCarrier);
 
         RegisterState(IdleState);
         RegisterState(MoveState);
@@ -87,16 +91,16 @@ public sealed class UnitStateMachine : StateMachineBase
         if (target.IsGround)
             return IdleState;
 
-        if (target.Entity is ResourceProvider) // means the target is GoldMine or Tree
+        if (unit is IResourceCarrier && target.Entity is ResourceProvider) 
             return HarvestState;
 
         if (target.Entity.GetTeam() != blackBoard.team)
         {
-            if (target.Entity is IDamageable)
+            if (unit is Infantry && target.Entity is IDamageable)
                 return AttackState;
         }
         
-        if (target.Entity is Building)
+        if (unit is IResourceCarrier &&  target.Entity is Building)
         {
             if (target.Entity is HeadQuarters)
                 return DepositState;

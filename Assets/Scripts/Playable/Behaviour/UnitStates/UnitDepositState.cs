@@ -3,22 +3,24 @@ using UnityEngine;
 public class UnitDepositState : UnitStateBase
 {
     private IUnitStateContext stateContext;
+    private IResourceCarrier resourceCarrier;
 
-    public UnitDepositState(UnitStateMachine stateMachine, BlackBoard blackBoard, IUnitStateContext stateContext) : base(stateMachine, blackBoard)
+    public UnitDepositState(UnitStateMachine stateMachine, BlackBoard blackBoard, IUnitStateContext stateContext, IResourceCarrier resourceCarrier) : base(stateMachine, blackBoard)
     {
         this.stateContext = stateContext;
+        this.resourceCarrier = resourceCarrier;
     }
 
     public override void Enter()
     {
-        if (!stateContext.IsCarryingResources())
+        if (!resourceCarrier.IsCarryingResources())
         {
             stateMachine.ChangeState<UnitIdleState>();
             return;
         }
 
-        stateContext.DepositResource(ResourceType.Gold);
-        stateContext.DepositResource(ResourceType.Wood);
+        resourceCarrier.DepositResource(ResourceType.Gold);
+        resourceCarrier.DepositResource(ResourceType.Wood);
 
         if(blackBoard.PreviousTarget.Entity is not ResourceProvider provider)
         {

@@ -9,7 +9,7 @@ public sealed class Player : MonoBehaviour
     // Temporary for testing.
     [Header("Spawn(temp)")]
     [SerializeField, Range(0, 99)] private int numberOfUnitOnStart = 3;
-    [SerializeField] private EntityData unitData;
+    [SerializeField] private UnitData unitData;
     [SerializeField] private ResourceProviderData goldMineData;
 
 
@@ -121,7 +121,8 @@ public sealed class Player : MonoBehaviour
 
     private void Start()
     {
-        unitGenerator.RandomGenerate(unitData, numberOfUnitOnStart);
+        unitGenerator.GenerateWithRandomPosition(unitData, Team.Green, numberOfUnitOnStart);
+        unitGenerator.GenerateWithRandomPosition(unitData, Team.Red, numberOfUnitOnStart);
 
         HQ = buildingFactory.Create(headquartersData, Team) as HeadQuarters;
         HQ.SetPosition(new Vector3(30, 0.5f, 30));
