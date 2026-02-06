@@ -26,13 +26,13 @@ public sealed class PlacementPresenter : IPlacementEvent
     private readonly GridSystem gridSystem;
     private readonly InputManager inputManager;
 
-    private BuildingData selectedBuildingData; // Building to place.
 
     private PlacementMode placementMode;
 
     // Placement Info
     private Vector3 snappedPosition;
     private Quaternion rotation;
+    private BuildingData buildingData; // Building to place.
 
     public event Action<ITarget> OnPlacementRequested; // ITarget: Requested Building that was initialized
     public event Action<Vector3> OnPlacementCanceled;
@@ -66,9 +66,9 @@ public sealed class PlacementPresenter : IPlacementEvent
         Vector2Int  mouseCell       = mouseCell3.ToVector2Int();
         Vector3     mouseCellWorld  = gridSystem.CellToWorld(mouseCell3);
 
-        if (selectedBuildingData == null) return;
+        if (buildingData == null) return;
 
-        Vector2Int size = selectedBuildingData.CellSize;
+        Vector2Int size = buildingData.CellSize;
 
         Vector2Int originCell = gridSystem.MouseToOrigin(mouseCell, size);
 
@@ -82,29 +82,36 @@ public sealed class PlacementPresenter : IPlacementEvent
     {
         placementMode = PlacementMode.Placing;
 
-        selectedBuildingData = data;
+        buildingData = data;
 
         // Preview building prefab & related UI
-        placementView.ToggleBuildingPreview(true, selectedBuildingData);
+        placementView.ToggleBuildingPreview(true, buildingData);
         placementView.ToggleUIPreview(true);
     }
 
-    public void Place()
+    public bool TryPlace()
     {
-        if (selectedBuildingData == null) return;
+        return TryPlace(buildingData, snappedPosition, Player.Team, out var building);
+    }
+
+    public bool TryPlace(BuildingData buildingData, Vector3 position, Team team, out Building placed)
+    {
+        placed = null;
+
+        if (buildingData == null) return false;
 
         // Check on Grid.
-        Vector2Int cellPosition = gridSystem.WorldToCell(snappedPosition).ToVector2Int();
-        Vector2Int cellSize = selectedBuildingData.CellSize;
-        if (!gridSystem.CanPlace(cellPosition, cellSize)) return;
-        
+        Vector2Int cellPosition = gridSystem.WorldToCell(position).ToVector2Int();
+        Vector2Int cellSize = buildingData.CellSize;
+        if (!gridSystem.CanPlace(cellPosition, cellSize)) return false;
+
 
         placementMode = PlacementMode.Idle;
 
         // Setup Building.
-        Building building = buildingFactory.Create(selectedBuildingData, Player.Team);
-        building.SetPosition(snappedPosition);
-
+        Building building = buildingFactory.Create(buildingData, Player.Team);
+        building.SetPosition(position);
+        placed = building;
 
         // Add to Grid.
         gridSystem.Occupy(cellPosition, cellSize);
@@ -112,21 +119,24 @@ public sealed class PlacementPresenter : IPlacementEvent
         placementView.ToggleUIPreview(false);
         placementView.ToggleBuildingPreview(false);
 
-        selectedBuildingData = null;
+        buildingData = null;
 
         OnPlacementRequested?.Invoke(building);
+
+        return true;
     }
+
 
     public void Cancel()
     {
-        if (selectedBuildingData == null) return;
+        if (buildingData == null) return;
 
         placementMode = PlacementMode.Idle;
 
         placementView.ToggleUIPreview(false);
         placementView.ToggleBuildingPreview(false);
 
-        selectedBuildingData = null;
+        buildingData = null;
 
         OnPlacementCanceled?.Invoke(inputManager.GetMousePositionOnCanvas());
     }

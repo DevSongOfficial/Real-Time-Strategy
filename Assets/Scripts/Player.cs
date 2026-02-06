@@ -124,11 +124,14 @@ public sealed class Player : MonoBehaviour
         unitGenerator.GenerateWithRandomPosition(unitData, Team.Green, numberOfUnitOnStart);
         unitGenerator.GenerateWithRandomPosition(unitData, Team.Red, numberOfUnitOnStart);
 
-        HQ = buildingFactory.Create(headquartersData, Team) as HeadQuarters;
-        HQ.SetPosition(new Vector3(30, 0.5f, 30));
+        var temp_HQPosition = new Vector3(30, 0.5f, 30);
+        if (placementPresenter.TryPlace(headquartersData, new Vector3(30, 0.5f, 30), Team, out Building HQ))
+        {
+            Player.HQ = HQ as HeadQuarters;
+        }
 
-        var mine = buildingFactory.Create(goldMineData, Team);
-        mine.SetPosition(new Vector3(33, 0.5f, 33));
+        var temp_minePosition = new Vector3(34, 0.5f, 34);
+        placementPresenter.TryPlace(goldMineData, temp_minePosition, Team, out Building mine);
     }
 
     private void Update()

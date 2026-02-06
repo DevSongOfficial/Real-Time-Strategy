@@ -36,7 +36,7 @@ public sealed class BuildMode : ModeBase
         if (!inputManager.IsPointerInClickableArea()) return;
 
         if (inputManager.GetMouseButtonDown(0))
-            presenter.Place();
+            presenter.TryPlace();
 
         if (inputManager.GetMouseButtonDown(1))
             presenter.Cancel();

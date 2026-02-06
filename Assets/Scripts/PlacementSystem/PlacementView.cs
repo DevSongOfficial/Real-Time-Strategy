@@ -26,9 +26,13 @@ namespace BuildingSystem
         public void ToggleBuildingPreview(bool enable, BuildingData selectedBuilding = null)
         {
             if (enable && selectedBuilding != null)
-                buildingPreview = factory.CreateGhost(selectedBuilding);
-            else
             {
+                buildingPreview = factory.CreateGhost(selectedBuilding);
+                return;
+            }
+
+            if (buildingPreview != null) 
+            { 
                 factory.DestroyGhost(buildingPreview);
                 buildingPreview = null;
             }
