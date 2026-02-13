@@ -26,6 +26,5 @@ public class UnitIdleState : UnitStateBase
     public override void Update()
     {
         base.Update();
-        // Do some funny things
     }
 }

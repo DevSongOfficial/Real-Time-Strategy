@@ -36,9 +36,12 @@ public class UnitMoveState : UnitStateBase
             stateContext.SetDestination(blackBoard.Target.GetPosition());
             if (stateContext.GetRemainingDistance() - contactDistance * 0.5f < blackBoard.BaseData.Combat.AttackRange)
             {
-                if (blackBoard.attackCooldown <= 0)
-                {
+                if(blackBoard.attackCooldown <= 0)
                     stateMachine.ChangeState<UnitAttackState>();
+                else
+                {
+                    stateContext.CrossFadeAnimation(blackBoard.BaseData.Combat.AttackIdleAnimation, 0.05f, 0);
+                    stateContext.ClearDestination();
                 }
             }
 

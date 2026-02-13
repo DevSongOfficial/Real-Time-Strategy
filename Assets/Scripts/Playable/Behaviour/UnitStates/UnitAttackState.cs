@@ -32,7 +32,7 @@ public class UnitAttackState : UnitStateBase
 
     private IEnumerator AttackRoutine(IDamageable target)
     {
-        stateContext.PlayAnimation(blackBoard.BaseData.Combat.Animation, 0, 0f);
+        stateContext.PlayAnimation(blackBoard.BaseData.Combat.AttackAnimation, 0, 0f);
         blackBoard.attackCooldown = blackBoard.BaseData.Combat.AttackCooldown;
 
         yield return new WaitForSeconds(blackBoard.BaseData.Combat.WindupTime);
@@ -40,7 +40,7 @@ public class UnitAttackState : UnitStateBase
 
         yield return null;
 
-        while (stateContext.IsAnimationInProgress(blackBoard.BaseData.Combat.Animation, 0))
+        while (stateContext.IsAnimationInProgress(blackBoard.BaseData.Combat.AttackAnimation, 0))
         {
             yield return null;
         }

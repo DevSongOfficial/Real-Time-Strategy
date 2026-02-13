@@ -6546,7 +6546,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numberOfUnitOnStart: 2
-  unitData: {fileID: 11400000, guid: 17db0492f4acd9548a653ef07fc04dcd, type: 2}
+  unitData: {fileID: 11400000, guid: ec829f0cbb3a4c54286f1d7c85856f6c, type: 2}
   goldMineData: {fileID: 11400000, guid: 409e10036e6932d43aeab14a3db22a03, type: 2}
   headquartersData: {fileID: 11400000, guid: f384682b43bfa92489042729dfaa94e5, type: 2}
   canvas: {fileID: 1868754047}
