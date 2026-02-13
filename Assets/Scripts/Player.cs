@@ -20,8 +20,9 @@ public sealed class Player : MonoBehaviour
     [SerializeField] private EntityProfilePanel profilePanel;
     [SerializeField] private CommandPanel commandPanel;
     [SerializeField] private Transform healthBarContainer;
-    [SerializeField] private RectTransform nonClickableArea;
+    [SerializeField] private RectTransform nonClickableAreas;
     [SerializeField] private PlacementView placementView;
+    [SerializeField] private ResourceView resourceView;
     [Space]
     [SerializeField] private CameraController cameraController;
     
@@ -75,7 +76,7 @@ public sealed class Player : MonoBehaviour
 
     private void Awake()
     {
-        inputManager = new InputManager(cameraController.Camera, nonClickableArea);
+        inputManager = new InputManager(cameraController.Camera, nonClickableAreas);
         cameraController.Setup(inputManager);
 
         entityRegistry              = new EntityRegistry();
@@ -101,7 +102,7 @@ public sealed class Player : MonoBehaviour
         unitGenerator                   = new UnitGenerator(unitFactory, entityRegistry);
         unitGenerator.OnUnitGenerated   += healthBarGenerator.GenerateAndSetTargetUnit;
 
-        resourceBank = new ResourceBank();
+        resourceBank = new ResourceBank(resourceView);
 
         // FSM
         var normalMode              = new NormalMode(inputManager, selectionHandler, dragEventHandler);

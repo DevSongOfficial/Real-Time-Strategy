@@ -25,12 +25,11 @@ public class Worker : Unit, IResourceCarrier, IConstructor
         resourceBank.AddResource(type, amount);
     }
 
-    public int DepositResource(ResourceType type)
+    public void DepositResource(ResourceType type)
     {
         var depositAmount = resourceBank.GetResourceAmount(type);
-        resourceBank.SpendResource(type, depositAmount);
-
-        return depositAmount;
+        if(resourceBank.SpendResource(type, depositAmount))
+            teamResourceBank.AddResource(type, depositAmount);
     }
 
     public bool IsCarryingResources()

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -6,12 +8,15 @@ public sealed class InputManager
     private Vector3 lastPosition;
     private Camera camera;
 
-    private RectTransform nonClickableArea;
+    private List<RectTransform> nonClickableAreas;
 
     public InputManager(Camera camera, RectTransform nonClickableArea)
     {
         this.camera = camera;
-        this.nonClickableArea = nonClickableArea;
+         
+        nonClickableAreas = new List<RectTransform>();
+        for (int i = 0; i < nonClickableArea.childCount; i++)
+            nonClickableAreas.Add(nonClickableArea.GetChild(i) as RectTransform);
     }
 
     public bool GetMouseButton(int button)
@@ -87,7 +92,11 @@ public sealed class InputManager
 
     public bool IsPointerInClickableArea()
     {
-        return !IsPointerOverUI(nonClickableArea);
+        foreach (var area in nonClickableAreas)
+            if (IsPointerOverUI(area))
+                return false;
+
+        return true;
     }
 }
 

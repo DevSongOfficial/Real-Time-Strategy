@@ -8,6 +8,17 @@ public enum ResourceType
 public class ResourceBank
 {
     private readonly Dictionary<ResourceType, int> resourceAmounts;
+    private readonly ResourceView view;
+
+    public ResourceBank(ResourceView view)
+    {
+        resourceAmounts = new Dictionary<ResourceType, int>()
+        {
+            { ResourceType.Gold, 0 },
+            { ResourceType.Wood, 0 },
+        };
+        this.view = view;
+    }
 
     public ResourceBank()
     {
@@ -21,6 +32,7 @@ public class ResourceBank
     public void AddResource(ResourceType type, int amount)
     {
         resourceAmounts[type] += amount;
+        view?.UpdateResourceText(type, GetResourceAmount(type));
     }
 
     public bool SpendResource(ResourceType type, int amount)
@@ -29,6 +41,7 @@ public class ResourceBank
             return false;
 
         resourceAmounts[type] -= amount;
+        view?.UpdateResourceText(type, GetResourceAmount(type));
         return true;
     }
 

@@ -26,7 +26,7 @@ public interface ITarget<out TData> : ITarget where TData : EntityData
 public interface IResourceCarrier
 {
     void CarryResource(ResourceType type, int amount);
-    int DepositResource(ResourceType type);
+    void DepositResource(ResourceType type);
     bool IsCarryingResources();
 }
 
