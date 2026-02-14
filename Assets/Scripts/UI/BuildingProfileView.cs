@@ -10,7 +10,7 @@ public class BuildingProfileView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI manaText;
     [Space]
     [SerializeField] private TextMeshProUGUI displayName;
-    [SerializeField] private List<Image> progressInfoImages;
+    [SerializeField] private List<Button> progressInfoButtons;
     [SerializeField] private TextMeshProUGUI progressLabelText;
     [SerializeField] private Image progressFill;
 
@@ -28,7 +28,24 @@ public class BuildingProfileView : MonoBehaviour
         progressLabelText.text = building.GetProgressLabelName();
         progressFill.fillAmount = building.GetProgressRate();
 
+        // TODO: make these be executed only when a new building is selected or some barracks-related events occur. not every frame.
+        BindButtonEvents(building);
         FillTrainingSprites(building);
+    }
+
+    private void BindButtonEvents(Building building)
+    {
+        if (building is not Barracks barracks || building.CurrentState is BuildingUnderConstructionState)
+            return;
+
+        foreach (var button in progressInfoButtons)
+            button.onClick.RemoveAllListeners();
+        
+        for (int i = 0; i < barracks.GetUnitCountInQueue(); i++)
+        {
+            int index = i;
+            progressInfoButtons[i].onClick.AddListener(() => barracks.DequeueUnit(index));
+        }
     }
 
     private void FillTrainingSprites(Building building)
@@ -36,29 +53,29 @@ public class BuildingProfileView : MonoBehaviour
         if (building is not Barracks barracks  || 
             building.CurrentState is BuildingUnderConstructionState)
         {
-            for (int i = 0; i < progressInfoImages.Count; i++)
+            for (int i = 0; i < progressInfoButtons.Count; i++)
             {
-                progressInfoImages[i].sprite = null;
-                progressInfoImages[i].enabled = false;
+                progressInfoButtons[i].image.sprite = null;
+                progressInfoButtons[i].enabled = false;
             }
         }
         else
         {
-            for (int i = 0; i < progressInfoImages.Count; i++)
+            for (int i = 0; i < progressInfoButtons.Count; i++)
             {
                 var maxCount = barracks.GetData().GenerationSlotCount;
-                progressInfoImages[i].enabled = i < maxCount;
+                progressInfoButtons[i].enabled = i < maxCount;
             }
             int j = 0;
-            foreach (var sprite in building.GetTraningUnitSprites())
+            foreach (var sprite in barracks.GetTraningUnitSprites())
             {
-                progressInfoImages[j].sprite = sprite;
+                progressInfoButtons[j].image.sprite = sprite;
 
                 j++;
             }
             for (; j < barracks.GetData().GenerationSlotCount; j++)
             {
-                progressInfoImages[j].sprite = null;
+                progressInfoButtons[j].image.sprite = null;
             }
         }
     }

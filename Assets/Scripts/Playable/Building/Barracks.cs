@@ -14,9 +14,9 @@ public interface IUnitGenerator
     bool CanGenerateUnit(UnitGenerationInfo info);
 
     void EnqueueUnit(UnitGenerationInfo unitInfo);
-    UnitGenerationInfo DequeueUnit();
+    UnitGenerationInfo DequeueUnit(int index = 0);
     UnitGenerationInfo PeekNextUnit();
-    int GetUnitCount();
+    int GetUnitCountInQueue();
 
     Vector3 GetUnitRallyPoint();
     void SetUnitRallyPoint(Vector3 spawnPosition);
@@ -25,7 +25,7 @@ public interface IUnitGenerator
 public class Barracks : Building, ITarget<BarracksData>, IUnitGenerator
 {
     private UnitGenerator unitGenerator;
-    private Queue<UnitGenerationInfo> unitGenerationQueue; // Waiting list for units to be generated
+    private List<UnitGenerationInfo> unitGenerationQueue; // Waiting list for units to be generated
 
     private RallyPointSetter rallyPointSetter;
     private Vector3 unitRallyPoint;
@@ -52,7 +52,7 @@ public class Barracks : Building, ITarget<BarracksData>, IUnitGenerator
         if(IsUnderConstruction)
             return;
 
-        if (GetUnitCount() >= GetData().GenerationSlotCount) 
+        if (GetUnitCountInQueue() >= GetData().GenerationSlotCount) 
             return;
 
         base.ExecuteCommand(command);
@@ -73,7 +73,7 @@ public class Barracks : Building, ITarget<BarracksData>, IUnitGenerator
         if (unitGenerator == null) return;
 
         this.unitGenerator = unitGenerator;
-        unitGenerationQueue = new Queue<UnitGenerationInfo>();
+        unitGenerationQueue = new List<UnitGenerationInfo>();
     }
 
     public void SetSpawnPositionSetter(RallyPointSetter setter)
@@ -107,26 +107,29 @@ public class Barracks : Building, ITarget<BarracksData>, IUnitGenerator
     public void EnqueueUnit(UnitGenerationInfo unitInfo)
     {
         var maxCount = GetData().GenerationSlotCount;
-        if (GetUnitCount() >= maxCount) return;
+        if (GetUnitCountInQueue() >= maxCount) return;
 
-        unitGenerationQueue.Enqueue(unitInfo);
+        unitGenerationQueue.Add(unitInfo);
     }
 
-    public UnitGenerationInfo DequeueUnit()
+    public UnitGenerationInfo DequeueUnit(int index = 0)
     {
-        if(GetUnitCount() == 0) return null;
+        //if(GetUnitCountInQueue() <= index) return null;
+        Debug.Log("Ans: " + index);
+        var dequeuedUnit = unitGenerationQueue[index];
+        unitGenerationQueue.RemoveAt(index);
 
-        return unitGenerationQueue.Dequeue();
+        return dequeuedUnit;
     }
 
     public UnitGenerationInfo PeekNextUnit()
     {
-        if (GetUnitCount() == 0) return null;
+        if (GetUnitCountInQueue() == 0) return null;
 
-        return unitGenerationQueue.Peek();
+        return unitGenerationQueue[0];
     }
 
-    public int GetUnitCount() => unitGenerationQueue.Count;
+    public int GetUnitCountInQueue() => unitGenerationQueue.Count;
 
     public void SetUnitRallyPoint(Vector3 position)
     {
@@ -144,7 +147,7 @@ public class Barracks : Building, ITarget<BarracksData>, IUnitGenerator
         return base.GetProgressLabelName();
     }
 
-    public override IEnumerable<Sprite> GetTraningUnitSprites()
+    public IEnumerable<Sprite> GetTraningUnitSprites()
     {
         if (stateMachine.CurrentState is not BuildingUnitTrainState)
             yield break;

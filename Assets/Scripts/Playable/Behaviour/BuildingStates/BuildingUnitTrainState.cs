@@ -36,7 +36,7 @@ public class BuildingUnitTrainState : BuildingStateBase
 
     public override void Update()
     {
-        if(generator.GetUnitCount() == 0)
+        if(generator.GetUnitCountInQueue() == 0)
         {
             stateMachine.ChangeState<BuildingIdleState>();
             return;
@@ -49,10 +49,20 @@ public class BuildingUnitTrainState : BuildingStateBase
 
         if (leftTime > 0) return;
 
+        GenerateUnit();
+
+        SwitchToNextState();
+    }
+
+    private void GenerateUnit()
+    {
         var unitInfo = generator.DequeueUnit();
         generator.GenerateUnit(unitInfo);
+    }
 
-        if(generator.GetUnitCount() > 0)
+    private void SwitchToNextState()
+    {
+        if (generator.GetUnitCountInQueue() > 0)
             stateMachine.ChangeState<BuildingUnitTrainState>();
         else
             stateMachine.ChangeState<BuildingIdleState>();

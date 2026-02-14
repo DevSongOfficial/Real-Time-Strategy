@@ -82,11 +82,6 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext
 
         return string.Empty;
     }
-
-    public virtual IEnumerable<Sprite> GetTraningUnitSprites()
-    {
-        return null;
-    }
     #endregion
 
     #region Construction
