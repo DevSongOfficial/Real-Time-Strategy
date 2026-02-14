@@ -42,6 +42,8 @@ public class BuildingUnitTrainState : BuildingStateBase
             return;
         }
 
+        if (!generator.CanGenerateUnit(generator.PeekNextUnit())) return;
+
         leftTime -= Time.deltaTime;
         blackBoard.progressRate = 1 - (leftTime / generationTime);
 

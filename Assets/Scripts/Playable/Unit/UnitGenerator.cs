@@ -7,19 +7,30 @@ public class UnitGenerator
     public System.Action<Unit> OnUnitGenerated;
 
     private UnitFactory unitFactory;
-    IUnitRegisterer unitRegistry;
+    private IUnitRegisterer unitRegistry;
+    private UnitCapacitySlots capacitySlots;
 
-    public UnitGenerator(UnitFactory unitFactory, IUnitRegisterer unitRegistry)
+    public UnitGenerator(UnitFactory unitFactory, IUnitRegisterer unitRegistry, UnitCapacitySlots capacitySlots)
     {
         this.unitFactory = unitFactory;
         this.unitRegistry = unitRegistry;
+        this.capacitySlots = capacitySlots;
     }
 
-    public void Generate(EntityData unitData, Team team, Vector3 spawnPosition, Vector3? rallyPoint = null)
+    public bool HasCapacityFor(UnitData unitData)
     {
+        return capacitySlots.FreeCapacity >= unitData.CapacityCost;
+    }
+
+    public void Generate(UnitData unitData, Team team, Vector3 spawnPosition, Vector3? rallyPoint = null)
+    {
+        if (!HasCapacityFor(unitData)) return;
+
         var newUnit = unitFactory.Create(unitData, team);
-        unitRegistry.RegisterUnit(newUnit);
         newUnit.SetPosition(spawnPosition);
+        
+        unitRegistry.RegisterUnit(newUnit);
+        capacitySlots.Occupy(unitData.CapacityCost);
 
         if(rallyPoint.HasValue)
             newUnit.SetTarget(new Target(rallyPoint.Value));
@@ -27,7 +38,7 @@ public class UnitGenerator
         OnUnitGenerated?.Invoke(newUnit);
     }
 
-    public void GenerateWithRandomPosition(EntityData unitData, Team team, int numberOfUnit = 1)
+    public void GenerateWithRandomPosition(UnitData unitData, Team team, int numberOfUnit = 1)
     {
         for (int i = 0; i < numberOfUnit; i++)
         {

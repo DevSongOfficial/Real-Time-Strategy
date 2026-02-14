@@ -7095,6 +7095,7 @@ MonoBehaviour:
   nonClickableAreas: {fileID: 1217027838}
   placementView: {fileID: 1386255004}
   resourceView: {fileID: 841335201}
+  maxUnitCapacityOnStart: 30
   cameraController: {fileID: 153142338}
   grid: {fileID: 1795782375}
   quadMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}

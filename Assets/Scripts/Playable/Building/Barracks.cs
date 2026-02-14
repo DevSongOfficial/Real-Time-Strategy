@@ -11,6 +11,7 @@ public interface IUnitGenerator
     void SetSpawnPositionSetter(RallyPointSetter setter);
 
     void GenerateUnit(UnitGenerationInfo unitGenerationInfo);
+    bool CanGenerateUnit(UnitGenerationInfo info);
 
     void EnqueueUnit(UnitGenerationInfo unitInfo);
     UnitGenerationInfo DequeueUnit();
@@ -96,6 +97,12 @@ public class Barracks : Building, ITarget<BarracksData>, IUnitGenerator
     {
         unitGenerator.Generate(info.Data, info.team, unitSpawnPoint, unitRallyPoint);
     }
+
+    public bool CanGenerateUnit(UnitGenerationInfo info)
+    {
+        return unitGenerator.HasCapacityFor(info.Data);
+    }
+
 
     public void EnqueueUnit(UnitGenerationInfo unitInfo)
     {

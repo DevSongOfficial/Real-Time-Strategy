@@ -17,7 +17,11 @@ public class ResourceBank
             { ResourceType.Gold, 0 },
             { ResourceType.Wood, 0 },
         };
+
         this.view = view;
+        view.UpdateResourceText(ResourceType.Gold, GetResourceAmount(ResourceType.Gold));
+        view.UpdateResourceText(ResourceType.Wood, GetResourceAmount(ResourceType.Wood));
+
     }
 
     public ResourceBank()

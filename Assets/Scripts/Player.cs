@@ -22,7 +22,9 @@ public sealed class Player : MonoBehaviour
     [SerializeField] private Transform healthBarContainer;
     [SerializeField] private RectTransform nonClickableAreas;
     [SerializeField] private PlacementView placementView;
+    [Header("Resource & Capacity")]
     [SerializeField] private ResourceView resourceView;
+    [SerializeField] private int maxUnitCapacityOnStart;
     [Space]
     [SerializeField] private CameraController cameraController;
     
@@ -40,9 +42,10 @@ public sealed class Player : MonoBehaviour
     // Entity Regsitry includes diffrent type of entity containers.
     private EntityRegistry entityRegistry;
 
-    // Manages resources such as Gold, Wood, Food.
-    private static ResourceBank resourceBank;
+    // Manages resources such as Gold, Wood.
     public static ResourceBank ResourceBank => resourceBank; // TEMP: Each team must have a single resourcebank
+    private static ResourceBank resourceBank;
+    private UnitCapacitySlots capacitySlots;
 
     // Mouse drag event.
     private DragEventHandler dragEventHandler;
@@ -97,12 +100,12 @@ public sealed class Player : MonoBehaviour
         placementPresenter.OnPlacementCanceled += (Vector3 finishedPosition) => stateMachine.RequestTransition(Mode.Normal);
         placementPresenter.OnPlacementRequested += (ITarget requestedBuilding) => stateMachine.RequestTransition(Mode.Normal);
 
+        resourceBank = new ResourceBank(resourceView);
+        capacitySlots = new UnitCapacitySlots(maxUnitCapacityOnStart, resourceView);
 
         unitFactory                     = new UnitFactory(selectionHandler, selectionIndicatorFactory, placementPresenter, profilePanel);
-        unitGenerator                   = new UnitGenerator(unitFactory, entityRegistry);
+        unitGenerator                   = new UnitGenerator(unitFactory, entityRegistry, capacitySlots);
         unitGenerator.OnUnitGenerated   += healthBarGenerator.GenerateAndSetTargetUnit;
-
-        resourceBank = new ResourceBank(resourceView);
 
         // FSM
         var normalMode              = new NormalMode(inputManager, selectionHandler, dragEventHandler);
