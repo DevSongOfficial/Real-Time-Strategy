@@ -22,5 +22,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 056daaf9362228145b746818f7cc5a82, type: 2}
   <MaxHealth>k__BackingField: 200
   <Combat>k__BackingField: {fileID: 11400000, guid: 58d8226b328a96b49ba764f54c373837, type: 2}
+  <Movement>k__BackingField: {fileID: 11400000, guid: 467bedcfb0a456242beb5fb01cbfcd23, type: 2}
   <CapacityCost>k__BackingField: 3
   <TrainingTime>k__BackingField: 4

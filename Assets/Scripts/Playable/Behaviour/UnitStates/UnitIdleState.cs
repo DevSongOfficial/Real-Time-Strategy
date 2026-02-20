@@ -15,7 +15,7 @@ public class UnitIdleState : UnitStateBase
 
     public override void Enter()
     {
-        stateContext.CrossFadeAnimation("Breathing Idle", 0.05f, 0);
+        stateContext.CrossFadeAnimation(blackBoard.BaseData.Movement.IdleAnimation, 0.05f, 0);
     }
 
     public override void Exit()

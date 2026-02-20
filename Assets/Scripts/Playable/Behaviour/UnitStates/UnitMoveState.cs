@@ -17,7 +17,7 @@ public class UnitMoveState : UnitStateBase
         stateContext.SetDestination(blackBoard.Target.GetPosition());
 
         if (stateMachine.PreviousState != stateMachine.CurrentState)
-            stateContext.CrossFadeAnimation("Run", 0.1f, 0);
+            stateContext.CrossFadeAnimation(blackBoard.BaseData.Movement.RunningAnimation, 0.1f, 0);
     }
 
     public override void Exit()

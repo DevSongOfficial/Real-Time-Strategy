@@ -14,9 +14,9 @@ public class EntityData : ScriptableObject
 
     [field: Header("Commands")]
     [field: SerializeField] public List<CommandData> CommandSet { get; private set; }
-    [field: Space]
 
+    [field: Header("Status")]
     [field: SerializeField] public int MaxHealth { get; private set; }
     [field: SerializeField] public CombatData Combat { get; private set; }
-
+    [field: SerializeField] public MovementData Movement { get; private set; }
 }

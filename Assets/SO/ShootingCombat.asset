@@ -16,5 +16,5 @@ MonoBehaviour:
   <AttackCooldown>k__BackingField: 1
   <AttackRange>k__BackingField: 5
   <AttackAnimation>k__BackingField: Shoot
-  <AttackIdleAnimation>k__BackingField: Rifle Aiming Idle
+  <AttackIdleAnimation>k__BackingField: Rifle Idle
   <WindupTime>k__BackingField: 0.65
