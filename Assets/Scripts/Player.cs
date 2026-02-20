@@ -106,6 +106,7 @@ public sealed class Player : MonoBehaviour
         unitFactory                     = new UnitFactory(selectionHandler, selectionIndicatorFactory, placementPresenter, profilePanel);
         unitGenerator                   = new UnitGenerator(unitFactory, entityRegistry, capacitySlots);
         unitGenerator.OnUnitGenerated   += healthBarGenerator.GenerateAndSetTargetUnit;
+        unitGenerator.OnUnitDestroyed   += healthBarGenerator.UnsetTargetUnit;
 
         // FSM
         var normalMode              = new NormalMode(inputManager, selectionHandler, dragEventHandler);

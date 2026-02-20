@@ -41,10 +41,16 @@ public class UnitAttackState : UnitStateBase
         yield return null;
 
         while (stateContext.IsAnimationInProgress(blackBoard.BaseData.Combat.AttackAnimation, 0))
-        {
             yield return null;
-        }
 
-        stateMachine.ChangeState<UnitMoveState>();
+        if (IsTargetAlive(target))
+            stateMachine.ChangeState<UnitMoveState>();
+        else
+            stateMachine.ChangeState<UnitIdleState>();
+    }
+
+    private bool IsTargetAlive(IDamageable target)
+    {
+        return (target as Unit).GetHealthSystem().CurrentHealth > 0;
     }
 }

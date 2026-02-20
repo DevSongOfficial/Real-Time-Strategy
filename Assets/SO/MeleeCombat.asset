@@ -18,3 +18,4 @@ MonoBehaviour:
   <AttackAnimation>k__BackingField: Melee Attack
   <AttackIdleAnimation>k__BackingField: Breathing Idle
   <WindupTime>k__BackingField: 0.65
+  <DieAnimation>k__BackingField: Die

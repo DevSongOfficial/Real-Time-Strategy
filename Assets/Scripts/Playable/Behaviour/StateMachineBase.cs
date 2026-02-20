@@ -15,9 +15,17 @@ public abstract class StateMachineBase
     public IState CurrentState { get; private set; }
     public IState PreviousState { get; private set; }
 
+    private bool canChangeState = true;
+
+    public void DisableStateChanges()
+    {
+        canChangeState = false;
+    }
+
     public void ChangeState<T>() where T : IState 
     { 
-        ChangeState(states[typeof(T)]); 
+        if(canChangeState)
+            ChangeState(states[typeof(T)]); 
     }
 
     protected void RegisterState(IState state) 
@@ -53,6 +61,7 @@ public sealed class UnitStateMachine : StateMachineBase
     public UnitConstructState   ConstructState { get; private set; }
     public UnitHarvestState     HarvestState {  get; private set; }
     public UnitDepositState     DepositState { get; private set; }
+    public UnitDieState         DieState { get; private set; }
 
     private BlackBoard blackBoard;
     private Unit unit;
@@ -66,8 +75,12 @@ public sealed class UnitStateMachine : StateMachineBase
         var resourceCarrier = unit as IResourceCarrier;
 
         IdleState       = new UnitIdleState(this, blackBoard, unit);
+        DieState        = new UnitDieState(this, blackBoard, unit);
+        
         MoveState       = new UnitMoveState(this, blackBoard, unit);
         AttackState     = new UnitAttackState(this, blackBoard, unit);
+
+
         ConstructState  = new UnitConstructState(this, blackBoard, unit);
 
         HarvestState    = new UnitHarvestState(this, blackBoard, unit, resourceCarrier);
@@ -79,6 +92,7 @@ public sealed class UnitStateMachine : StateMachineBase
         RegisterState(ConstructState);
         RegisterState(HarvestState);
         RegisterState(DepositState);
+        RegisterState(DieState);
 
         // Initial State
         ChangeState<UnitIdleState>();

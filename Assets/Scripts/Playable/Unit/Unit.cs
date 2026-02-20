@@ -1,4 +1,7 @@
+using System;
+using System.Collections;
 using Unity.AppUI.Core;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using static UnityEngine.EventSystems.EventTrigger;
@@ -14,6 +17,8 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
     public float PositionDeltaY { get; private set; }
 
 
+    public event Action<Unit> OnDestroyed;
+
     private GameObject selectionIndicator;
     private HealthSystem healthSystem;
     protected IPlacementEvent placementEvent;
@@ -22,7 +27,7 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
     // Resource
     protected ResourceBank teamResourceBank; 
     protected ResourceBank resourceBank; // For managing this unit's currently holding resources.
-
+    
     protected virtual void Awake()
     {
         if (coroutineExecutor != null)
@@ -53,6 +58,8 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
         stateMachine = new UnitStateMachine(this, blackBoard);
 
         healthSystem = new HealthSystem(data.MaxHealth);
+        healthSystem.OnDie += OnDeathRequested;
+
         this.resourceBank = new ResourceBank();
 
         return this;
@@ -149,6 +156,24 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
     public void GetDamaged(int damage)
     {
         healthSystem.GetDamaged(damage);
+    }
+
+    private void OnDeathRequested()
+    {
+        StartCoroutine(DieCoroutine());
+    }
+
+    private IEnumerator DieCoroutine()
+    {
+        stateMachine.ChangeState<UnitDieState>();
+        
+        yield return new WaitForSeconds(3);
+
+        profilePanel.UnregisterEntity();
+
+        OnDestroyed?.Invoke(this);
+        GameObject.Destroy(gameObject);
+
     }
     #endregion
 

@@ -18,3 +18,4 @@ MonoBehaviour:
   <AttackAnimation>k__BackingField: Shoot
   <AttackIdleAnimation>k__BackingField: Rifle Idle
   <WindupTime>k__BackingField: 0.65
+  <DieAnimation>k__BackingField: Die

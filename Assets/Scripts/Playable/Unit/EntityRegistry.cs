@@ -4,6 +4,7 @@ using UnityEngine;
 public interface IUnitRegisterer
 {
     void RegisterUnit(Unit unit);
+    void UnregisterUnit(Unit unit);
 }
 
 

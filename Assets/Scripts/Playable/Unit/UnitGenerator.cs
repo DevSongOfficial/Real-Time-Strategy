@@ -5,6 +5,7 @@ using UnityEngine;
 public class UnitGenerator
 {
     public System.Action<Unit> OnUnitGenerated;
+    public System.Action<Unit> OnUnitDestroyed;
 
     private UnitFactory unitFactory;
     private IUnitRegisterer unitRegistry;
@@ -30,6 +31,9 @@ public class UnitGenerator
         newUnit.SetPosition(spawnPosition);
         
         unitRegistry.RegisterUnit(newUnit);
+        newUnit.OnDestroyed += unitRegistry.UnregisterUnit;
+        newUnit.OnDestroyed += OnUnitDestroyed.Invoke;
+
         capacitySlots.Occupy(unitData.CapacityCost);
 
         if(rallyPoint.HasValue)

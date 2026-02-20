@@ -20,6 +20,12 @@ public class HealthTracker : MonoBehaviour
         healthBar.color = DetermineColor(target.GetTeam());
     }
 
+    public void Dispose()
+    {
+        target.GetHealthSystem().OnHelathChanged -= UpdateHealthBarLength;
+        GameObject.Destroy(gameObject);
+    }
+
     private void Awake()
     {
         healthTracker = GetComponent<Image>();

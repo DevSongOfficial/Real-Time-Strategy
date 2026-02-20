@@ -10,5 +10,7 @@ public class CombatData : ScriptableObject
     [field: Tooltip("Ready to attack Animation")]
     [field: SerializeField] public string AttackIdleAnimation { get; private set; } 
     [field:SerializeField] public float WindupTime {get;private set; }
+    [field: Space]
+    [field: SerializeField] public string DieAnimation { get; private set; }
 
 }
