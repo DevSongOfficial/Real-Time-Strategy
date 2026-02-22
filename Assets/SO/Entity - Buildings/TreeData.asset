@@ -20,6 +20,7 @@ MonoBehaviour:
   <CommandSet>k__BackingField: []
   <MaxHealth>k__BackingField: 0
   <Combat>k__BackingField: {fileID: 11400000, guid: 6cb5b9cdf07257844966f082b6a892f4, type: 2}
+  <Movement>k__BackingField: {fileID: 0}
   <CellSize>k__BackingField: {x: 1, y: 1}
   <ConsructionTime>k__BackingField: 0
   <RequiredGold>k__BackingField: 0
@@ -28,4 +29,5 @@ MonoBehaviour:
   <TotalAmount>k__BackingField: 15
   <AmountPerAction>k__BackingField: 4
   <TimeToHarvest>k__BackingField: 4
+  <UnitSlotCount>k__BackingField: 5
   <DestroyOnResourceDepleted>k__BackingField: 1

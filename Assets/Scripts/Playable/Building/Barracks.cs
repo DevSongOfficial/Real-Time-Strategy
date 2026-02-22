@@ -115,7 +115,6 @@ public class Barracks : Building, ITarget<BarracksData>, IUnitGenerator
     public UnitGenerationInfo DequeueUnit(int index = 0)
     {
         //if(GetUnitCountInQueue() <= index) return null;
-        Debug.Log("Ans: " + index);
         var dequeuedUnit = unitGenerationQueue[index];
         unitGenerationQueue.RemoveAt(index);
 

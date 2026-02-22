@@ -7264,8 +7264,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2391b714b488aa40b9795c0c8fda98a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfUnitOnStart: 2
-  unitData: {fileID: 11400000, guid: ec829f0cbb3a4c54286f1d7c85856f6c, type: 2}
+  numberOfUnitOnStart: 6
+  unitData: {fileID: 11400000, guid: 17db0492f4acd9548a653ef07fc04dcd, type: 2}
   goldMineData: {fileID: 11400000, guid: 409e10036e6932d43aeab14a3db22a03, type: 2}
   headquartersData: {fileID: 11400000, guid: f384682b43bfa92489042729dfaa94e5, type: 2}
   canvas: {fileID: 1868754047}
@@ -7275,7 +7275,7 @@ MonoBehaviour:
   nonClickableAreas: {fileID: 1217027838}
   placementView: {fileID: 1386255004}
   resourceView: {fileID: 841335201}
-  maxUnitCapacityOnStart: 30
+  maxUnitCapacityOnStart: 200
   cameraController: {fileID: 153142338}
   grid: {fileID: 1795782375}
   quadMesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}

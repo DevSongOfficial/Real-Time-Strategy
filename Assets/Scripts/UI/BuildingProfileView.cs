@@ -28,9 +28,40 @@ public class BuildingProfileView : MonoBehaviour
         progressLabelText.text = building.GetProgressLabelName();
         progressFill.fillAmount = building.GetProgressRate();
 
+        if (building is ResourceProvider)
+            return;
+
         // TODO: make these be executed only when a new building is selected or some barracks-related events occur. not every frame.
         BindButtonEvents(building);
         FillTrainingSprites(building);
+    }
+
+    public void DisableProgressInfoButtons()
+    {
+        foreach (var button in progressInfoButtons)
+            button.gameObject.SetActive(false);
+    }
+
+    public void ClearProgressInfoButtons()
+    {
+        foreach (var button in progressInfoButtons)
+        {
+            button.image.sprite = null;
+            button.enabled = false;
+        }
+    }
+
+    public void SetupUnitSlotSprites(int maxSlotCount)
+    {
+        for (int i = 0; i < maxSlotCount; i++)
+        {
+            progressInfoButtons[i].gameObject.SetActive(true);
+        }
+    }
+
+    public void FillUnitSlotSprites(Sprite sprite, int index)
+    {
+        progressInfoButtons[index].image.sprite = sprite;
     }
 
     private void BindButtonEvents(Building building)
@@ -50,20 +81,19 @@ public class BuildingProfileView : MonoBehaviour
 
     private void FillTrainingSprites(Building building)
     {
-        if (building is not Barracks barracks  || 
-            building.CurrentState is BuildingUnderConstructionState)
+        if (building is not Barracks barracks  || building.CurrentState is BuildingUnderConstructionState)
         {
-            for (int i = 0; i < progressInfoButtons.Count; i++)
-            {
-                progressInfoButtons[i].image.sprite = null;
-                progressInfoButtons[i].enabled = false;
-            }
+            ClearProgressInfoButtons();
         }
         else
         {
+            var maxCount = barracks.GetData().GenerationSlotCount;
+            for (int i = 0; i < maxCount; i++)
+            {
+                progressInfoButtons[i].gameObject.SetActive(true);
+            }
             for (int i = 0; i < progressInfoButtons.Count; i++)
             {
-                var maxCount = barracks.GetData().GenerationSlotCount;
                 progressInfoButtons[i].enabled = i < maxCount;
             }
             int j = 0;

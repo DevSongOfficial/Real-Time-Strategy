@@ -1,45 +1,86 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-// Buildings that provide resources such as Gold, Wood, Food
+// Buildings that provide resources such as Gold, Wood, 
 public sealed class ResourceProvider : Building
 {
+    // Registered Units(Harvesters).
+    public List<IResourceCarrier> registeredUnits; // Units assigned to this mine/tree.
+    public int RemainingUnitSlot => GetData().UnitSlotCount - registeredUnits.Count;
+
+    // About Resource
+    public event Action OnResourceDepleted;
+    public int RemainingResource { get; private set; }
+
     protected override void Awake()
     {
         base.Awake();
 
         team = Team.None;
+
+        registeredUnits = new List<IResourceCarrier>();
     }
 
     private void Start()
     {
-        RemainingAmount = GetData().TotalAmount;
+        RemainingResource = GetData().TotalAmount;
     }
 
-    public int RemainingAmount { get; private set; }
+    // Should be called when a unit start harvesting.
+    public void RegisterHarvester(IResourceCarrier resourceCarrier)
+    {
+        registeredUnits.Add(resourceCarrier);
+    }
+
+    public void UnregisterHarvester(IResourceCarrier resourceCarrier)
+    {
+        if(IsRegistered(resourceCarrier))
+            registeredUnits.Remove(resourceCarrier);
+    }
+
+    public bool IsRegistered(IResourceCarrier resourceCarrier)
+    {
+        return registeredUnits.Contains(resourceCarrier);
+    }
 
     public int TakeResource()
     {
         var amountToTake = GetData().AmountPerAction;
-        if (amountToTake > RemainingAmount)
-            amountToTake = RemainingAmount;
+        if (amountToTake > RemainingResource)
+            amountToTake = RemainingResource;
         
-        RemainingAmount -= amountToTake;
+        RemainingResource -= amountToTake;
 
-        if(RemainingAmount <= 0 && GetData().DestroyOnResourceDepleted)
-            StartCoroutine(DestroyRoutine());
+        if (RemainingResource <= 0)
+            HandleResourceDepleted();
 
         return amountToTake;
     }
 
     public override string GetProgressLabelName()
     {
-        return $"{RemainingAmount} / {GetData().TotalAmount}";
+        return $"{RemainingResource} / {GetData().TotalAmount}";
     }
 
     public override float GetProgressRate()
     {
-        return (float)RemainingAmount / GetData().TotalAmount;
+        return (float)RemainingResource / GetData().TotalAmount;
+    }
+
+    public IEnumerable<IResourceCarrier> GetRegisteredUnits()
+    {
+        return registeredUnits;
+    }
+
+    private void HandleResourceDepleted()
+    {
+        if(GetData().DestroyOnResourceDepleted)
+            StartCoroutine(DestroyRoutine());
+
+        OnResourceDepleted?.Invoke();
     }
 
     private IEnumerator DestroyRoutine()

@@ -28,6 +28,7 @@ public interface IResourceCarrier
     void CarryResource(ResourceType type, int amount);
     void DepositResource(ResourceType type);
     bool IsCarryingResources();
+    UnitData GetData();
 }
 
 public interface IConstructor { }

@@ -28,7 +28,7 @@ public class UnitDepositState : UnitStateBase
             return;
         }
         
-        if(provider != null && provider.RemainingAmount > 0)
+        if(provider != null && provider.RemainingResource > 0)
         {
             blackBoard.SetTarget(blackBoard.PreviousTarget);
             stateMachine.ChangeState<UnitMoveState>();

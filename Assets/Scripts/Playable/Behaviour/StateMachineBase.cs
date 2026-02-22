@@ -7,6 +7,7 @@ using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UIElements;
+using static UnityEngine.CullingGroup;
 
 public abstract class StateMachineBase
 {
@@ -14,6 +15,8 @@ public abstract class StateMachineBase
 
     public IState CurrentState { get; private set; }
     public IState PreviousState { get; private set; }
+
+    public event Action OnStateChanged;
 
     private bool canChangeState = true;
 
@@ -44,6 +47,7 @@ public abstract class StateMachineBase
         }
 
         CurrentState = newState;
+        OnStateChanged?.Invoke();
         CurrentState.Enter();
     }
 
