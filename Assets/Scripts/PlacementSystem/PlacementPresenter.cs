@@ -37,6 +37,9 @@ public sealed class PlacementPresenter : IPlacementEvent
     public event Action<ITarget> OnPlacementRequested; // ITarget: Requested Building that was initialized
     public event Action<Vector3> OnPlacementCanceled;
 
+    public event Action<Building> OnBuildingDestroyed;
+    public event Action<Building> OnBuildingDeconstructionRequested;
+
     public PlacementPresenter(IPlacementView placementView, CommandPanel commandPanel, BuildingFactory buildingFactory, GridSystem gridSystem, InputManager inputManager)
     {
         this.placementView = placementView;
@@ -108,9 +111,11 @@ public sealed class PlacementPresenter : IPlacementEvent
 
         placementMode = PlacementMode.Idle;
 
-        // Setup Building.
-        Building building = buildingFactory.Create(buildingData, Player.Team);
+        // Create & setup building.
+        Building building = buildingFactory.Create(buildingData, team);
         building.SetPosition(position);
+        building.OnDestroyed += OnBuildingDestroyed;
+        building.OnDestructionRequested += OnBuildingDeconstructionRequested;
         placed = building;
 
         // Add to Grid.

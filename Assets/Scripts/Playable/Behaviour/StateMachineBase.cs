@@ -109,21 +109,42 @@ public sealed class UnitStateMachine : StateMachineBase
         if (target.IsGround)
             return IdleState;
 
-        if (unit is IResourceCarrier && target.Entity is ResourceProvider) 
-            return HarvestState;
+        Team targetTeam = target.Entity.GetTeam();
+        Team myTeam = blackBoard.team;
+        Debug.Log(targetTeam+ "  -target");
+        Debug.Log(myTeam + "  -my");
 
-        if (target.Entity.GetTeam() != blackBoard.team)
+        if(targetTeam == Team.None)
+        {
+            if (unit is IResourceCarrier && target.Entity is ResourceProvider) 
+                return HarvestState;
+
+            return IdleState;
+        }
+
+        if (targetTeam != myTeam)
         {
             if (unit is Infantry && target.Entity is IDamageable)
                 return AttackState;
-        }
-        
-        if (unit is IResourceCarrier &&  target.Entity is Building)
-        {
-            if (target.Entity is HeadQuarters)
-                return DepositState;
 
-            return ConstructState;
+            return IdleState;
+        }
+
+        if(targetTeam == myTeam)
+        {
+            if(target.Entity is Building)
+            {
+                if(target.Entity is HeadQuarters && unit is IResourceCarrier)
+                {
+                    return DepositState;
+                }
+                else
+                {
+                    return ConstructState;
+                }
+            }
+
+            return IdleState;
         }
 
         return IdleState;

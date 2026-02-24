@@ -6,6 +6,7 @@ public class UnitGenerator
 {
     public System.Action<Unit> OnUnitGenerated;
     public System.Action<Unit> OnUnitDestroyed;
+    public System.Action<Unit> OnUnitDeathRequested;
 
     private UnitFactory unitFactory;
     private IUnitRegisterer unitRegistry;
@@ -31,8 +32,9 @@ public class UnitGenerator
         newUnit.SetPosition(spawnPosition);
         
         unitRegistry.RegisterUnit(newUnit);
+        newUnit.OnDeathRequested += OnUnitDeathRequested;
         newUnit.OnDestroyed += unitRegistry.UnregisterUnit;
-        newUnit.OnDestroyed += OnUnitDestroyed.Invoke;
+        newUnit.OnDestroyed += OnUnitDestroyed;
 
         capacitySlots.Occupy(unitData.CapacityCost);
 

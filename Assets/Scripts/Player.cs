@@ -11,6 +11,7 @@ public sealed class Player : MonoBehaviour
     [SerializeField, Range(0, 99)] private int numberOfUnitOnStart = 3;
     [SerializeField] private UnitData unitData;
     [SerializeField] private ResourceProviderData goldMineData;
+    [SerializeField] private BuildingData redTeamBuildingData;
 
 
     [Header("Scene Refs")]
@@ -106,7 +107,11 @@ public sealed class Player : MonoBehaviour
         unitFactory                     = new UnitFactory(selectionHandler, selectionIndicatorFactory, placementPresenter, profilePanel);
         unitGenerator                   = new UnitGenerator(unitFactory, entityRegistry, capacitySlots);
         unitGenerator.OnUnitGenerated   += healthBarGenerator.GenerateAndSetTargetUnit;
-        unitGenerator.OnUnitDestroyed   += healthBarGenerator.UnsetTargetUnit;
+        
+        unitGenerator.OnUnitDeathRequested                      += selectionHandler.DeselectEntity;
+        placementPresenter.OnBuildingDeconstructionRequested    += selectionHandler.DeselectEntity; 
+        unitGenerator.OnUnitDestroyed                           += healthBarGenerator.UnsetTargetUnit;
+        
 
         // FSM
         var normalMode              = new NormalMode(inputManager, selectionHandler, dragEventHandler);
@@ -137,6 +142,8 @@ public sealed class Player : MonoBehaviour
 
         var temp_minePosition = new Vector3(34, 0.5f, 34);
         placementPresenter.TryPlace(goldMineData, temp_minePosition, Team, out Building mine);
+        placementPresenter.TryPlace(redTeamBuildingData, temp_minePosition + Vector3.back * 4, Team.Red, out Building building);
+        
     }
 
     private void Update()

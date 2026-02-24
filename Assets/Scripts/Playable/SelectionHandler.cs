@@ -157,7 +157,7 @@ public class SelectionHandler : ISelectionEvent
         return true;
     }
 
-    private void DeselectEntity(ISelectable entity)
+    public void DeselectEntity(ISelectable entity)
     {
         if (selectedEntities.Contains(entity))
             selectedEntities.Remove(entity);

@@ -18,6 +18,7 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
 
 
     public event Action<Unit> OnDestroyed;
+    public event Action<Unit> OnDeathRequested;
 
     private GameObject selectionIndicator;
     private HealthSystem healthSystem;
@@ -58,7 +59,7 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
         stateMachine = new UnitStateMachine(this, blackBoard);
 
         healthSystem = new HealthSystem(data.MaxHealth);
-        healthSystem.OnDie += OnDeathRequested;
+        healthSystem.OnDie += RequestDeath;
 
         this.resourceBank = new ResourceBank();
 
@@ -157,19 +158,25 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
     {
         healthSystem.GetDamaged(damage);
     }
-
-    private void OnDeathRequested()
+    public bool IsAlive()
     {
-        StartCoroutine(DieCoroutine());
+        return healthSystem.CurrentHealth > 0;
     }
 
-    private IEnumerator DieCoroutine()
+    private void RequestDeath()
+    {
+        OnDeathRequested?.Invoke(this);
+        StartCoroutine(DieRoutine());
+    }
+
+    private IEnumerator DieRoutine()
     {
         stateMachine.ChangeState<UnitDieState>();
         
-        yield return new WaitForSeconds(3);
+        if(profilePanel.CurrentEntity == this as ISelectable)
+            profilePanel.UnregisterEntity();
 
-        profilePanel.UnregisterEntity();
+        yield return new WaitForSeconds(3);
 
         OnDestroyed?.Invoke(this);
         GameObject.Destroy(gameObject);

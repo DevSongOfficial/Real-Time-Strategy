@@ -1,15 +1,20 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext
+public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext, IDamageable
 {
     [SerializeField] protected CoroutineExecutor coroutineExecutor;
     [SerializeField] private new Collider collider;
     protected HealthSystem healthSystem;
     protected GameObject selectionIndicator;
     protected EntityProfilePanel profilePanel;
+
+    public event Action<Building> OnDestroyed;
+    public event Action<Building> OnDestructionRequested;
+
 
     protected new BuildingStateMachine stateMachine => base.stateMachine as BuildingStateMachine;
     protected new BuildingBlackBoard blackBoard;
@@ -49,6 +54,7 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext
         base.stateMachine = new BuildingStateMachine(this, blackBoard);
 
         healthSystem = new HealthSystem(data.MaxHealth);
+        healthSystem.OnDie += RequestDestruction;
 
         this.selectionIndicator = selectionIndicator;
         this.profilePanel = profilePanel;
@@ -134,6 +140,23 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext
         gameObject.SetLayer(Layer.IgnoreCollision);
     }
 
+    private void RequestDestruction()
+    {
+        OnDestructionRequested?.Invoke(this);
+        StartCoroutine(DestructionRoutine());
+    }
+
+    private IEnumerator DestructionRoutine()
+    {
+        if(profilePanel.CurrentEntity == this as ISelectable)
+            profilePanel.UnregisterEntity();
+
+        yield return new WaitForSeconds(0.1f);
+
+        OnDestroyed?.Invoke(this);
+        GameObject.Destroy(gameObject);
+    }
+
     protected enum SpawnPositionType { TopLeft, TopRight, BottomLeft, BottomRight, Random }
     protected Vector3 CalculateSpawnPosition(SpawnPositionType type)
     {
@@ -168,5 +191,14 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext
         int y = Mathf.CeilToInt((GetData().CellSize.y / 2f)) * ySign;
 
         return transform.position + new Vector3(x, 0, y);
+    }
+
+    public void GetDamaged(int damage)
+    {
+        healthSystem.GetDamaged(damage);
+    }
+    public bool IsAlive()
+    {
+        return healthSystem.CurrentHealth > 0;
     }
 }

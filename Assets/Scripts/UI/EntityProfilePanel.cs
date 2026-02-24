@@ -6,28 +6,28 @@ public class EntityProfilePanel : MonoBehaviour
     [SerializeField] private BuildingProfileView buildingPV;
     [SerializeField] private UnitProfileView unitPV;
 
-    private ISelectable currentEntity;
+    public ISelectable CurrentEntity { get; private set; }
     private bool isSelected;
 
     public void RegisterEntity(ISelectable entity)
     {
-        currentEntity = entity;
+        CurrentEntity = entity;
         isSelected = true;
 
-        var isBuilding = currentEntity is Building;
+        var isBuilding = CurrentEntity is Building;
         buildingPV.gameObject.SetActive(isBuilding);
         unitPV.gameObject.SetActive(!isBuilding);
 
 
         buildingPV.DisableProgressInfoButtons();
 
-        if (currentEntity is ResourceProvider resourceProvider)
+        if (CurrentEntity is ResourceProvider resourceProvider)
             buildingPV.SetupUnitSlotSprites(resourceProvider.GetData().UnitSlotCount);
     }
 
     public void UnregisterEntity()
     {
-        currentEntity = null;
+        CurrentEntity = null;
         isSelected = false;
 
         buildingPV.gameObject.SetActive(false);
@@ -38,14 +38,14 @@ public class EntityProfilePanel : MonoBehaviour
     {
         if (!isSelected) return;
 
-        if (currentEntity is Building building)
+        if (CurrentEntity is Building building)
         {
             buildingPV.Refresh(building);
             
-            if (currentEntity is ResourceProvider resourceProvider)
+            if (CurrentEntity is ResourceProvider resourceProvider)
                 RefreshUnitSlots(resourceProvider);
         }
-        else if (currentEntity is Unit unit)
+        else if (CurrentEntity is Unit unit)
             unitPV.Refresh(unit);
     }
 

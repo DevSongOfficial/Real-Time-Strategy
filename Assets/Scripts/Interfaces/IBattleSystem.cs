@@ -3,6 +3,7 @@ using UnityEngine;
 public interface IDamageable
 {
     void GetDamaged(int damage);
+    bool IsAlive();
 }
 
 public interface ITargetor
