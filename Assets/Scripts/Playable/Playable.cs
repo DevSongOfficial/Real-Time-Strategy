@@ -18,6 +18,7 @@ public interface ISelectable // Selectable by mouse0 or keyboard or ... .
     // Selection
     void OnSelected();
     void OnDeselected();
+    bool CanSelect();
 
     void ExecuteCommand(CommandData command);
     event Action<CommandData> OnCommandExecuted;
@@ -49,6 +50,7 @@ public abstract class Playable : MonoBehaviour, ISelectable, ITransformProvider
 
     public abstract void OnSelected();
     public abstract void OnDeselected();
+    public abstract bool CanSelect();
 
 
     public Transform GetTransform() { return transform; }

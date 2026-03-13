@@ -125,8 +125,10 @@ public class SelectionHandler : ISelectionEvent
             return null;
         }
 
-        bool selectionSucceeded = SelectEntity(entity);
-        return selectionSucceeded ? entity : null;
+        if (!entity.CanSelect()) return null;
+        if (!SelectEntity(entity)) return null;
+
+        return entity;
     }
 
     public void SelectEntities(IEnumerable<ISelectable> entities)

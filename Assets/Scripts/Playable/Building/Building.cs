@@ -62,6 +62,7 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext, 
         return this;
     }
 
+    #region Selection
     public override void OnSelected()
     {
         selectionIndicator.SetActive(false);
@@ -75,6 +76,12 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext, 
         selectionIndicator.SetActive(false);
         profilePanel.UnregisterEntity();
     }
+
+    public override bool CanSelect()
+    {
+        return true;
+    }
+    #endregion
 
     #region State & Progress
     public virtual float GetProgressRate()

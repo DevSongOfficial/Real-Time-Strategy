@@ -71,6 +71,7 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
         stateMachine.Update();
     }
 
+    #region Selection
     public override void OnSelected()
     {
         profilePanel.RegisterEntity(this);
@@ -85,6 +86,14 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
 
         selectionIndicator.SetActive(false);
     }
+
+    public override bool CanSelect()
+    {
+        return IsAlive();
+    }
+    #endregion
+
+
 
     public void SetTarget(Target target)
     {
