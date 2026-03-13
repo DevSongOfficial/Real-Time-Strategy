@@ -55,7 +55,7 @@ public sealed class ResourceProvider : Building
         RemainingResource -= amountToTake;
 
         if (RemainingResource <= 0)
-            HandleResourceDepleted();
+            HandleResourceDepletion();
 
         return amountToTake;
     }
@@ -75,7 +75,7 @@ public sealed class ResourceProvider : Building
         return registeredUnits;
     }
 
-    private void HandleResourceDepleted()
+    private void HandleResourceDepletion()
     {
         if(GetData().DestroyOnResourceDepleted)
             StartCoroutine(DestroyRoutine());

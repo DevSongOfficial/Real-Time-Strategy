@@ -45,7 +45,12 @@ public class UnitHarvestState : UnitStateBase
         CarryResourceToHQ();
     }
 
-    public override void Exit() { }
+    public override void Exit() 
+    {
+        if(resourceProvider == null) return;
+        if (resourceProvider.IsRegistered(resourceCarrier))
+            UnassignResourceProvider();
+    }
 
     private void AssignResourceProvider(ResourceProvider resourceProvider)
     {
@@ -73,8 +78,12 @@ public class UnitHarvestState : UnitStateBase
 
     private void UnassignResourceProvider()
     {
-        this.resourceProvider.UnregisterHarvester(resourceCarrier);
-        this.resourceProvider = null;
+        resourceProvider.UnregisterHarvester(resourceCarrier);
+        resourceProvider.OnResourceDepleted -= UnassignResourceProvider;
+        resourceProvider = null;
+
+        if (!resourceCarrier.IsCarryingResources())
+            stateMachine.ChangeState<UnitIdleState>();
     }
 
     private void HarvestResource()

@@ -111,8 +111,6 @@ public sealed class UnitStateMachine : StateMachineBase
 
         Team targetTeam = target.Entity.GetTeam();
         Team myTeam = blackBoard.team;
-        Debug.Log(targetTeam+ "  -target");
-        Debug.Log(myTeam + "  -my");
 
         if(targetTeam == Team.None)
         {
