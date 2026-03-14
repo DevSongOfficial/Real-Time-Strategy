@@ -8,6 +8,11 @@ public class BuildingData : EntityData
 
     [field: Header("Construction")]
     [field: SerializeField] public float ConsructionTime { get; private set; } = 4f;
-    [field: SerializeField] public int RequiredGold { get; private set; } = 0;
-    [field: SerializeField] public int RequiredWood { get; private set; } = 0;
+    [field: SerializeField] public int GoldRequired { get; private set; } = 0;
+    [field: SerializeField] public int WoodRequired { get; private set; } = 0;
+
+    [field: Header("Demolition")]
+    [field: SerializeField] public float DemolitionTime { get; private set; } = 4f;
+    [field: SerializeField] public int GoldRefund { get; private set; } = 0;
+    [field: SerializeField] public int WoodRefund { get; private set; } = 0;
 }

@@ -26,6 +26,7 @@ public sealed class PlacementPresenter : IPlacementEvent
     private readonly GridSystem gridSystem;
     private readonly InputManager inputManager;
 
+    private readonly ResourceBank resourceBank;
 
     private PlacementMode placementMode;
 
@@ -40,13 +41,14 @@ public sealed class PlacementPresenter : IPlacementEvent
     public event Action<Building> OnBuildingDestroyed;
     public event Action<Building> OnBuildingDeconstructionRequested;
 
-    public PlacementPresenter(IPlacementView placementView, CommandPanel commandPanel, BuildingFactory buildingFactory, GridSystem gridSystem, InputManager inputManager)
+    public PlacementPresenter(IPlacementView placementView, CommandPanel commandPanel, ResourceBank resourceBank, BuildingFactory buildingFactory, GridSystem gridSystem, InputManager inputManager)
     {
         this.placementView = placementView;
         this.buildingFactory = buildingFactory;
         this.commandPanel = commandPanel;
         this.gridSystem = gridSystem;
         this.inputManager = inputManager;
+        this.resourceBank = resourceBank;
     }
 
     public void Enter()
@@ -107,6 +109,11 @@ public sealed class PlacementPresenter : IPlacementEvent
         Vector2Int cellPosition = gridSystem.WorldToCell(position).ToVector2Int();
         Vector2Int cellSize = buildingData.CellSize;
         if (!gridSystem.CanPlace(cellPosition, cellSize)) return false;
+
+        // Check left resource
+        if (!resourceBank.CanBuild(buildingData)) return false;
+        resourceBank.SpendResource(ResourceType.Gold, buildingData.GoldRequired);
+        resourceBank.SpendResource(ResourceType.Wood, buildingData.WoodRequired);
 
 
         placementMode = PlacementMode.Idle;

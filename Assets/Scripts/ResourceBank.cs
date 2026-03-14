@@ -1,5 +1,6 @@
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
+using static CustomResourceManagement.Prefabs.Playable;
 public enum ResourceType
 {
     Gold, Wood,
@@ -52,5 +53,11 @@ public class ResourceBank
     public int GetResourceAmount(ResourceType type)
     {
         return resourceAmounts[type];
+    }
+
+    public bool CanBuild(BuildingData data)
+    {
+        return data.GoldRequired <= GetResourceAmount(ResourceType.Gold)
+            && data.WoodRequired <= GetResourceAmount(ResourceType.Wood) ;
     }
 }

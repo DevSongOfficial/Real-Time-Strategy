@@ -20,6 +20,7 @@ public class UnitConstructState : UnitStateBase
             return;
         }
 
+
         this.building = building;
         building.StartConstruction(SwitchToIdleState);
 

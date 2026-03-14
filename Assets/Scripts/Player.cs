@@ -94,15 +94,15 @@ public sealed class Player : MonoBehaviour
         dragEventHandler    = new DragEventHandler(entityRegistry.GetTransformsOfUnits(), cameraController.Camera, canvas, inputManager);
         selectionHandler    = new SelectionHandler(entityRegistry.GetSelectedEntities(), cameraController.Camera, commandPanel, moveMarkerFactory);
 
+        resourceBank = new ResourceBank(resourceView);
+        capacitySlots = new UnitCapacitySlots(maxUnitCapacityOnStart, resourceView);
+
         placementView.SetUp(buildingFactory);
         placementView.ToggleUIPreview(false);
         gridSystem          = new GridSystem(grid, quadMesh);
-        placementPresenter  = new PlacementPresenter(placementView, commandPanel, buildingFactory, gridSystem, inputManager);
+        placementPresenter  = new PlacementPresenter(placementView, commandPanel, resourceBank, buildingFactory, gridSystem, inputManager);
         placementPresenter.OnPlacementCanceled += (Vector3 finishedPosition) => stateMachine.RequestTransition(Mode.Normal);
         placementPresenter.OnPlacementRequested += (ITarget requestedBuilding) => stateMachine.RequestTransition(Mode.Normal);
-
-        resourceBank = new ResourceBank(resourceView);
-        capacitySlots = new UnitCapacitySlots(maxUnitCapacityOnStart, resourceView);
 
         unitFactory                     = new UnitFactory(selectionHandler, selectionIndicatorFactory, placementPresenter, profilePanel);
         unitGenerator                   = new UnitGenerator(unitFactory, entityRegistry, capacitySlots);

@@ -25,6 +25,9 @@ MonoBehaviour:
   <Movement>k__BackingField: {fileID: 0}
   <CellSize>k__BackingField: {x: 2, y: 3}
   <ConsructionTime>k__BackingField: 4
-  <RequiredGold>k__BackingField: 30
-  <RequiredWood>k__BackingField: 0
+  <GoldRequired>k__BackingField: 2
+  <WoodRequired>k__BackingField: 0
+  <DemolitionTime>k__BackingField: 4
+  <GoldRefund>k__BackingField: 0
+  <WoodRefund>k__BackingField: 0
   GenerationSlotCount: 3
