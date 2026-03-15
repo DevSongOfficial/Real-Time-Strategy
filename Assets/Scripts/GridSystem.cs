@@ -74,7 +74,7 @@ public sealed class GridSystem
             }
     }
 
-    public void Release(Vector2Int centerPosition, Vector2Int cellSize)
+    public void Release(Vector2Int cellPosition, Vector2Int cellSize)
     {
         int halfSizeX = cellSize.x / 2;
         int halfSizeY = cellSize.y / 2;
@@ -82,7 +82,7 @@ public sealed class GridSystem
         for (int offsetX = -halfSizeX; offsetX < cellSize.x - halfSizeX; offsetX++)
             for (int offsetY = -halfSizeY; offsetY < cellSize.y - halfSizeY; offsetY++)
             {
-                var occupiedCell = new Vector2Int(centerPosition.x + offsetX, centerPosition.y + offsetY);
+                var occupiedCell = new Vector2Int(cellPosition.x + offsetX, cellPosition.y + offsetY);
                 occupiedCells.Remove(occupiedCell);
             }
     }

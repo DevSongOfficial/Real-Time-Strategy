@@ -36,9 +36,28 @@ public sealed class BuildMode : ModeBase
         if (!inputManager.IsPointerInClickableArea()) return;
 
         if (inputManager.GetMouseButtonDown(0))
-            presenter.TryPlace();
+            TryPlace();
 
         if (inputManager.GetMouseButtonDown(1))
             presenter.Cancel();
+    }
+
+    // TODO: Replace debug logs with UI feedback
+    private void TryPlace()
+    {
+        var result = presenter.TryPlace();
+
+        switch (result)
+        {
+            case PlacementResult.Success:
+            case PlacementResult.InvalidBuildingData:
+                return;
+            case PlacementResult.GridOccupied:
+                Debug.Log("Grid Occupied");
+                break;
+            case PlacementResult.InsufficientResources:
+                Debug.Log("Resource Needed");
+                break;
+        }
     }
 }

@@ -20,6 +20,7 @@ MonoBehaviour:
   <CommandSet>k__BackingField:
   - {fileID: 11400000, guid: b6832e66701b1ef4cb4d6b5fd84ff98f, type: 2}
   - {fileID: 11400000, guid: 493329ddf966e9f428d9f4e8affe0644, type: 2}
+  - {fileID: 11400000, guid: 28cd42b0f44ec5a469cca185b84fe044, type: 2}
   <MaxHealth>k__BackingField: 250
   <Combat>k__BackingField: {fileID: 11400000, guid: 6cb5b9cdf07257844966f082b6a892f4, type: 2}
   <Movement>k__BackingField: {fileID: 0}
@@ -27,7 +28,7 @@ MonoBehaviour:
   <ConsructionTime>k__BackingField: 4
   <GoldRequired>k__BackingField: 2
   <WoodRequired>k__BackingField: 0
-  <DemolitionTime>k__BackingField: 4
-  <GoldRefund>k__BackingField: 0
+  <DemolitionTime>k__BackingField: 0
+  <GoldRefund>k__BackingField: 2
   <WoodRefund>k__BackingField: 0
   GenerationSlotCount: 3

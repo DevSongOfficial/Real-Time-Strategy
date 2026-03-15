@@ -135,7 +135,7 @@ public sealed class Player : MonoBehaviour
         unitGenerator.GenerateWithRandomPosition(unitData, Team.Red, numberOfUnitOnStart);
 
         var temp_HQPosition = new Vector3(30, 0.5f, 30);
-        if (placementPresenter.TryPlace(headquartersData, new Vector3(30, 0.5f, 30), Team, out Building HQ))
+        if (placementPresenter.TryPlace(headquartersData, new Vector3(30, 0.5f, 30), Team, out Building HQ) == PlacementResult.Success)
         {
             Player.HQ = HQ as HeadQuarters;
         }

@@ -5,13 +5,13 @@ using UnityEngine;
 
 public class CommandPanel : MonoBehaviour
 {
+    public event Action                     OnCommandButtonClicked;
+    public event Action<BuildingData>       OnBuildingConstructionButtonClicked;
+
     public static readonly int ButtonCount = 12;
     [SerializeField] private CommandButton[] commandButtons = new CommandButton[ButtonCount];
 
     private IModeTransitionRequester transitionRequester;
-
-    public event Action                     OnCommandButtonClicked;
-    public event Action<BuildingData>       OnBuildingConstructionButtonClicked;
 
     private ISelectable currentEntity;
     private List<CommandData> currentCommands;
@@ -50,6 +50,10 @@ public class CommandPanel : MonoBehaviour
                 currentEntity.ExecuteCommand(command);
                 break;
             case UnitTrainCommandData command:
+                currentEntity.ExecuteCommand(command);
+                break;
+            case DemolishCommandData command:
+                Debug.Log("Command Executed");
                 currentEntity.ExecuteCommand(command);
                 break;
             case SpawnPositionSetCommandData:

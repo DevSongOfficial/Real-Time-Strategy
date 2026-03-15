@@ -18,6 +18,14 @@ public interface IPlacementEvent
 
 public enum PlacementMode { Idle, Placing }
 
+public enum PlacementResult
+{
+    Success,
+    InvalidBuildingData,
+    GridOccupied,
+    InsufficientResources,
+}
+
 public sealed class PlacementPresenter : IPlacementEvent
 {
     private readonly IPlacementView placementView;
@@ -94,39 +102,45 @@ public sealed class PlacementPresenter : IPlacementEvent
         placementView.ToggleUIPreview(true);
     }
 
-    public bool TryPlace()
+    public PlacementResult TryPlace()
     {
         return TryPlace(buildingData, snappedPosition, Player.Team, out var building);
     }
 
-    public bool TryPlace(BuildingData buildingData, Vector3 position, Team team, out Building placed)
+    public PlacementResult TryPlace(BuildingData buildingData, Vector3 position, Team team, out Building placed)
     {
         placed = null;
 
-        if (buildingData == null) return false;
+        if (buildingData == null)
+            return PlacementResult.InvalidBuildingData;
 
         // Check on Grid.
         Vector2Int cellPosition = gridSystem.WorldToCell(position).ToVector2Int();
         Vector2Int cellSize = buildingData.CellSize;
-        if (!gridSystem.CanPlace(cellPosition, cellSize)) return false;
+        if (!gridSystem.CanPlace(cellPosition, cellSize))
+            return PlacementResult.GridOccupied;
 
-        // Check left resource
-        if (!resourceBank.CanBuild(buildingData)) return false;
+
+        // Check resource requirements and spend resources.
+        if (!resourceBank.CanBuild(buildingData))
+            return PlacementResult.InsufficientResources;
+
         resourceBank.SpendResource(ResourceType.Gold, buildingData.GoldRequired);
         resourceBank.SpendResource(ResourceType.Wood, buildingData.WoodRequired);
 
+        // Add to Grid.
+        gridSystem.Occupy(cellPosition, cellSize);
 
         placementMode = PlacementMode.Idle;
 
         // Create & setup building.
         Building building = buildingFactory.Create(buildingData, team);
         building.SetPosition(position);
+        building.SetCellPosition(cellPosition);
         building.OnDestroyed += OnBuildingDestroyed;
+        building.OnDestroyed += OnDestructed;
         building.OnDestructionRequested += OnBuildingDeconstructionRequested;
         placed = building;
-
-        // Add to Grid.
-        gridSystem.Occupy(cellPosition, cellSize);
 
         placementView.ToggleUIPreview(false);
         placementView.ToggleBuildingPreview(false);
@@ -135,9 +149,8 @@ public sealed class PlacementPresenter : IPlacementEvent
 
         OnPlacementRequested?.Invoke(building);
 
-        return true;
+        return PlacementResult.Success;
     }
-
 
     public void Cancel()
     {
@@ -151,5 +164,10 @@ public sealed class PlacementPresenter : IPlacementEvent
         buildingData = null;
 
         OnPlacementCanceled?.Invoke(inputManager.GetMousePositionOnCanvas());
+    }
+
+    private void OnDestructed(Building building)
+    {
+        gridSystem.Release(building.GetCellPosition(), building.GetData().CellSize);
     }
 }

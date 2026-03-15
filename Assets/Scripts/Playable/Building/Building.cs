@@ -24,9 +24,10 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext, 
     public bool IsUnderConstruction => (stateMachine.CurrentState is BuildingUnderConstructionState);
     public IState CurrentState => stateMachine.CurrentState;
 
-
     // TODO: I think it's better to put this variable in EntityData and write on my own. (not getting it through collider)
     public float PositionDeltaY { get; private set; }
+    private Vector2Int cellPosition;
+
 
     // Better not use Start().
     protected virtual void Awake()
@@ -54,12 +55,26 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext, 
         base.stateMachine = new BuildingStateMachine(this, blackBoard);
 
         healthSystem = new HealthSystem(data.MaxHealth);
-        healthSystem.OnDie += RequestDestruction;
+        healthSystem.OnDie += StartDestruction;
 
         this.selectionIndicator = selectionIndicator;
         this.profilePanel = profilePanel;
 
         return this;
+    }
+
+    public void SetCellPosition(Vector2Int cellPosition)
+    {
+        this.cellPosition = cellPosition;
+    }
+
+    public Vector2Int GetCellPosition() => cellPosition;
+
+    public override void ExecuteCommand(CommandData command)
+    {
+        base.ExecuteCommand(command);
+
+        Demolish(command as DemolishCommandData);
     }
 
     #region Selection
@@ -110,6 +125,36 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext, 
     }
     #endregion
 
+    #region Destruction & Demolition
+    public void Demolish(DemolishCommandData command)
+    {
+        Player.ResourceBank.AddResource(ResourceType.Gold, GetData().GoldRefund);
+        Player.ResourceBank.AddResource(ResourceType.Wood, GetData().WoodRefund);
+
+        StartDestruction(GetData().DemolitionTime);
+    }
+
+    private void StartDestruction() => StartDestruction();
+
+    private void StartDestruction(float delaySeconds = 0)
+    {
+        OnDestructionRequested?.Invoke(this);
+        StartCoroutine(DestructionRoutine(delaySeconds));
+    }
+
+    private IEnumerator DestructionRoutine(float delaySeconds)
+    {
+        if (profilePanel.CurrentEntity == this as ISelectable)
+            profilePanel.UnregisterEntity();
+
+        yield return new WaitForSeconds(delaySeconds);
+
+        OnDestroyed?.Invoke(this);
+        GameObject.Destroy(gameObject);
+    }
+    #endregion
+
+
     #region Transform
     public override void SetPosition(Vector3 position)
     {
@@ -145,23 +190,6 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext, 
         IsPreview = true;
         enabled = false;
         gameObject.SetLayer(Layer.IgnoreCollision);
-    }
-
-    private void RequestDestruction()
-    {
-        OnDestructionRequested?.Invoke(this);
-        StartCoroutine(DestructionRoutine());
-    }
-
-    private IEnumerator DestructionRoutine()
-    {
-        if(profilePanel.CurrentEntity == this as ISelectable)
-            profilePanel.UnregisterEntity();
-
-        yield return new WaitForSeconds(0.1f);
-
-        OnDestroyed?.Invoke(this);
-        GameObject.Destroy(gameObject);
     }
 
     protected enum SpawnPositionType { TopLeft, TopRight, BottomLeft, BottomRight, Random }
