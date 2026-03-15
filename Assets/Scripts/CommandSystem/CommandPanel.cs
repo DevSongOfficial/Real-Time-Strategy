@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class CommandPanel : MonoBehaviour
+public sealed class CommandPanel : MonoBehaviour
 {
     public event Action                     OnCommandButtonClicked;
     public event Action<BuildingData>       OnBuildingConstructionButtonClicked;
@@ -12,6 +12,7 @@ public class CommandPanel : MonoBehaviour
     [SerializeField] private CommandButton[] commandButtons = new CommandButton[ButtonCount];
 
     private IModeTransitionRequester transitionRequester;
+    private TeamContext teamContext;
 
     private ISelectable currentEntity;
     private List<CommandData> currentCommands;
@@ -22,9 +23,10 @@ public class CommandPanel : MonoBehaviour
             button.Setup(this);
     }
 
-    public void Setup(IModeTransitionRequester transitionRequester)
+    public void Setup(IModeTransitionRequester transitionRequester, TeamContext teamContext)
     {
         this.transitionRequester = transitionRequester;
+        this.teamContext = teamContext;
     }
 
     public void OnEntitySelected(ISelectable selectable)
@@ -32,7 +34,10 @@ public class CommandPanel : MonoBehaviour
         currentEntity = selectable;
         currentCommands = currentEntity.GetData().CommandSet;
 
-        if (selectable.GetTeam() == Player.Team)
+        Debug.Log(currentEntity);
+
+
+        if (selectable.GetTeam() == teamContext.Team)
             RefreshCommandButtons();
         else
             DisableAllButtons();
@@ -53,7 +58,6 @@ public class CommandPanel : MonoBehaviour
                 currentEntity.ExecuteCommand(command);
                 break;
             case DemolishCommandData command:
-                Debug.Log("Command Executed");
                 currentEntity.ExecuteCommand(command);
                 break;
             case SpawnPositionSetCommandData:

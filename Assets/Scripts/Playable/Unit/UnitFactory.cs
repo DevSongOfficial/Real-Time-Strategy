@@ -1,11 +1,12 @@
+using NUnit.Framework;
 using UnityEngine;
 using static CustomResourceManagement.Prefabs.Playable;
 
 
 public class UnitFactory : PlayableAbsFactory<Unit>
 {
-    private IPlacementEvent placementEvent;
-    private EntityProfilePanel profilePanel;
+    private readonly IPlacementEvent placementEvent;
+    private readonly EntityProfilePanel profilePanel;
 
     public UnitFactory(ISelectionEvent selectionEvent, SelectionIndicatorFactory selectionIndicatorFactory, IPlacementEvent placementEvent, EntityProfilePanel profilePanel)
     {
@@ -15,7 +16,7 @@ public class UnitFactory : PlayableAbsFactory<Unit>
 
         base.Setup(selectionEvent, selectionIndicatorFactory);
     }
-    public override Unit Create(EntityData data, Team team)
+    public override Unit Create(EntityData data, TeamContext teamContext)
     {
         var prefab = data.Prefab.GetComponent<Unit>();
         var unit = GameObject.Instantiate<Unit>(prefab);
@@ -27,6 +28,6 @@ public class UnitFactory : PlayableAbsFactory<Unit>
         selectionIndicator.GetChild(0).localScale = (Vector3.one * data.RadiusOnTerrain).WithZ(1);
         selectionIndicator.gameObject.SetActive(false);
 
-        return unit.SetUp(data, team, Player.ResourceBank, selectionIndicator.gameObject, profilePanel, placementEvent);
+        return unit.SetUp(data, teamContext, selectionIndicator.gameObject, profilePanel, placementEvent);
     }
 }

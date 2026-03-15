@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -24,12 +25,12 @@ public class HybridBuilding : Building, ITargetor
         // agent.updatePosition = false;
     }
 
-    public override Building SetUp(EntityData data, GameObject selectionIndicator, EntityProfilePanel profilePanel, Team team)
+    public override Building SetUp(EntityData data, GameObject selectionIndicator, EntityProfilePanel profilePanel, TeamContext teamContext)
     {
         this.data = data;
         this.profilePanel = profilePanel;
 
-        blackBoard = new BuildingBlackBoard(data, coroutineExecutor, team);
+        blackBoard = new BuildingBlackBoard(data, coroutineExecutor, teamContext);
         //stateMachine = new HybridBuildingStateMachine(this, blackBoard, agent);
 
         healthSystem = new HealthSystem(data.MaxHealth);

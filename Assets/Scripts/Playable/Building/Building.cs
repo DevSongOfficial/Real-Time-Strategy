@@ -1,7 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext, IDamageable
@@ -46,12 +44,12 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext, 
         stateMachine?.Update();
     }
 
-    public virtual Building SetUp(EntityData data, GameObject selectionIndicator, EntityProfilePanel profilePanel, Team team)
+    public virtual Building SetUp(EntityData data, GameObject selectionIndicator, EntityProfilePanel profilePanel, TeamContext teamContext)
     {
         this.data = data;
-        this.team = team;
+        this.teamContext = teamContext;
 
-        blackBoard = new BuildingBlackBoard(data, coroutineExecutor, team);
+        blackBoard = new BuildingBlackBoard(data, coroutineExecutor, teamContext);
         base.stateMachine = new BuildingStateMachine(this, blackBoard);
 
         healthSystem = new HealthSystem(data.MaxHealth);
@@ -74,7 +72,8 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext, 
     {
         base.ExecuteCommand(command);
 
-        Demolish(command as DemolishCommandData);
+        if(command is DemolishCommandData demolitionCommand)
+            Demolish(demolitionCommand);
     }
 
     #region Selection
@@ -128,15 +127,15 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext, 
     #region Destruction & Demolition
     public void Demolish(DemolishCommandData command)
     {
-        Player.ResourceBank.AddResource(ResourceType.Gold, GetData().GoldRefund);
-        Player.ResourceBank.AddResource(ResourceType.Wood, GetData().WoodRefund);
+        teamContext.ResourceBank.AddResource(ResourceType.Gold, GetData().GoldRefund);
+        teamContext.ResourceBank.AddResource(ResourceType.Wood, GetData().WoodRefund);
 
         StartDestruction(GetData().DemolitionTime);
     }
 
-    private void StartDestruction() => StartDestruction();
+    private void StartDestruction() => StartDestruction(0);
 
-    private void StartDestruction(float delaySeconds = 0)
+    private void StartDestruction(float delaySeconds)
     {
         OnDestructionRequested?.Invoke(this);
         StartCoroutine(DestructionRoutine(delaySeconds));

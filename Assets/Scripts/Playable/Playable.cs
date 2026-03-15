@@ -36,9 +36,9 @@ public abstract class Playable : MonoBehaviour, ISelectable, ITransformProvider
     protected EntityData data;
 
     // Team
-    public Team GetTeam() => team;
-    protected Team team;
-    
+    protected TeamContext teamContext;
+    public Team GetTeam() => teamContext.Team;
+
     // State Machine
     protected StateMachineBase stateMachine;
     protected BlackBoard blackBoard;

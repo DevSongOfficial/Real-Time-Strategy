@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,8 +19,6 @@ public sealed class ResourceProvider : Building
     protected override void Awake()
     {
         base.Awake();
-
-        team = Team.None;
 
         registeredUnits = new List<IResourceCarrier>();
     }

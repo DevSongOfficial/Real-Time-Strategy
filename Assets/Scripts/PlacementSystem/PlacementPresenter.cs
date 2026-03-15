@@ -34,8 +34,6 @@ public sealed class PlacementPresenter : IPlacementEvent
     private readonly GridSystem gridSystem;
     private readonly InputManager inputManager;
 
-    private readonly ResourceBank resourceBank;
-
     private PlacementMode placementMode;
 
     // Placement Info
@@ -49,14 +47,13 @@ public sealed class PlacementPresenter : IPlacementEvent
     public event Action<Building> OnBuildingDestroyed;
     public event Action<Building> OnBuildingDeconstructionRequested;
 
-    public PlacementPresenter(IPlacementView placementView, CommandPanel commandPanel, ResourceBank resourceBank, BuildingFactory buildingFactory, GridSystem gridSystem, InputManager inputManager)
+    public PlacementPresenter(IPlacementView placementView, CommandPanel commandPanel, BuildingFactory buildingFactory, GridSystem gridSystem, InputManager inputManager)
     {
         this.placementView = placementView;
         this.buildingFactory = buildingFactory;
         this.commandPanel = commandPanel;
         this.gridSystem = gridSystem;
         this.inputManager = inputManager;
-        this.resourceBank = resourceBank;
     }
 
     public void Enter()
@@ -102,12 +99,12 @@ public sealed class PlacementPresenter : IPlacementEvent
         placementView.ToggleUIPreview(true);
     }
 
-    public PlacementResult TryPlace()
+    public PlacementResult TryPlace(TeamContext teamContext)
     {
-        return TryPlace(buildingData, snappedPosition, Player.Team, out var building);
+        return TryPlace(buildingData, teamContext, snappedPosition, out var building);
     }
 
-    public PlacementResult TryPlace(BuildingData buildingData, Vector3 position, Team team, out Building placed)
+    public PlacementResult TryPlace(BuildingData buildingData, TeamContext teamContext, Vector3 position, out Building placed)
     {
         placed = null;
 
@@ -122,11 +119,11 @@ public sealed class PlacementPresenter : IPlacementEvent
 
 
         // Check resource requirements and spend resources.
-        if (!resourceBank.CanBuild(buildingData))
+        if (!teamContext.ResourceBank.CanBuild(buildingData))
             return PlacementResult.InsufficientResources;
 
-        resourceBank.SpendResource(ResourceType.Gold, buildingData.GoldRequired);
-        resourceBank.SpendResource(ResourceType.Wood, buildingData.WoodRequired);
+        teamContext.ResourceBank.SpendResource(ResourceType.Gold, buildingData.GoldRequired);
+        teamContext.ResourceBank.SpendResource(ResourceType.Wood, buildingData.WoodRequired);
 
         // Add to Grid.
         gridSystem.Occupy(cellPosition, cellSize);
@@ -134,7 +131,7 @@ public sealed class PlacementPresenter : IPlacementEvent
         placementMode = PlacementMode.Idle;
 
         // Create & setup building.
-        Building building = buildingFactory.Create(buildingData, team);
+        Building building = buildingFactory.Create(buildingData, teamContext);
         building.SetPosition(position);
         building.SetCellPosition(cellPosition);
         building.OnDestroyed += OnBuildingDestroyed;

@@ -6,7 +6,7 @@ public class Worker : Unit, IResourceCarrier, IConstructor
     {
         base.ExecuteCommand(command);
 
-        // When Place() is called:
+        // Wait til Place() is called:
         if (command is BuildCommandData)
             placementEvent.OnPlacementRequested += StartConstruction;
     }
@@ -29,7 +29,7 @@ public class Worker : Unit, IResourceCarrier, IConstructor
     {
         var depositAmount = resourceBank.GetResourceAmount(type);
         if(resourceBank.SpendResource(type, depositAmount))
-            teamResourceBank.AddResource(type, depositAmount);
+            teamContext.ResourceBank.AddResource(type, depositAmount);
     }
 
     public bool IsCarryingResources()

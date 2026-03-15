@@ -31,9 +31,9 @@ public class Barracks : Building, ITarget<BarracksData>, IUnitGenerator
     private Vector3 unitRallyPoint;
     private Vector3 unitSpawnPoint;
     
-    public override Building SetUp(EntityData data, GameObject selectionIndicator, EntityProfilePanel profilePanel, Team team)
+    public override Building SetUp(EntityData data, GameObject selectionIndicator, EntityProfilePanel profilePanel, TeamContext teamContext)
     {
-        return base.SetUp(data, selectionIndicator, profilePanel, team);
+        return base.SetUp(data, selectionIndicator, profilePanel, teamContext);
     }
 
     public override void SetPosition(Vector3 position)
@@ -60,7 +60,7 @@ public class Barracks : Building, ITarget<BarracksData>, IUnitGenerator
         if (command is UnitTrainCommandData unitTrainCommand)
         {
             var unitGenerationInfo 
-                = new UnitGenerationInfo(unitTrainCommand.UnitData, team, unitRallyPoint);
+                = new UnitGenerationInfo(unitTrainCommand.UnitData, teamContext, unitRallyPoint);
 
             EnqueueUnit(unitGenerationInfo);
 
@@ -95,7 +95,7 @@ public class Barracks : Building, ITarget<BarracksData>, IUnitGenerator
 
     public void GenerateUnit(UnitGenerationInfo info)
     {
-        unitGenerator.Generate(info.Data, info.team, unitSpawnPoint, unitRallyPoint);
+        unitGenerator.Generate(info.Data, info.teamContext, unitSpawnPoint, unitRallyPoint);
     }
 
     public bool CanGenerateUnit(UnitGenerationInfo info)

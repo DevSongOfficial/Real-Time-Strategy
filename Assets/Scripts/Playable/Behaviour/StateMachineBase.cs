@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -109,8 +110,11 @@ public sealed class UnitStateMachine : StateMachineBase
         if (target.IsGround)
             return IdleState;
 
+        if (blackBoard.Target.Entity == null)
+            return IdleState;
+
         Team targetTeam = target.Entity.GetTeam();
-        Team myTeam = blackBoard.team;
+        Team myTeam = blackBoard.TeamContext.Team;
 
         if(targetTeam == Team.None)
         {
@@ -122,7 +126,7 @@ public sealed class UnitStateMachine : StateMachineBase
 
         if (targetTeam != myTeam)
         {
-            if (unit is Infantry && target.Entity is IDamageable)
+            if (unit is Infantry && target.Entity is IDamageable damageable && damageable.IsAlive())
                 return AttackState;
 
             return IdleState;
@@ -187,7 +191,7 @@ public class HybridBuildingStateMachine : BuildingStateMachine
 public class BlackBoard
 {
     public EntityData BaseData { get; private set; }
-    public Team team;
+    public TeamContext TeamContext { get; private set; }
     public HeadQuarters hq;
 
     // Move
@@ -205,11 +209,12 @@ public class BlackBoard
 
     public CoroutineExecutor coroutineExecutor;
 
-    public BlackBoard(EntityData data, CoroutineExecutor coroutineExecutor, Team team)
+    public BlackBoard(EntityData data, CoroutineExecutor coroutineExecutor, TeamContext teamContext)
     {
-        this.BaseData = data;
+        BaseData = data;
+        TeamContext = teamContext;
+
         this.coroutineExecutor = coroutineExecutor;
-        this.team = team;
     }
 }
 
@@ -219,8 +224,8 @@ public class BuildingBlackBoard : BlackBoard
 
     public float progressRate; // 0 ~ 1
 
-    public BuildingBlackBoard(EntityData data, CoroutineExecutor coroutineExecutor, Team team)
-        :base(data, coroutineExecutor, team)
+    public BuildingBlackBoard(EntityData data, CoroutineExecutor coroutineExecutor, TeamContext teamContext)
+        :base(data, coroutineExecutor, teamContext)
     {
         
     }

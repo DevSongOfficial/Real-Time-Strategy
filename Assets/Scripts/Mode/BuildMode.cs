@@ -8,9 +8,11 @@ public sealed class BuildMode : ModeBase
 {
     private readonly InputManager inputManager;
     private readonly PlacementPresenter presenter;
+    private readonly TeamContext teamContext;
 
-    public BuildMode(InputManager inputManager, PlacementPresenter presenter)
+    public BuildMode(TeamContext teamContext, InputManager inputManager, PlacementPresenter presenter)
     {
+        this.teamContext = teamContext;
         this.inputManager = inputManager;
         this.presenter = presenter;
     }
@@ -45,7 +47,7 @@ public sealed class BuildMode : ModeBase
     // TODO: Replace debug logs with UI feedback
     private void TryPlace()
     {
-        var result = presenter.TryPlace();
+        var result = presenter.TryPlace(teamContext);
 
         switch (result)
         {

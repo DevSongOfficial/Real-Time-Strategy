@@ -12,11 +12,16 @@ public interface IBuildingPreviewFactory
 public class BuildingFactory : PlayableAbsFactory<Building>, IBuildingPreviewFactory
 {
     private event Func<UnitGenerator> getUnitGenerator;
-    private EntityProfilePanel profilePanel;
-    private RallyPointSetter spawnPositionSetter;
+    
+    private readonly EntityProfilePanel profilePanel;
+    private readonly RallyPointSetter spawnPositionSetter;
 
-    public BuildingFactory(Func<UnitGenerator> getUnitGenerator, ISelectionEvent selectionHandler, 
-        SelectionIndicatorFactory selectionIndicatorFactory, EntityProfilePanel profilePanel, RallyPointSetter spawnPositionSetter)
+    public BuildingFactory(
+        Func<UnitGenerator> getUnitGenerator, 
+        ISelectionEvent selectionHandler, 
+        SelectionIndicatorFactory selectionIndicatorFactory, 
+        EntityProfilePanel profilePanel, 
+        RallyPointSetter spawnPositionSetter)
     {
         this.getUnitGenerator = getUnitGenerator;
         this.profilePanel = profilePanel;
@@ -25,7 +30,7 @@ public class BuildingFactory : PlayableAbsFactory<Building>, IBuildingPreviewFac
         base.Setup(selectionHandler, selectionIndicatorFactory);
     }
 
-    public override Building Create(EntityData data, Team team)
+    public override Building Create(EntityData data, TeamContext teamContext)
     {
         var prefab = data.Prefab.GetComponent<Building>();
         var building = GameObject.Instantiate<Building>(prefab);
@@ -38,7 +43,7 @@ public class BuildingFactory : PlayableAbsFactory<Building>, IBuildingPreviewFac
         selectionIndicator.GetChild(0).localScale = (Vector3.one * data.RadiusOnTerrain).WithZ(1);
         selectionIndicator.gameObject.SetActive(false);
 
-        building.SetUp(data, selectionIndicator.gameObject, profilePanel, team);
+        building.SetUp(data, selectionIndicator.gameObject, profilePanel, teamContext);
 
         // For those spawning units e.g., barracks
         if (building is IUnitGenerator unitGenerator)

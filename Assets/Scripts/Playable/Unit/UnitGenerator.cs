@@ -24,11 +24,11 @@ public class UnitGenerator
         return capacitySlots.FreeCapacity >= unitData.CapacityCost;
     }
 
-    public void Generate(UnitData unitData, Team team, Vector3 spawnPosition, Vector3? rallyPoint = null)
+    public void Generate(UnitData unitData, TeamContext teamContext, Vector3 spawnPosition, Vector3? rallyPoint = null)
     {
         if (!HasCapacityFor(unitData)) return;
 
-        var newUnit = unitFactory.Create(unitData, team);
+        var newUnit = unitFactory.Create(unitData, teamContext);
         newUnit.SetPosition(spawnPosition);
         
         unitRegistry.RegisterUnit(newUnit);
@@ -44,12 +44,12 @@ public class UnitGenerator
         OnUnitGenerated?.Invoke(newUnit);
     }
 
-    public void GenerateWithRandomPosition(UnitData unitData, Team team, int numberOfUnit = 1)
+    public void GenerateWithRandomPosition(UnitData unitData, TeamContext teamContext, int numberOfUnit = 1)
     {
         for (int i = 0; i < numberOfUnit; i++)
         {
             var randomPosition = new Vector3(Random.Range(26, 35), 2, Random.Range(20, 36));
-            Generate(unitData, team, randomPosition);
+            Generate(unitData, teamContext, randomPosition);
         }
     }
 }
@@ -57,13 +57,13 @@ public class UnitGenerator
 public class UnitGenerationInfo
 {
     public UnitData Data;
-    public Team team;
+    public TeamContext teamContext;
     public Vector3 rallyPosition;
 
-    public UnitGenerationInfo(UnitData unitData, Team team, Vector3 position)
+    public UnitGenerationInfo(UnitData unitData, TeamContext teamContext, Vector3 position)
     {
         this.Data = unitData; 
-        this.team = team; 
+        this.teamContext = teamContext; 
         this.rallyPosition = position;
     }
 }

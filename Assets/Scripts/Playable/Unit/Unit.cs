@@ -26,7 +26,6 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
     protected EntityProfilePanel profilePanel;
 
     // Resource
-    protected ResourceBank teamResourceBank; 
     protected ResourceBank resourceBank; // For managing this unit's currently holding resources.
     
     protected virtual void Awake()
@@ -46,22 +45,21 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
         PositionDeltaY = collider.bounds.extents.y;
     }
 
-    public Unit SetUp(EntityData data, Team team, ResourceBank resourceBank, GameObject selectionIndicator, EntityProfilePanel profilePanel, IPlacementEvent placementEvent)
+    public Unit SetUp(EntityData data, TeamContext teamContext, GameObject selectionIndicator, EntityProfilePanel profilePanel, IPlacementEvent placementEvent)
     {
         this.data = data;
-        this.team = team;
         this.selectionIndicator = selectionIndicator;
         this.placementEvent = placementEvent;
         this.profilePanel = profilePanel;
-        this.teamResourceBank = resourceBank;
+        this.teamContext = teamContext;
 
-        blackBoard = new BlackBoard(data, coroutineExecutor, team);
+        blackBoard = new BlackBoard(data, coroutineExecutor, teamContext);
         stateMachine = new UnitStateMachine(this, blackBoard);
 
         healthSystem = new HealthSystem(data.MaxHealth);
         healthSystem.OnDie += RequestDeath;
 
-        this.resourceBank = new ResourceBank();
+        resourceBank = new ResourceBank();
 
         return this;
     }

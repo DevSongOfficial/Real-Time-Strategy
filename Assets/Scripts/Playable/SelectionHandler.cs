@@ -64,16 +64,18 @@ public class SelectionHandler : ISelectionEvent
     private CommandPanel commandPanel;
     private List<ISelectable> selectedEntities;
     private MoveMarkerFactory moveMarkerFactory;
+    private TeamContext teamContext;
 
 
     private Team currentSelectedTeam; // The team of the currently selected entity; this matters since it's not allowed to select multiple teams' units at a time.
 
-    public SelectionHandler(List<ISelectable> selectedEntities, Camera camera, CommandPanel commandPanel, MoveMarkerFactory moveMarkerFactory)
+    public SelectionHandler(List<ISelectable> selectedEntities, Camera camera, CommandPanel commandPanel, MoveMarkerFactory moveMarkerFactory, TeamContext teamContext)
     {
         this.selectedEntities = selectedEntities;
         this.camera = camera;
         this.commandPanel = commandPanel;
         this.moveMarkerFactory = moveMarkerFactory; 
+        this.teamContext = teamContext;
     }
     
     // Select our units' target to attack or move towards. (Mouse 1)
@@ -106,7 +108,7 @@ public class SelectionHandler : ISelectionEvent
         else // When the target is entity
         {
             foreach (var unit in selectedEntities)
-                if (unit is ITargetor targetor && unit.GetTeam() == Player.Team)
+                if (unit is ITargetor targetor && unit.GetTeam() == teamContext.Team)
                     targetor.SetTarget(target);
         }
     }
@@ -145,9 +147,9 @@ public class SelectionHandler : ISelectionEvent
 
         if (currentSelectedTeam != entity.GetTeam())
         {
-            if(currentSelectedTeam == Player.Team)
+            if(currentSelectedTeam == teamContext.Team)
                 return false;
-            else if(entity.GetTeam() == Player.Team)
+            else if(entity.GetTeam() == teamContext.Team)
                 DeselectAllEntities();
         }
 

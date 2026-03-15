@@ -101,7 +101,7 @@ public class UnitHarvestState : UnitStateBase
 
     private void CarryResourceToHQ()
     {
-        blackBoard.SetTarget(new Target(Player.HQ));
+        blackBoard.SetTarget(new Target(blackBoard.TeamContext.HeadQuarters));
         stateMachine.ChangeState<UnitMoveState>();
     }
 }
