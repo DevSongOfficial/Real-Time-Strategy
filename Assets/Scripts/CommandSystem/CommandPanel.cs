@@ -17,10 +17,14 @@ public sealed class CommandPanel : MonoBehaviour
     private ISelectable currentEntity;
     private List<CommandData> currentCommands;
 
+    private CommandExecutor commandExecutor;
+
     private void Awake()
     {
+        commandExecutor = new CommandExecutor();
+
         foreach (var button in commandButtons)
-            button.Setup(this);
+            button.Setup(HandleCommandButtonClick);
     }
 
     public void Setup(IModeTransitionRequester transitionRequester, TeamContext teamContext)
@@ -45,28 +49,14 @@ public sealed class CommandPanel : MonoBehaviour
 
     public void HandleCommandButtonClick(CommandData commandRequested)
     {
-        OnCommandButtonClicked?.Invoke();
+        var context = new CommandExecutionContext(
+            currentEntity,
+            transitionRequester,
+            onBuildingConstructionButtonClicked:  buildingData => OnBuildingConstructionButtonClicked?.Invoke(buildingData)
+        );
 
-        switch (commandRequested)
-        {
-            case BuildCommandData command:
-                OnBuildingConstructionButtonClicked?.Invoke(command.BuildingData);
-                transitionRequester.RequestTransition(Mode.Build);
-                currentEntity.ExecuteCommand(command);
-                break;
-            case UnitTrainCommandData command:
-                currentEntity.ExecuteCommand(command);
-                break;
-            case DemolishCommandData command:
-                currentEntity.ExecuteCommand(command);
-                break;
-            case SpawnPositionSetCommandData:
-                transitionRequester.RequestTransition(Mode.SetSpawnPoint);
-                break;
-            case SelectTargetCommandData:
-                transitionRequester.RequestTransition(Mode.SelectTarget);
-                break;
-        }
+        var succeeded = commandExecutor.TryExecute(commandRequested, context);
+        if(succeeded) OnCommandButtonClicked?.Invoke();
     }
 
     public void DisableAllButtons()

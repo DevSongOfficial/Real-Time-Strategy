@@ -6,16 +6,17 @@ using UnityEngine.UI;
 
 public class CommandButton : MonoBehaviour
 {
-    private CommandPanel commandPanel;
-    private CommandData command; // current command
+    private event Action<CommandData> onClick;
+
+    private CommandData command;        // current command
 
     [SerializeField] private Button button;
     [SerializeField] private Image image;
     [SerializeField] private TextMeshProUGUI textMeshPro;
 
-    public void Setup(CommandPanel commandPanel)
+    public void Setup(Action<CommandData> onClick)
     {
-        this.commandPanel = commandPanel;
+        this.onClick = onClick;
 
         if(button == null)
             button = GetComponent<Button>();
@@ -33,10 +34,15 @@ public class CommandButton : MonoBehaviour
 
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(OnClicked);
+
+        button.interactable = true;
     }
 
     public void Disable()
     {
+        button.interactable = false;
+        
+        command = null;
         image.sprite = null;
         textMeshPro.text = "Not Assigned";
 
@@ -45,6 +51,6 @@ public class CommandButton : MonoBehaviour
 
     private void OnClicked()
     {
-        commandPanel.HandleCommandButtonClick(command);
+        onClick?.Invoke(command);
     }
 }
