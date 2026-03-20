@@ -7265,7 +7265,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   numberOfUnitOnStart: 1
-  unitData: {fileID: 11400000, guid: 17db0492f4acd9548a653ef07fc04dcd, type: 2}
+  unitData: {fileID: 11400000, guid: dc1b73eb39b3afe49bfb14b45b824142, type: 2}
   goldMineData: {fileID: 11400000, guid: 409e10036e6932d43aeab14a3db22a03, type: 2}
   redTeamBuildingData: {fileID: 11400000, guid: 0abf40482913615419e4c89cf938d6d5, type: 2}
   headquartersData: {fileID: 11400000, guid: f384682b43bfa92489042729dfaa94e5, type: 2}

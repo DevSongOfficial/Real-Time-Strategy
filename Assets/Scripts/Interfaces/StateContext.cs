@@ -5,14 +5,14 @@ using UnityEngine;
 public interface IUnitStateContext
 {
     // Transform
-    public Vector3 GetPosition();
+    Vector3 GetPosition();
     void LookAt(Vector3 target);
     int CaculateContactDistance(ITarget target);
     int CaculateContactDistance(Target target);
 
-
     // NavMeshAgent
     void SetDestination(Vector3 destination);
+    void SetDestination(Target building);
     void ClearDestination();
     float GetRemainingDistance();
     bool HasArrived(float tolerance = 0.1f);

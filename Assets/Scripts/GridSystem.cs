@@ -57,7 +57,7 @@ public sealed class GridSystem
         return true;
     }
 
-    private bool CanPlace(Vector2Int cellPosition)
+    public bool CanPlace(Vector2Int cellPosition)
     {
         return !occupiedCells.Contains(cellPosition);
     }
@@ -157,6 +157,7 @@ public sealed class GridSystem
         }
     }
 
+    // Converts the hovered center cell into the building footprint's bottom-left origin cell.
     public Vector2Int MouseToOrigin(Vector2Int mouseCell, Vector2Int size)
     {
         int ox = size.x / 2;

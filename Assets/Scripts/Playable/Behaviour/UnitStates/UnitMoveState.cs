@@ -14,7 +14,11 @@ public class UnitMoveState : UnitStateBase
 
     public override void Enter()
     {
-        stateContext.SetDestination(blackBoard.Target.GetPosition());
+        // temp
+        if (blackBoard.Target.Entity is Building ) 
+            stateContext.SetDestination(blackBoard.Target);
+        else
+            stateContext.SetDestination(blackBoard.Target.GetPosition());
 
         if (stateContext.HasArrived()) return;
         if (stateMachine.PreviousState == stateMachine.CurrentState) return;
@@ -31,14 +35,22 @@ public class UnitMoveState : UnitStateBase
     {
         base.Update();
         var nextState = stateMachine.DetermineNextState();
+
         if (nextState == stateMachine.AttackState)
         {
             var contactDistance = stateContext.CaculateContactDistance(blackBoard.Target);
-            stateContext.SetDestination(blackBoard.Target.GetPosition());
+
+            // temp
+            if (blackBoard.Target.Entity is Building)
+                stateContext.SetDestination(blackBoard.Target);
+            else
+                stateContext.SetDestination(blackBoard.Target.GetPosition());
+
             if (stateContext.GetRemainingDistance() - contactDistance * 0.5f < blackBoard.BaseData.Combat.AttackRange)
             {
                 if(blackBoard.attackCooldown <= 0)
                     stateMachine.ChangeState<UnitAttackState>();
+                
                 else
                 {
                     stateContext.CrossFadeAnimation(blackBoard.BaseData.Combat.AttackIdleAnimation, 0.05f, 0);

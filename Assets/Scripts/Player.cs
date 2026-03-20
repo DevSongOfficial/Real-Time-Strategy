@@ -32,7 +32,7 @@ public sealed class Player : MonoBehaviour
     [Header("Grid System")]
     [SerializeField] private Grid grid;
     [SerializeField] private Mesh quadMesh;
-
+    [Space]
     // GameObject following mouse cursor position
     [SerializeField] private Transform mouseIndicator_World;
 
@@ -134,7 +134,7 @@ public sealed class Player : MonoBehaviour
         placementPresenter.OnPlacementCanceled += (Vector3 finishedPosition) => stateMachine.RequestTransition(Mode.Normal);
         placementPresenter.OnPlacementRequested += (ITarget requestedBuilding) => stateMachine.RequestTransition(Mode.Normal);
 
-        unitFactory                     = new UnitFactory(selectionHandler, selectionIndicatorFactory, placementPresenter, profilePanel);
+        unitFactory                     = new UnitFactory(selectionHandler, selectionIndicatorFactory, placementPresenter, profilePanel, gridSystem);
         unitGenerator                   = new UnitGenerator(unitFactory, entityRegistry, myTeam.CapacitySlots);
         unitGenerator.OnUnitGenerated   += healthBarGenerator.GenerateAndSetTargetUnit;
         
@@ -162,7 +162,7 @@ public sealed class Player : MonoBehaviour
     private void Start()
     {
         unitGenerator.GenerateWithRandomPosition(unitData, myTeam, numberOfUnitOnStart);
-        unitGenerator.GenerateWithRandomPosition(unitData, teamContext_Red, numberOfUnitOnStart);
+        //unitGenerator.GenerateWithRandomPosition(unitData, teamContext_Red, numberOfUnitOnStart);
 
         var temp_HQPosition = new Vector3(30, 0.5f, 30);
         if (placementPresenter.TryPlace(headquartersData, myTeam, new Vector3(30, 0.5f, 30), out Building HQ) == PlacementResult.Success)

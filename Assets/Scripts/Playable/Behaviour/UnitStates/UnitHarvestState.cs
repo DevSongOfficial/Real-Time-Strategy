@@ -29,6 +29,8 @@ public class UnitHarvestState : UnitStateBase
         if(!resourceProvider.IsRegistered(resourceCarrier))
             AssignResourceProvider(resourceProvider);
 
+        stateContext.LookAt(resourceProvider.transform.position);
+
         harvestTime = resourceProvider.GetData().TimeToHarvest;
         stateContext.CrossFadeAnimation("Dig", 0.5f, 0);
     }

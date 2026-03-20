@@ -20,6 +20,7 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
     public event Action<Unit> OnDestroyed;
     public event Action<Unit> OnDeathRequested;
 
+    private GridSystem gridSystem;
     private GameObject selectionIndicator;
     private HealthSystem healthSystem;
     protected IPlacementEvent placementEvent;
@@ -45,13 +46,14 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
         PositionDeltaY = collider.bounds.extents.y;
     }
 
-    public Unit SetUp(EntityData data, TeamContext teamContext, GameObject selectionIndicator, EntityProfilePanel profilePanel, IPlacementEvent placementEvent)
+    public Unit SetUp(EntityData data, TeamContext teamContext, GameObject selectionIndicator, EntityProfilePanel profilePanel, IPlacementEvent placementEvent, GridSystem gridSystem)
     {
         this.data = data;
         this.selectionIndicator = selectionIndicator;
         this.placementEvent = placementEvent;
         this.profilePanel = profilePanel;
         this.teamContext = teamContext;
+        this.gridSystem = gridSystem;
 
         blackBoard = new BlackBoard(data, coroutineExecutor, teamContext);
         stateMachine = new UnitStateMachine(this, blackBoard);
@@ -114,8 +116,10 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
     }
     public int CaculateContactDistance(ITarget target)
     {
-        if (target == null) return -1;
-        return target.GetData().RadiusOnTerrain + blackBoard.BaseData.RadiusOnTerrain;
+        if  (target is Building) return blackBoard.BaseData.RadiusOnTerrain;
+        else if (target is Unit) return target.GetData().RadiusOnTerrain + blackBoard.BaseData.RadiusOnTerrain;
+
+        return -1;
     }
     public int CaculateContactDistance(Target target)
     {
@@ -128,15 +132,59 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
     public void SetDestination(Vector3 destination)
     {
         agent.isStopped = false;
-        agent?.SetDestination(destination);
+        agent.SetDestination(destination);
     }
+
+    private float offset = 0.1f;
+    public void SetDestination(Target target)
+    {
+        if (target.Entity is not Building building)
+            return;
+
+        Vector3 destination = target.GetPosition();
+        Vector2Int cellPosition = building.GetCellPosition();
+        Vector2Int cellSize = building.GetData().CellSize;
+
+        Vector2Int origin = gridSystem.MouseToOrigin(cellPosition, cellSize);
+
+        Vector3 min = gridSystem.CellToWorld(new Vector3Int(origin.x, 0, origin.y));
+        Vector3 max = gridSystem.CellToWorld(new Vector3Int(origin.x + cellSize.x, 0, origin.y + cellSize.y));
+
+        // Find the closest cell' position.
+        float x = Mathf.Clamp(transform.position.x, min.x, max.x);
+        float z = Mathf.Clamp(transform.position.z, min.z, max.z);
+        Vector3 closest = new Vector3(x, transform.position.y, z);
+
+        Vector3 direction = (closest - transform.position).normalized;
+
+        // Set destination
+        destination = closest;
+        if (direction.sqrMagnitude > 0.0001f)    // if direction is valid:
+            destination -= direction * offset;  // destination이 현재는 건물이 차지하는 cell 중 가장 가까운 cell이므로,
+                                                // so move it back toward the unit by the offset to place it just outside the bounds.
+
+        //if (NavMesh.SamplePosition(destination, out NavMeshHit hit, 1.0f, NavMesh.AllAreas))
+        //    destination = hit.position;
+
+        SetDestination(destination);
+    }
+    
+
     public void ClearDestination() 
     { 
         agent.isStopped = true;
         agent.ResetPath();
     }
-    public float GetRemainingDistance() => agent.remainingDistance;
-    public bool HasArrived(float tolerance = 0.1f) => !agent.pathPending && agent.remainingDistance <= agent.stoppingDistance + tolerance;
+    public float GetRemainingDistance()
+    {
+        // return agent.remainingDistance;
+
+        return Vector3.Distance(agent.destination, transform.position);
+    }
+    public bool HasArrived(float tolerance = 0.1f)
+    {
+        return !agent.pathPending && agent.remainingDistance <= agent.stoppingDistance + tolerance;
+    }
 
     #endregion
 

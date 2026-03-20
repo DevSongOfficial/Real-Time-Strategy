@@ -7,12 +7,15 @@ public class UnitFactory : PlayableAbsFactory<Unit>
 {
     private readonly IPlacementEvent placementEvent;
     private readonly EntityProfilePanel profilePanel;
+    private readonly GridSystem gridSystem;
 
-    public UnitFactory(ISelectionEvent selectionEvent, SelectionIndicatorFactory selectionIndicatorFactory, IPlacementEvent placementEvent, EntityProfilePanel profilePanel)
+    public UnitFactory(ISelectionEvent selectionEvent, SelectionIndicatorFactory selectionIndicatorFactory, 
+        IPlacementEvent placementEvent, EntityProfilePanel profilePanel,GridSystem gridSystem)
     {
         this.selectionIndicatorFactory = selectionIndicatorFactory;
         this.placementEvent = placementEvent;
         this.profilePanel = profilePanel;
+        this.gridSystem = gridSystem;
 
         base.Setup(selectionEvent, selectionIndicatorFactory);
     }
@@ -28,6 +31,6 @@ public class UnitFactory : PlayableAbsFactory<Unit>
         selectionIndicator.GetChild(0).localScale = (Vector3.one * data.RadiusOnTerrain).WithZ(1);
         selectionIndicator.gameObject.SetActive(false);
 
-        return unit.SetUp(data, teamContext, selectionIndicator.gameObject, profilePanel, placementEvent);
+        return unit.SetUp(data, teamContext, selectionIndicator.gameObject, profilePanel, placementEvent, gridSystem);
     }
 }

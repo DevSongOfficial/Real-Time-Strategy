@@ -12,11 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61594700613c48a4c83f2c31a8c39ff5, type: 3}
   m_Name: Building2Data
   m_EditorClassIdentifier: 
-  <Team>k__BackingField: 0
-  <DisplayName>k__BackingField: Building 2
-  <RadiusOnTerrain>k__BackingField: 3
-  <SelectionIndicatorPositionOffset>k__BackingField: {x: 0, y: 0, z: 0}
   <Prefab>k__BackingField: {fileID: 5758938310227597527, guid: 4908897b143a67841a6d2e98ba0cb86e, type: 3}
+  <DisplayName>k__BackingField: Building 2
+  <ProfileSprite>k__BackingField: {fileID: 0}
+  <RadiusOnTerrain>k__BackingField: 2
+  <SelectionIndicatorPositionOffset>k__BackingField: {x: 0, y: 0, z: 0}
+  <CommandSet>k__BackingField: []
   <MaxHealth>k__BackingField: 100
   <Combat>k__BackingField: {fileID: 11400000, guid: 6cb5b9cdf07257844966f082b6a892f4, type: 2}
+  <Movement>k__BackingField: {fileID: 0}
   <CellSize>k__BackingField: {x: 1, y: 1}
+  <ConsructionTime>k__BackingField: 4
+  <GoldRequired>k__BackingField: 0
+  <WoodRequired>k__BackingField: 0
+  <DemolitionTime>k__BackingField: 4
+  <GoldRefund>k__BackingField: 0
+  <WoodRefund>k__BackingField: 0
