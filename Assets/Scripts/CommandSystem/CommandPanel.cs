@@ -38,9 +38,6 @@ public sealed class CommandPanel : MonoBehaviour
         currentEntity = selectable;
         currentCommands = currentEntity.GetData().CommandSet;
 
-        Debug.Log(currentEntity);
-
-
         if (selectable.GetTeam() == teamContext.Team)
             RefreshCommandButtons();
         else

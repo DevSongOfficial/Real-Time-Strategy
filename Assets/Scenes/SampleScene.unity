@@ -7264,7 +7264,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2391b714b488aa40b9795c0c8fda98a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numberOfUnitOnStart: 6
+  numberOfUnitOnStart: 1
   unitData: {fileID: 11400000, guid: 17db0492f4acd9548a653ef07fc04dcd, type: 2}
   goldMineData: {fileID: 11400000, guid: 409e10036e6932d43aeab14a3db22a03, type: 2}
   redTeamBuildingData: {fileID: 11400000, guid: 0abf40482913615419e4c89cf938d6d5, type: 2}

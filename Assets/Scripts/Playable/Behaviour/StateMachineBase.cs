@@ -54,6 +54,7 @@ public abstract class StateMachineBase
 
     public void Update()
     {
+        Debug.Log(CurrentState.GetType());
         CurrentState?.Update();
     }
 }
@@ -106,6 +107,8 @@ public sealed class UnitStateMachine : StateMachineBase
     public UnitStateBase DetermineNextState()
     {
         Target target = blackBoard.Target;
+
+        if (target.Entity is ResourceProvider)
 
         if (target.IsGround)
             return IdleState;

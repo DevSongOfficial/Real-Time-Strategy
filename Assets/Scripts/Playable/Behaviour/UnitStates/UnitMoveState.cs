@@ -16,8 +16,10 @@ public class UnitMoveState : UnitStateBase
     {
         stateContext.SetDestination(blackBoard.Target.GetPosition());
 
-        if (stateMachine.PreviousState != stateMachine.CurrentState)
-            stateContext.CrossFadeAnimation(blackBoard.BaseData.Movement.RunningAnimation, 0.1f, 0);
+        if (stateContext.HasArrived()) return;
+        if (stateMachine.PreviousState == stateMachine.CurrentState) return;
+
+        stateContext.CrossFadeAnimation(blackBoard.BaseData.Movement.RunningAnimation, 0.1f, 0);
     }
 
     public override void Exit()
@@ -28,7 +30,6 @@ public class UnitMoveState : UnitStateBase
     public override void Update()
     {
         base.Update();
-
         var nextState = stateMachine.DetermineNextState();
         if (nextState == stateMachine.AttackState)
         {
