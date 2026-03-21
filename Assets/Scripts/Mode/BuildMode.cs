@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public sealed class BuildMode : ModeBase
 {
+    public event Action<ITarget> OnBuildingPlaced;
+
     private readonly InputManager inputManager;
     private readonly PlacementPresenter presenter;
     private TeamContext teamContext;
@@ -19,11 +21,14 @@ public sealed class BuildMode : ModeBase
         this.presenter = presenter;
 
         this.useEditorPlacement = useEditorPlacement;
+
+        presenter.OnPlacementRequested += HandlePlacementRequested;
     }
 
     public override void Enter()
     {
         presenter.Enter();
+        
     }
 
     public override void Exit()
@@ -63,8 +68,9 @@ public sealed class BuildMode : ModeBase
         switch (result)
         {
             case PlacementResult.Success:
+                break;
             case PlacementResult.InvalidBuildingData:
-                return;
+                break;
             case PlacementResult.GridOccupied:
                 Debug.Log("Grid Occupied");
                 break;
@@ -72,5 +78,10 @@ public sealed class BuildMode : ModeBase
                 Debug.Log("Resource Needed");
                 break;
         }
+    }
+
+    private void HandlePlacementRequested(ITarget target)
+    {
+        OnBuildingPlaced?.Invoke(target);
     }
 }

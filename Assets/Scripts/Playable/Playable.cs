@@ -5,10 +5,10 @@ using UnityEngine.UIElements;
 
 public enum Team
 {
-    None, // Neutral
-    Red,
-    Green,
-    Blue,
+    None    = 0, // Neutral
+    Red     = 1,
+    Green   = 2,
+    Blue    = 3,
 }
 
 public interface ISelectable // Selectable by mouse0 or keyboard or ... .

@@ -1,9 +1,11 @@
 using BuildingSystem;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class MapEditor : MonoBehaviour
 {
     [SerializeField] private GameManager GameManager;
+    [SerializeField] private MapSaveLoad SaveLoad;
     [Space]
 
     [SerializeField] private CameraController cameraController;
@@ -19,9 +21,12 @@ public class MapEditor : MonoBehaviour
 
                      private BuildMode buildMode;
 
+                     private List<Building> placedBuildings;
+
     // Team
     public Team CurrentTeam { get; private set; } = Team.None;
     public void ShiftTeam(Team team) => CurrentTeam = team;
+
 
 
     private void Awake()
@@ -37,6 +42,18 @@ public class MapEditor : MonoBehaviour
 
         // TODO: need dedicated fsm & states.
         buildMode = new BuildMode(GameManager.GetTeamContext(CurrentTeam), inputManager, placementPresenter, useEditorPlacement: true);
+        buildMode.OnBuildingPlaced += BuildMode_OnBuildingPlaced;
+
+        placedBuildings = new List<Building>();
+    }
+
+    private void BuildMode_OnBuildingPlaced(ITarget obj)
+    {
+        var building = obj as Building;
+        placedBuildings.Add(building);
+        
+        var map = SaveLoad.CreateMapData(placedBuildings, null);
+        SaveLoad.SaveMapData(map);
     }
 
     void Start()
@@ -51,6 +68,7 @@ public class MapEditor : MonoBehaviour
         buildMode.HandleInput();
     }
 
+    // Buttons' event action
     public void AddBuilding(BuildingData data)
     {
         placementPresenter.SelectBuilding(data);

@@ -148,6 +148,7 @@ public sealed class PlacementPresenter : IPlacementEvent
         buildingData = null;
 
         OnPlacementRequested?.Invoke(building);
+        Debug.Log("Requested");
 
         return PlacementResult.Success;
     }

@@ -5,6 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "EntityData", menuName = "Scriptable Objects/Entity Data")]
 public class EntityData : ScriptableObject
 {
+    [field: Header("Identity")]
+    [field: SerializeField] public string Id { get; private set; }
     [field: SerializeField] public Transform Prefab { get; private set; }
     [field: Space]
     [field: SerializeField] public string DisplayName { get; private set; }
