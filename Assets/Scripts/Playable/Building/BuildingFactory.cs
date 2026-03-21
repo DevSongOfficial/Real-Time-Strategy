@@ -11,23 +11,22 @@ public interface IBuildingPreviewFactory
 
 public class BuildingFactory : PlayableAbsFactory<Building>, IBuildingPreviewFactory
 {
-    private event Func<UnitGenerator> getUnitGenerator;
+    private readonly Func<UnitGenerator> getUnitGenerator;
     
     private readonly EntityProfilePanel profilePanel;
     private readonly RallyPointSetter spawnPositionSetter;
 
     public BuildingFactory(
-        Func<UnitGenerator> getUnitGenerator, 
-        ISelectionEvent selectionHandler, 
-        SelectionIndicatorFactory selectionIndicatorFactory, 
-        EntityProfilePanel profilePanel, 
-        RallyPointSetter spawnPositionSetter)
+        SelectionIndicatorFactory selectionIndicatorFactory,
+        Func<UnitGenerator> getUnitGenerator = null,  
+        EntityProfilePanel profilePanel= null, 
+        RallyPointSetter spawnPositionSetter = null)
     {
         this.getUnitGenerator = getUnitGenerator;
         this.profilePanel = profilePanel;
         this.spawnPositionSetter = spawnPositionSetter;
 
-        base.Setup(selectionHandler, selectionIndicatorFactory);
+        base.Setup(selectionIndicatorFactory);
     }
 
     public override Building Create(EntityData data, TeamContext teamContext)
@@ -35,21 +34,17 @@ public class BuildingFactory : PlayableAbsFactory<Building>, IBuildingPreviewFac
         var prefab = data.Prefab.GetComponent<Building>();
         var building = GameObject.Instantiate<Building>(prefab);
 
-        // TODO: Seperate codes?
-        // Create Selection Indicator. 
-        var selectionIndicator = selectionIndicatorFactory.Create();
-        selectionIndicator.parent = building.transform;
-        selectionIndicator.localPosition = Vector3.zero.WithY(-building.PositionDeltaY);
-        selectionIndicator.GetChild(0).localScale = (Vector3.one * data.RadiusOnTerrain).WithZ(1);
-        selectionIndicator.gameObject.SetActive(false);
+        // Set selection indicator.
+        var selectionIndicator = CreateSelectionIndicator(building);
 
-        building.SetUp(data, selectionIndicator.gameObject, profilePanel, teamContext);
+
+        building.SetUp(data, selectionIndicator, profilePanel, teamContext);
 
         // For those spawning units e.g., barracks
         if (building is IUnitGenerator unitGenerator)
         {
-            unitGenerator.SetUnitGenerator(getUnitGenerator.Invoke());
-            unitGenerator.SetSpawnPositionSetter(spawnPositionSetter);
+            unitGenerator?.SetUnitGenerator(getUnitGenerator.Invoke());
+            unitGenerator?.SetSpawnPositionSetter(spawnPositionSetter);
         }
 
         return building;

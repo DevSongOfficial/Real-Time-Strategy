@@ -10,12 +10,8 @@ using static UnityEngine.EventSystems.EventTrigger;
 [RequireComponent(typeof(NavMeshAgent))]
 public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
 {
-    [SerializeField] private CoroutineExecutor coroutineExecutor;
     [SerializeField] private Animator animator;
     [SerializeField] private NavMeshAgent agent;
-    [SerializeField] private new Collider collider; // collider for calculating position delta.
-    public float PositionDeltaY { get; private set; }
-
 
     public event Action<Unit> OnDestroyed;
     public event Action<Unit> OnDeathRequested;
@@ -29,21 +25,15 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
     // Resource
     protected ResourceBank resourceBank; // For managing this unit's currently holding resources.
     
-    protected virtual void Awake()
+    protected override void Awake()
     {
-        if (coroutineExecutor != null)
-            coroutineExecutor = GetComponent<CoroutineExecutor>();
+        base.Awake();
 
         if(agent == null)
             agent = GetComponent<NavMeshAgent>();
 
         if(animator == null)
             animator = GetComponent<Animator>();
-
-        if (collider == null)
-            collider = GetComponentInChildren<Collider>();
-
-        PositionDeltaY = collider.bounds.extents.y;
     }
 
     public Unit SetUp(EntityData data, TeamContext teamContext, GameObject selectionIndicator, EntityProfilePanel profilePanel, IPlacementEvent placementEvent, GridSystem gridSystem)

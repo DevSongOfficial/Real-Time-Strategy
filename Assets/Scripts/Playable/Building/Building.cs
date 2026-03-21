@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext, IDamageable
 {
-    [SerializeField] protected CoroutineExecutor coroutineExecutor;
-    [SerializeField] private new Collider collider;
     protected HealthSystem healthSystem;
     protected GameObject selectionIndicator;
     protected EntityProfilePanel profilePanel;
@@ -22,21 +20,11 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext, 
     public bool IsUnderConstruction => (stateMachine.CurrentState is BuildingUnderConstructionState);
     public IState CurrentState => stateMachine.CurrentState;
 
-    // TODO: I think it's better to put this variable in EntityData and write on my own. (not getting it through collider)
-    public float PositionDeltaY { get; private set; }
     private Vector2Int cellPosition;
 
-
-    // Better not use Start().
-    protected virtual void Awake()
+    protected override void Awake()
     {
-        if (coroutineExecutor != null)
-            coroutineExecutor = GetComponent<CoroutineExecutor>();
-
-        if (collider == null)
-            collider = GetComponentInChildren<Collider>();
-
-        PositionDeltaY = collider.bounds.extents.y;
+        base.Awake();
     }
 
     private void Update()
@@ -157,7 +145,7 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext, 
     #region Transform
     public override void SetPosition(Vector3 position)
     {
-        transform.position = position.WithY(PositionDeltaY);
+        transform.position = position.WithY(GetPositionDeltaY());
     }
 
     public Vector3 GetPosition()

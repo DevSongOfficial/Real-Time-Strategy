@@ -4,15 +4,22 @@ using UnityEngine;
 
 public abstract class PlayableAbsFactory<T> where T : Playable
 {
-    protected ISelectionEvent selectionEvent;
     protected SelectionIndicatorFactory selectionIndicatorFactory;
 
 
-    protected void Setup(ISelectionEvent selectionEvent, SelectionIndicatorFactory selectionIndicatorFactory)
+    protected void Setup(SelectionIndicatorFactory selectionIndicatorFactory)
     {
-        this.selectionEvent = selectionEvent;
         this.selectionIndicatorFactory = selectionIndicatorFactory;
+    }
 
+    protected GameObject CreateSelectionIndicator(Playable playable, Vector3 offset = default)
+    {
+        var indicator = selectionIndicatorFactory.Create();
+        indicator.SetParent(playable.transform, false);
+        indicator.localPosition = Vector3.zero.WithY(-playable.GetPositionDeltaY()) + offset;
+        indicator.GetChild(0).localScale = (Vector3.one * playable.GetData().RadiusOnTerrain).WithZ(1);
+        indicator.gameObject.SetActive(false);
+        return indicator.gameObject;
     }
 
     public abstract T Create(EntityData data, TeamContext teamContext);

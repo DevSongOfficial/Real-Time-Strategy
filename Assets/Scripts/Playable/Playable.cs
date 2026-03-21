@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -31,6 +32,9 @@ public interface ITransformProvider
 
 public abstract class Playable : MonoBehaviour, ISelectable, ITransformProvider
 {
+    [SerializeField] protected new Collider collider;
+    [SerializeField] protected CoroutineExecutor coroutineExecutor;
+
     // Entity Data
     public EntityData GetData() => data;
     protected EntityData data;
@@ -53,7 +57,18 @@ public abstract class Playable : MonoBehaviour, ISelectable, ITransformProvider
     public abstract bool CanSelect();
 
 
+    // TODO: I think it's better to put this variable in EntityData and write on my own. (not getting it through collider)
+    public float GetPositionDeltaY() => collider.bounds.extents.y;
     public Transform GetTransform() { return transform; }
     public virtual void SetPosition(Vector3 position) { transform.position = position; }
     public void SetRotation(Quaternion rotation) {  transform.rotation = rotation; }
+
+    protected virtual void Awake()
+    {
+        if (collider == null)
+            collider = GetComponentInChildren<Collider>();
+
+        if (coroutineExecutor != null)
+            coroutineExecutor = GetComponent<CoroutineExecutor>();
+    }
 }

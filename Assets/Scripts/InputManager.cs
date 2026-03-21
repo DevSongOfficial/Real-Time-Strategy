@@ -13,10 +13,15 @@ public sealed class InputManager
     public InputManager(Camera camera, RectTransform nonClickableArea)
     {
         this.camera = camera;
-         
+        
         nonClickableAreas = new List<RectTransform>();
         for (int i = 0; i < nonClickableArea.childCount; i++)
             nonClickableAreas.Add(nonClickableArea.GetChild(i) as RectTransform);
+    }
+
+    public InputManager(Camera camera)
+    {
+        this.camera = camera;
     }
 
     public bool GetMouseButton(int button)

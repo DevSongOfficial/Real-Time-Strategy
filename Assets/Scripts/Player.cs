@@ -16,32 +16,27 @@ public sealed class Player : MonoBehaviour
 
     [Header("Scene Refs")]
     [SerializeField] private BarracksData headquartersData;
-    [Space]
+    [SerializeField] private GameManager GameManager;
+    [Header("UI")]
     [SerializeField] private Canvas canvas;
     [SerializeField] private EntityProfilePanel profilePanel;
     [SerializeField] private CommandPanel commandPanel;
     [SerializeField] private Transform healthBarContainer;
     [SerializeField] private RectTransform nonClickableAreas;
     [SerializeField] private PlacementView placementView;
-    [Header("Resource & Capacity")]
-    [SerializeField] private ResourceView resourceView;
-    [SerializeField] private int maxUnitCapacityOnStart;
+    
     [Space]
     [SerializeField] private CameraController cameraController;
-    
+
     [Header("Grid System")]
-    [SerializeField] private Grid grid;
-    [SerializeField] private Mesh quadMesh;
+    [SerializeField] private GridSystem gridSystsem;
     [Space]
     // GameObject following mouse cursor position
     [SerializeField] private Transform mouseIndicator_World;
 
     // Team
-    private TeamContext myTeam => teamContext_Green;
-    private TeamContext teamContext_Green;
-    private TeamContext teamContext_Red;
-    private TeamContext teamContext_Blue;
-    private TeamContext teamContext_Neutral;
+    [SerializeField] private Team playerTeam = Team.Green;
+    private TeamContext myTeam => GameManager.GetTeamContext(playerTeam);
     
     // Entity Regsitry includes diffrent type of entity containers.
     private EntityRegistry entityRegistry;
@@ -76,42 +71,9 @@ public sealed class Player : MonoBehaviour
     private RallyPointSetter rallyPointSetter;
     [SerializeField] private Transform rallyPointIndicator;
 
-    private void InitializeTeams()
-    {
-        // Green (my team)
-        {
-            var team = Team.Green;
-            var resourceBank = new ResourceBank(resourceView);
-            var capacitySlots = new UnitCapacitySlots(maxUnitCapacityOnStart, resourceView);
-            teamContext_Green = new TeamContext(team, resourceBank, capacitySlots);
-        }
-        // Red 
-        {
-            var team = Team.Red;
-            var resourceBank = new ResourceBank(resourceView);
-            var capacitySlots = new UnitCapacitySlots(maxUnitCapacityOnStart, resourceView);
-            teamContext_Red = new TeamContext(team, resourceBank, capacitySlots);
-        }
-        // Blue 
-        {
-            var team = Team.Blue;
-            var resourceBank = new ResourceBank(resourceView);
-            var capacitySlots = new UnitCapacitySlots(maxUnitCapacityOnStart, resourceView);
-            teamContext_Blue = new TeamContext(team, resourceBank, capacitySlots);
-        }
-        // Neutral 
-        {
-            var team = Team.None;
-            var resourceBank = new ResourceBank(resourceView);
-            var capacitySlots = new UnitCapacitySlots(maxUnitCapacityOnStart, resourceView);
-            teamContext_Neutral = new TeamContext(team, resourceBank, capacitySlots);
-        }
-    }
-
+    
     private void Awake()
     {
-        InitializeTeams();
-
         inputManager = new InputManager(cameraController.Camera, nonClickableAreas);
         cameraController.Setup(inputManager);
 
@@ -121,20 +83,19 @@ public sealed class Player : MonoBehaviour
         
         rallyPointSetter = new RallyPointSetter(rallyPointIndicator, mouseIndicator_World);
         moveMarkerFactory    = new MoveMarkerFactory();
-        buildingFactory      = new BuildingFactory(() => unitGenerator, selectionHandler, selectionIndicatorFactory, profilePanel, rallyPointSetter);
+        buildingFactory      = new BuildingFactory(selectionIndicatorFactory, () => unitGenerator, profilePanel, rallyPointSetter);
 
         dragEventHandler    = new DragEventHandler(entityRegistry.GetTransformsOfUnits(), cameraController.Camera, canvas, inputManager);
-        selectionHandler    = new SelectionHandler(entityRegistry.GetSelectedEntities(), cameraController.Camera, commandPanel, moveMarkerFactory, teamContext_Green);
+        selectionHandler    = new SelectionHandler(entityRegistry.GetSelectedEntities(), cameraController.Camera, commandPanel, moveMarkerFactory, myTeam);
 
         // Placement
         placementView.SetUp(buildingFactory);
         placementView.ToggleUIPreview(false);
-        gridSystem          = new GridSystem(grid, quadMesh);
         placementPresenter  = new PlacementPresenter(placementView, commandPanel, buildingFactory, gridSystem, inputManager);
         placementPresenter.OnPlacementCanceled += (Vector3 finishedPosition) => stateMachine.RequestTransition(Mode.Normal);
         placementPresenter.OnPlacementRequested += (ITarget requestedBuilding) => stateMachine.RequestTransition(Mode.Normal);
 
-        unitFactory                     = new UnitFactory(selectionHandler, selectionIndicatorFactory, placementPresenter, profilePanel, gridSystem);
+        unitFactory                     = new UnitFactory(selectionIndicatorFactory, placementPresenter, profilePanel, gridSystem);
         unitGenerator                   = new UnitGenerator(unitFactory, entityRegistry, myTeam.CapacitySlots);
         unitGenerator.OnUnitGenerated   += healthBarGenerator.GenerateAndSetTargetUnit;
         
@@ -150,7 +111,7 @@ public sealed class Player : MonoBehaviour
         var selectTargetMode        = new SelectTargetMode(inputManager, selectionHandler, mouseIndicator_World);
         
         stateMachine                = new PlayerStateMachine(normalMode, buildMode, rallyPointSetMode, selectTargetMode);
-        commandPanel.Setup(stateMachine, teamContext_Green);
+        commandPanel.Setup(stateMachine, myTeam);
         stateMachine.SetMode(normalMode);
 
 
@@ -171,8 +132,8 @@ public sealed class Player : MonoBehaviour
         }
 
         var temp_minePosition = new Vector3(34, 0.5f, 34);
-        placementPresenter.TryPlace(goldMineData, teamContext_Neutral,  temp_minePosition, out Building mine);
-        placementPresenter.TryPlace(redTeamBuildingData, teamContext_Red, temp_minePosition + Vector3.back * 4, out Building building);
+        placementPresenter.TryPlace(goldMineData, GameManager.GetTeamContext(Team.Red),  temp_minePosition, out Building mine);
+        placementPresenter.TryPlace(redTeamBuildingData, GameManager.GetTeamContext(Team.Red), temp_minePosition + Vector3.back * 4, out Building building);
         
     }
 

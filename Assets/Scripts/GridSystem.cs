@@ -5,26 +5,22 @@ using CustomResourceManagement;
 using TreeEditor;
 using Unity.Profiling.LowLevel;
 
-// TODO: Player class is getting too big and PlacementPresenter's been getting too many arguments.
-public sealed class GridSystem
+public class GridSystem : MonoBehaviour
 {
     // Hash Set is better
     private readonly HashSet<Vector2Int> occupiedCells = new HashSet<Vector2Int>();
 
-    private readonly Grid grid;
-    private readonly Mesh quadMesh;
+    [SerializeField] private Grid grid;
+    [SerializeField] private Mesh quadMesh;
 
-    private readonly Material greenMaterial;
-    private readonly Material redMaterial;
+    private  Material greenMaterial;
+    private  Material redMaterial;
 
     private readonly List<Matrix4x4> greenMatrices  = new List<Matrix4x4>(64);
     private readonly List<Matrix4x4> redMatrices    = new List<Matrix4x4>(64);
 
-    public GridSystem(Grid grid, Mesh quadMesh)
+    private void Awake()
     {
-        this.grid = grid;
-        this.quadMesh = quadMesh;
-
         greenMaterial = ResourceLoader.GetResource<Material>(Materials.GreenMaterial);
         redMaterial = ResourceLoader.GetResource<Material>(Materials.RedMaterial);
         greenMaterial.enableInstancing = true;

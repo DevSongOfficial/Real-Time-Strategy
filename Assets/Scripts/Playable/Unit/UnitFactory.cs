@@ -9,7 +9,7 @@ public class UnitFactory : PlayableAbsFactory<Unit>
     private readonly EntityProfilePanel profilePanel;
     private readonly GridSystem gridSystem;
 
-    public UnitFactory(ISelectionEvent selectionEvent, SelectionIndicatorFactory selectionIndicatorFactory, 
+    public UnitFactory(SelectionIndicatorFactory selectionIndicatorFactory, 
         IPlacementEvent placementEvent, EntityProfilePanel profilePanel,GridSystem gridSystem)
     {
         this.selectionIndicatorFactory = selectionIndicatorFactory;
@@ -17,7 +17,7 @@ public class UnitFactory : PlayableAbsFactory<Unit>
         this.profilePanel = profilePanel;
         this.gridSystem = gridSystem;
 
-        base.Setup(selectionEvent, selectionIndicatorFactory);
+        base.Setup(selectionIndicatorFactory);
     }
     public override Unit Create(EntityData data, TeamContext teamContext)
     {
@@ -25,12 +25,8 @@ public class UnitFactory : PlayableAbsFactory<Unit>
         var unit = GameObject.Instantiate<Unit>(prefab);
 
         // Set selection indicator.
-        var selectionIndicator = selectionIndicatorFactory.Create();
-        selectionIndicator.parent = unit.transform;
-        selectionIndicator.localPosition = Vector3.zero.WithY(-unit.PositionDeltaY) + data.SelectionIndicatorPositionOffset;
-        selectionIndicator.GetChild(0).localScale = (Vector3.one * data.RadiusOnTerrain).WithZ(1);
-        selectionIndicator.gameObject.SetActive(false);
+        var selectionIndicator = CreateSelectionIndicator(unit, unit.GetData().SelectionIndicatorPositionOffset);
 
-        return unit.SetUp(data, teamContext, selectionIndicator.gameObject, profilePanel, placementEvent, gridSystem);
+        return unit.SetUp(data, teamContext, selectionIndicator, profilePanel, placementEvent, gridSystem);
     }
 }
