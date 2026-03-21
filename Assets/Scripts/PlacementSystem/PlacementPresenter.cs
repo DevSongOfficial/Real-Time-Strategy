@@ -57,6 +57,8 @@ public sealed class PlacementPresenter : IPlacementEvent
         this.inputManager = inputManager;
     }
 
+    public void Enter() { }
+
     public void Exit()
     {
         Cancel();
