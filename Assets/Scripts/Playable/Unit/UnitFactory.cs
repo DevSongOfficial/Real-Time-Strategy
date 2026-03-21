@@ -10,7 +10,9 @@ public class UnitFactory : PlayableAbsFactory<Unit>
     private readonly GridSystem gridSystem;
 
     public UnitFactory(SelectionIndicatorFactory selectionIndicatorFactory, 
-        IPlacementEvent placementEvent, EntityProfilePanel profilePanel,GridSystem gridSystem)
+        IPlacementEvent placementEvent = null, 
+        EntityProfilePanel profilePanel = null,
+        GridSystem gridSystem = null)
     {
         this.selectionIndicatorFactory = selectionIndicatorFactory;
         this.placementEvent = placementEvent;
