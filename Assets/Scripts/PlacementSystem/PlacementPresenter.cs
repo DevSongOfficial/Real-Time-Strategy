@@ -24,6 +24,7 @@ public enum PlacementResult
     InvalidBuildingData,
     GridOccupied,
     InsufficientResources,
+    MissingEditorContext // Failed while editing map
 }
 
 public sealed class PlacementPresenter : IPlacementEvent
@@ -54,11 +55,6 @@ public sealed class PlacementPresenter : IPlacementEvent
         this.commandPanel = commandPanel;
         this.gridSystem = gridSystem;
         this.inputManager = inputManager;
-    }
-
-    public void Enter()
-    {
-
     }
 
     public void Exit()
@@ -99,12 +95,17 @@ public sealed class PlacementPresenter : IPlacementEvent
         placementView.ToggleUIPreview(true);
     }
 
+    public PlacementResult TryPlaceForEditor(TeamContext teamContext)
+    {
+        return TryPlace(buildingData, teamContext, snappedPosition, out var building, spendResources: false);
+    }
+
     public PlacementResult TryPlace(TeamContext teamContext)
     {
         return TryPlace(buildingData, teamContext, snappedPosition, out var building);
     }
 
-    public PlacementResult TryPlace(BuildingData buildingData, TeamContext teamContext, Vector3 position, out Building placed)
+    public PlacementResult TryPlace(BuildingData buildingData, TeamContext teamContext, Vector3 position, out Building placed, bool spendResources = true)
     {
         placed = null;
 
@@ -117,13 +118,15 @@ public sealed class PlacementPresenter : IPlacementEvent
         if (!gridSystem.CanPlace(cellPosition, cellSize))
             return PlacementResult.GridOccupied;
 
-
         // Check resource requirements and spend resources.
-        if (!teamContext.ResourceBank.CanBuild(buildingData))
-            return PlacementResult.InsufficientResources;
+        if(spendResources)
+        {
+            if (!teamContext.ResourceBank.CanBuild(buildingData))
+                return PlacementResult.InsufficientResources;
 
-        teamContext.ResourceBank.SpendResource(ResourceType.Gold, buildingData.GoldRequired);
-        teamContext.ResourceBank.SpendResource(ResourceType.Wood, buildingData.WoodRequired);
+            teamContext.ResourceBank.SpendResource(ResourceType.Gold, buildingData.GoldRequired);
+            teamContext.ResourceBank.SpendResource(ResourceType.Wood, buildingData.WoodRequired);
+        }
 
         // Add to Grid.
         gridSystem.Occupy(cellPosition, cellSize);
