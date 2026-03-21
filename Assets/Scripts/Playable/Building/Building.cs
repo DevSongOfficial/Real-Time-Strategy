@@ -67,16 +67,16 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext, 
     #region Selection
     public override void OnSelected()
     {
-        selectionIndicator.SetActive(false);
-        selectionIndicator.SetActive(true);
+        selectionIndicator?.SetActive(false);
+        selectionIndicator?.SetActive(true);
 
-        profilePanel.RegisterEntity(this);
+        profilePanel?.RegisterEntity(this);
     }
 
     public override void OnDeselected()
     {
-        selectionIndicator.SetActive(false);
-        profilePanel.UnregisterEntity();
+        selectionIndicator?.SetActive(false);
+        profilePanel?.UnregisterEntity();
     }
 
     public override bool CanSelect()
@@ -131,7 +131,7 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext, 
 
     private IEnumerator DestructionRoutine(float delaySeconds)
     {
-        if (profilePanel.CurrentEntity == this as ISelectable)
+        if (profilePanel != null && profilePanel.CurrentEntity == this as ISelectable)
             profilePanel.UnregisterEntity();
 
         yield return new WaitForSeconds(delaySeconds);
