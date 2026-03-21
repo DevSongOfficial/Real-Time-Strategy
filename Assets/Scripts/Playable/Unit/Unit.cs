@@ -64,17 +64,17 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
     #region Selection
     public override void OnSelected()
     {
-        profilePanel.RegisterEntity(this);
+        profilePanel?.RegisterEntity(this);
 
-        selectionIndicator.SetActive(false);
-        selectionIndicator.SetActive(true);
+        selectionIndicator?.SetActive(false);
+        selectionIndicator?.SetActive(true);
     }
 
     public override void OnDeselected()
     {
-        profilePanel.UnregisterEntity();
-
-        selectionIndicator.SetActive(false);
+        profilePanel?.UnregisterEntity();
+            
+        selectionIndicator?.SetActive(false);
     }
 
     public override bool CanSelect()
@@ -218,14 +218,13 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
     {
         stateMachine.ChangeState<UnitDieState>();
         
-        if(profilePanel.CurrentEntity == this as ISelectable)
+        if(profilePanel != null && profilePanel.CurrentEntity == this as ISelectable)
             profilePanel.UnregisterEntity();
 
         yield return new WaitForSeconds(3);
 
         OnDestroyed?.Invoke(this);
         GameObject.Destroy(gameObject);
-
     }
     #endregion
 
