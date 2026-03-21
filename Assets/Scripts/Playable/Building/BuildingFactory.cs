@@ -17,7 +17,7 @@ public class BuildingFactory : PlayableAbsFactory<Building>, IBuildingPreviewFac
     private readonly RallyPointSetter spawnPositionSetter;
 
     public BuildingFactory(
-        SelectionIndicatorFactory selectionIndicatorFactory,
+        SelectionIndicatorFactory selectionIndicatorFactory = null,
         Func<UnitGenerator> getUnitGenerator = null,  
         EntityProfilePanel profilePanel= null, 
         RallyPointSetter spawnPositionSetter = null)
@@ -35,13 +35,13 @@ public class BuildingFactory : PlayableAbsFactory<Building>, IBuildingPreviewFac
         var building = GameObject.Instantiate<Building>(prefab);
 
         // Set selection indicator.
-        var selectionIndicator = CreateSelectionIndicator(building);
+        var selectionIndicator = CreateSelectionIndicator(building, data.RadiusOnTerrain);
 
 
         building.SetUp(data, selectionIndicator, profilePanel, teamContext);
 
         // For those spawning units e.g., barracks
-        if (building is IUnitGenerator unitGenerator)
+        if (building is IUnitGenerator unitGenerator && getUnitGenerator != null)
         {
             unitGenerator?.SetUnitGenerator(getUnitGenerator.Invoke());
             unitGenerator?.SetSpawnPositionSetter(spawnPositionSetter);

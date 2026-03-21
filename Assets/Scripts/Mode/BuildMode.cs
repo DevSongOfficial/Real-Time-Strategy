@@ -8,13 +8,17 @@ public sealed class BuildMode : ModeBase
 {
     private readonly InputManager inputManager;
     private readonly PlacementPresenter presenter;
-    private readonly TeamContext teamContext;
+    private TeamContext teamContext;
 
-    public BuildMode(TeamContext teamContext, InputManager inputManager, PlacementPresenter presenter)
+    private readonly bool useEditorPlacement;
+
+    public BuildMode(TeamContext teamContext, InputManager inputManager, PlacementPresenter presenter, bool useEditorPlacement = false)
     {
         this.teamContext = teamContext;
         this.inputManager = inputManager;
         this.presenter = presenter;
+
+        this.useEditorPlacement = useEditorPlacement;
     }
 
     public override void Enter()
@@ -44,10 +48,17 @@ public sealed class BuildMode : ModeBase
             presenter.Cancel();
     }
 
+    public void ChangeTeamContext(TeamContext teamContext)
+    {
+        this.teamContext = teamContext;
+    }
+
     // TODO: Replace debug logs with UI feedback
     private void TryPlace()
     {
-        var result = presenter.TryPlace(teamContext);
+        PlacementResult result;
+        if (useEditorPlacement) result = presenter.TryPlaceForEditor(teamContext);
+        else                    result = presenter.TryPlace(teamContext);
 
         switch (result)
         {

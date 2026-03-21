@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         teamManager = new TeamManager(resourceView, maxUnitCapacityOnStart);
+
+
     }
 
     public TeamContext GetTeamContext(Team team) => teamManager.GetTeamContext(team);

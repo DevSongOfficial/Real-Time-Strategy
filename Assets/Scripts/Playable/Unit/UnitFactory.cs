@@ -9,7 +9,7 @@ public class UnitFactory : PlayableAbsFactory<Unit>
     private readonly EntityProfilePanel profilePanel;
     private readonly GridSystem gridSystem;
 
-    public UnitFactory(SelectionIndicatorFactory selectionIndicatorFactory, 
+    public UnitFactory(SelectionIndicatorFactory selectionIndicatorFactory = null, 
         IPlacementEvent placementEvent = null, 
         EntityProfilePanel profilePanel = null,
         GridSystem gridSystem = null)
@@ -27,7 +27,7 @@ public class UnitFactory : PlayableAbsFactory<Unit>
         var unit = GameObject.Instantiate<Unit>(prefab);
 
         // Set selection indicator.
-        var selectionIndicator = CreateSelectionIndicator(unit, unit.GetData().SelectionIndicatorPositionOffset);
+        var selectionIndicator = CreateSelectionIndicator(unit, data.RadiusOnTerrain, data.SelectionIndicatorPositionOffset);
 
         return unit.SetUp(data, teamContext, selectionIndicator, profilePanel, placementEvent, gridSystem);
     }

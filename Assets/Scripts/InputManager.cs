@@ -22,6 +22,7 @@ public sealed class InputManager
     public InputManager(Camera camera)
     {
         this.camera = camera;
+        nonClickableAreas = new List<RectTransform>();
     }
 
     public bool GetMouseButton(int button)

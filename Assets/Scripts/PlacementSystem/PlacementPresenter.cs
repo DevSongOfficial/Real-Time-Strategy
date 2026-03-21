@@ -30,7 +30,6 @@ public enum PlacementResult
 public sealed class PlacementPresenter : IPlacementEvent
 {
     private readonly IPlacementView placementView;
-    private readonly CommandPanel commandPanel;
     private readonly BuildingFactory buildingFactory;
     private readonly GridSystem gridSystem;
     private readonly InputManager inputManager;
@@ -48,11 +47,10 @@ public sealed class PlacementPresenter : IPlacementEvent
     public event Action<Building> OnBuildingDestroyed;
     public event Action<Building> OnBuildingDeconstructionRequested;
 
-    public PlacementPresenter(IPlacementView placementView, CommandPanel commandPanel, BuildingFactory buildingFactory, GridSystem gridSystem, InputManager inputManager)
+    public PlacementPresenter(IPlacementView placementView, BuildingFactory buildingFactory, GridSystem gridSystem, InputManager inputManager)
     {
         this.placementView = placementView;
         this.buildingFactory = buildingFactory;
-        this.commandPanel = commandPanel;
         this.gridSystem = gridSystem;
         this.inputManager = inputManager;
     }

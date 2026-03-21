@@ -12,12 +12,16 @@ public abstract class PlayableAbsFactory<T> where T : Playable
         this.selectionIndicatorFactory = selectionIndicatorFactory;
     }
 
-    protected GameObject CreateSelectionIndicator(Playable playable, Vector3 offset = default)
+    protected GameObject CreateSelectionIndicator(Playable playable, int radius, Vector3 offset = default)
     {
+        if (selectionIndicatorFactory == null) return null;
+
         var indicator = selectionIndicatorFactory.Create();
         indicator.SetParent(playable.transform, false);
         indicator.localPosition = Vector3.zero.WithY(-playable.GetPositionDeltaY()) + offset;
-        indicator.GetChild(0).localScale = (Vector3.one * playable.GetData().RadiusOnTerrain).WithZ(1);
+        Debug.Log(playable);
+        Debug.Log(playable.GetData());
+        indicator.GetChild(0).localScale = (Vector3.one * radius).WithZ(1);
         indicator.gameObject.SetActive(false);
         return indicator.gameObject;
     }

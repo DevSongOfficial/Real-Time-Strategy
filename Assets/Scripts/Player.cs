@@ -29,7 +29,7 @@ public sealed class Player : MonoBehaviour
     [SerializeField] private CameraController cameraController;
 
     [Header("Grid System")]
-    [SerializeField] private GridSystem gridSystsem;
+    [SerializeField] private GridSystem gridSystem;
     [Space]
     // GameObject following mouse cursor position
     [SerializeField] private Transform mouseIndicator_World;
@@ -57,9 +57,6 @@ public sealed class Player : MonoBehaviour
     private MoveMarkerFactory moveMarkerFactory;
 
     private PlacementPresenter  placementPresenter;
-    
-    // Grid System for building placement.
-    private GridSystem gridSystem;
 
     private UnitGenerator unitGenerator;
     private HealthBarGenerator healthBarGenerator;
@@ -91,7 +88,7 @@ public sealed class Player : MonoBehaviour
         // Placement
         placementView.SetUp(buildingFactory);
         placementView.ToggleUIPreview(false);
-        placementPresenter  = new PlacementPresenter(placementView, commandPanel, buildingFactory, gridSystem, inputManager);
+        placementPresenter  = new PlacementPresenter(placementView, buildingFactory, gridSystem, inputManager);
         placementPresenter.OnPlacementCanceled += (Vector3 finishedPosition) => stateMachine.RequestTransition(Mode.Normal);
         placementPresenter.OnPlacementRequested += (ITarget requestedBuilding) => stateMachine.RequestTransition(Mode.Normal);
 
