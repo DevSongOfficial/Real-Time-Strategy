@@ -121,6 +121,7 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext, 
         StartDestruction(GetData().DemolitionTime);
     }
 
+
     private void StartDestruction() => StartDestruction(0);
 
     private void StartDestruction(float delaySeconds)
@@ -136,8 +137,12 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext, 
 
         yield return new WaitForSeconds(delaySeconds);
 
-        OnDestroyed?.Invoke(this);
         GameObject.Destroy(gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        OnDestroyed?.Invoke(this);
     }
     #endregion
 

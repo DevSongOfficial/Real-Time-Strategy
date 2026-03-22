@@ -97,6 +97,7 @@ public sealed class PlacementPresenter : IPlacementEvent
 
     public PlacementResult TryPlaceForEditor(TeamContext teamContext)
     {
+        if (placementMode != PlacementMode.Placing) return PlacementResult.MissingEditorContext;
         return TryPlace(buildingData, teamContext, snappedPosition, out var building, spendResources: false);
     }
 
@@ -145,10 +146,9 @@ public sealed class PlacementPresenter : IPlacementEvent
         placementView.ToggleUIPreview(false);
         placementView.ToggleBuildingPreview(false);
 
-        buildingData = null;
+        this.buildingData = null;
 
         OnPlacementRequested?.Invoke(building);
-        Debug.Log("Requested");
 
         return PlacementResult.Success;
     }

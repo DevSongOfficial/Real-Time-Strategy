@@ -21,18 +21,19 @@ public sealed class BuildMode : ModeBase
         this.presenter = presenter;
 
         this.useEditorPlacement = useEditorPlacement;
-
-        presenter.OnPlacementRequested += HandlePlacementRequested;
     }
 
     public override void Enter()
     {
         presenter.Enter();
-        
+
+        presenter.OnPlacementRequested += HandlePlacementRequested;
     }
 
     public override void Exit()
     {
+        presenter.OnPlacementRequested -= HandlePlacementRequested;
+
         presenter.Exit();
     }
 

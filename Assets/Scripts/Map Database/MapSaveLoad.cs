@@ -60,28 +60,4 @@ public class MapSaveLoad : MonoBehaviour
         MapData mapData = JsonUtility.FromJson<MapData>(json);
         return mapData;
     }
-
-    public void LoadMapData(MapData mapData, TeamContext teamContext)
-    {
-        if (mapData == null) return;
-
-        foreach (var record in mapData.buildings)
-        {
-            BuildingData data = database.GetBuildinigData(record.id);
-            if (data == null)
-                continue;
-
-            Vector2Int originCell = new(record.cellX, record.cellY);
-            // placementSystem.PlaceFromRecord(data, teamContext, originCell, out _);
-        }
-
-        foreach (var record in mapData.units)
-        {
-            UnitData data = database.GetUnitData(record.id);
-            if (data == null)
-                continue;
-
-            // Spawn Unit
-        }
-    }
 }

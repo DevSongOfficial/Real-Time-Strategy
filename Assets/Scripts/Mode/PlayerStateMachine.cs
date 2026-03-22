@@ -6,7 +6,13 @@ public interface IModeTransitionRequester
 }
 
 // Add only the modes that outside systems may request via RequestTransition().
-public enum Mode { Normal, Build, SetSpawnPoint, SelectTarget }
+public enum Mode
+{
+    Normal, SetSpawnPoint, SelectTarget, // For Player Only
+    Build,                               // For Player & Editor
+    Select                               // For Editor Only    
+} 
+                    
 
 public class PlayerStateMachine : IModeTransitionRequester
 {

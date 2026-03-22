@@ -1,11 +1,13 @@
 using BuildingSystem;
-using UnityEngine;
 using System.Collections.Generic;
+using System.Net.Sockets;
+using UnityEngine;
 
 public class MapEditor : MonoBehaviour
 {
     [SerializeField] private GameManager GameManager;
     [SerializeField] private MapSaveLoad SaveLoad;
+    [SerializeField] private EntityDataDB EntityDataDB;
     [Space]
 
     [SerializeField] private CameraController cameraController;
@@ -19,9 +21,12 @@ public class MapEditor : MonoBehaviour
                      private BuildingFactory buildingFactory;
                      private UnitFactory unitFactory;
 
-                     private BuildMode buildMode;
+    // StateMachine & Modes
+    private EditorStateMachine stateMachine;
+    private SelectMode selectMode;
+    private BuildMode buildMode;
 
-                     private List<Building> placedBuildings;
+    private List<Building> placedBuildings;
 
     // Team
     public Team CurrentTeam { get; private set; } = Team.None;
@@ -40,37 +45,73 @@ public class MapEditor : MonoBehaviour
         placementView.SetUp(buildingFactory);
         placementPresenter = new PlacementPresenter(placementView, buildingFactory, gridSystem, inputManager);
 
-        // TODO: need dedicated fsm & states.
+
         buildMode = new BuildMode(GameManager.GetTeamContext(CurrentTeam), inputManager, placementPresenter, useEditorPlacement: true);
-        buildMode.OnBuildingPlaced += BuildMode_OnBuildingPlaced;
+        buildMode.OnBuildingPlaced += RegisterBuilding;
+
+        selectMode = new SelectMode(inputManager, placementPresenter, cameraController.Camera);
+        selectMode.OnBuildingSelected += UnregisterBuilding;
+        selectMode.OnBuildingSelected += (building) => AddBuilding(building.GetData());
+
+        stateMachine = new EditorStateMachine(selectMode, buildMode);
 
         placedBuildings = new List<Building>();
     }
 
-    private void BuildMode_OnBuildingPlaced(ITarget obj)
-    {
-        var building = obj as Building;
-        placedBuildings.Add(building);
-        
-        var map = SaveLoad.CreateMapData(placedBuildings, null);
-        SaveLoad.SaveMapData(map);
-    }
-
     void Start()
     {
-        
+        stateMachine.SetMode(selectMode);
     }
 
     // Update is called once per frame
     void Update()
     {
-        buildMode.Update();
-        buildMode.HandleInput();
+        stateMachine.Update();
+        stateMachine.HandleInput();
     }
 
-    // Buttons' event action
+    private void RegisterBuilding(ITarget obj)
+    {
+        var building = obj as Building;
+        placedBuildings.Add(building);
+
+        stateMachine.SetMode(selectMode);
+    }
+
+    private void UnregisterBuilding(Building building)
+    {
+        placedBuildings.Remove(building);
+    }
+
+    // Buttons' Event Actions
+    // Connected through UnitAction 
+    #region For Buttons
     public void AddBuilding(BuildingData data)
     {
+        stateMachine.SetMode(buildMode);
+
         placementPresenter.SelectBuilding(data);
     }
+
+    public void SaveMapData()
+    {
+        var mapData = SaveLoad.CreateMapData(placedBuildings, null);
+        SaveLoad.SaveMapData(mapData);
+    }
+
+    public void LoadMapData()
+    {
+        var mapData = SaveLoad.LoadMapDataFromFile();
+        if (mapData == null) return;
+
+        foreach (var record in mapData.buildings)
+        {
+            var data        = EntityDataDB.GetBuildinigData(record.id);
+            var teamContext = GameManager.GetTeamContext((Team)record.teamId);
+            var position    = new Vector3(record.cellX, 0.5f, record.cellY);
+
+            placementPresenter.TryPlace(data, teamContext , position , out Building placed, spendResources: false);
+        }
+    }
+    #endregion
 }
