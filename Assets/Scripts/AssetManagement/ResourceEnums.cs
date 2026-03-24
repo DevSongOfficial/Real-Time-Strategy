@@ -21,11 +21,13 @@ namespace CustomResourceManagement
 				Tree,
 			}
 			public enum Unit{
+				Gunner,
 				Swordsman,
 				Worker,
 			}
 		}
 		public enum UI{
+			EditorEntitySpawnButton,
 			HealthTracker,
 			SelectionBox,
 		}

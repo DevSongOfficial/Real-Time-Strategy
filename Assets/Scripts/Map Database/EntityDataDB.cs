@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System.Collections;
 
 public class EntityDataDB : MonoBehaviour
 {
@@ -33,5 +34,11 @@ public class EntityDataDB : MonoBehaviour
 
         Debug.LogError($"BuildingData not found. id = {id}");
         return null;
+    }
+
+    public IEnumerable<BuildingData> GetBuildingDatas()
+    {
+        foreach (var data in buildingDatas)
+            yield return data;
     }
 }
