@@ -5286,6 +5286,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buildingDatas:
   - {fileID: 11400000, guid: 29f8308226c5d13459224aefcc86f64b, type: 2}
+  - {fileID: 11400000, guid: 0abf40482913615419e4c89cf938d6d5, type: 2}
   unitDatas: []
 --- !u!4 &1110810353
 Transform:

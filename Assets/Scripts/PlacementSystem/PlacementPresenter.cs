@@ -95,15 +95,19 @@ public sealed class PlacementPresenter : IPlacementEvent
         placementView.ToggleUIPreview(true);
     }
 
-    public PlacementResult TryPlaceForEditor(TeamContext teamContext)
+    public PlacementResult TryPlaceForEditor(TeamContext teamContext, out Building placed)
     {
+        placed = null;
+
         if (placementMode != PlacementMode.Placing) return PlacementResult.MissingEditorContext;
-        return TryPlace(buildingData, teamContext, snappedPosition, out var building, spendResources: false);
+        return TryPlace(buildingData, teamContext, snappedPosition, out placed, spendResources: false);
     }
 
-    public PlacementResult TryPlace(TeamContext teamContext)
+    public PlacementResult TryPlace(TeamContext teamContext, out Building placed)
     {
-        return TryPlace(buildingData, teamContext, snappedPosition, out var building);
+        placed = null;
+
+        return TryPlace(buildingData, teamContext, snappedPosition, out placed);
     }
 
     public PlacementResult TryPlace(BuildingData buildingData, TeamContext teamContext, Vector3 position, out Building placed, bool spendResources = true)
@@ -153,9 +157,9 @@ public sealed class PlacementPresenter : IPlacementEvent
         return PlacementResult.Success;
     }
 
-    public void Cancel()
+    public bool Cancel()
     {
-        if (buildingData == null) return;
+        if (buildingData == null) return false;
 
         placementMode = PlacementMode.Idle;
 
@@ -165,6 +169,8 @@ public sealed class PlacementPresenter : IPlacementEvent
         buildingData = null;
 
         OnPlacementCanceled?.Invoke(inputManager.GetMousePositionOnCanvas());
+
+        return true;
     }
 
     private void OnDestructed(Building building)

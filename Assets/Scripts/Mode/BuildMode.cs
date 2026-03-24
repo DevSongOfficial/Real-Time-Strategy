@@ -7,6 +7,8 @@ using UnityEngine.UI;
 public sealed class BuildMode : ModeBase
 {
     public event Action<ITarget> OnBuildingPlaced;
+    public event Action OnPlacementCanceled;
+
 
     private readonly InputManager inputManager;
     private readonly PlacementPresenter presenter;
@@ -26,14 +28,10 @@ public sealed class BuildMode : ModeBase
     public override void Enter()
     {
         presenter.Enter();
-
-        presenter.OnPlacementRequested += HandlePlacementRequested;
     }
 
     public override void Exit()
     {
-        presenter.OnPlacementRequested -= HandlePlacementRequested;
-
         presenter.Exit();
     }
 
@@ -51,7 +49,7 @@ public sealed class BuildMode : ModeBase
             TryPlace();
 
         if (inputManager.GetMouseButtonDown(1))
-            presenter.Cancel();
+            TryCancel();
     }
 
     public void ChangeTeamContext(TeamContext teamContext)
@@ -63,12 +61,14 @@ public sealed class BuildMode : ModeBase
     private void TryPlace()
     {
         PlacementResult result;
-        if (useEditorPlacement) result = presenter.TryPlaceForEditor(teamContext);
-        else                    result = presenter.TryPlace(teamContext);
+        Building placed;
+        if (useEditorPlacement) result = presenter.TryPlaceForEditor(teamContext, out placed);
+        else                    result = presenter.TryPlace(teamContext, out placed);
 
         switch (result)
         {
             case PlacementResult.Success:
+                OnBuildingPlaced?.Invoke(placed);
                 break;
             case PlacementResult.InvalidBuildingData:
                 break;
@@ -81,8 +81,9 @@ public sealed class BuildMode : ModeBase
         }
     }
 
-    private void HandlePlacementRequested(ITarget target)
+    private void TryCancel()
     {
-        OnBuildingPlaced?.Invoke(target);
+        if (presenter.Cancel()) 
+            OnPlacementCanceled?.Invoke();
     }
 }

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61594700613c48a4c83f2c31a8c39ff5, type: 3}
   m_Name: Building1Data
   m_EditorClassIdentifier: 
+  <Id>k__BackingField: building1
   <Prefab>k__BackingField: {fileID: 6404431195190590083, guid: e1e49127e964eaa46aca0de9452cc1c6, type: 3}
   <DisplayName>k__BackingField: Building 1
   <ProfileSprite>k__BackingField: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}

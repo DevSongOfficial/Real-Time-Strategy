@@ -47,7 +47,8 @@ public class MapEditor : MonoBehaviour
 
 
         buildMode = new BuildMode(GameManager.GetTeamContext(CurrentTeam), inputManager, placementPresenter, useEditorPlacement: true);
-        buildMode.OnBuildingPlaced += RegisterBuilding;
+        buildMode.OnBuildingPlaced      += RegisterBuilding;
+        buildMode.OnPlacementCanceled   += () => stateMachine.SetMode(selectMode);
 
         selectMode = new SelectMode(inputManager, placementPresenter, cameraController.Camera);
         selectMode.OnBuildingSelected += UnregisterBuilding;
