@@ -140,7 +140,7 @@ public class Unit : Playable, IDamageable, ITargetor, ITarget, IUnitStateContext
         Vector3 min = gridSystem.CellToWorld(new Vector3Int(origin.x, 0, origin.y));
         Vector3 max = gridSystem.CellToWorld(new Vector3Int(origin.x + cellSize.x, 0, origin.y + cellSize.y));
 
-        // Find the closest cell' position.
+        // Find the closest cell's position.
         float x = Mathf.Clamp(transform.position.x, min.x, max.x);
         float z = Mathf.Clamp(transform.position.z, min.z, max.z);
         Vector3 closest = new Vector3(x, transform.position.y, z);

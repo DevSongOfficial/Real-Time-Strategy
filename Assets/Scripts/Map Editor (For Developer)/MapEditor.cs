@@ -7,9 +7,9 @@ using Unity.AppUI.UI;
 
 public class MapEditor : MonoBehaviour
 {
-    [SerializeField] private GameManager GameManager;
-    [SerializeField] private MapSaveLoad SaveLoad;
-    [SerializeField] private EntityDataDB EntityDataDB;
+    [SerializeField]        private GameManager GameManager;
+    [SerializeField]        private MapSaveLoad SaveLoad;
+    [field: SerializeField] public EntityDataDB EntityDataDB { get; private set; }
     [Space]
 
     [SerializeField] private CameraController cameraController;
@@ -22,12 +22,6 @@ public class MapEditor : MonoBehaviour
     [SerializeField] private GridSystem gridSystem;
                      private BuildingFactory buildingFactory;
                      private UnitFactory unitFactory;
-    [Space]
-
-    //UI
-    [SerializeField] private Transform spawnButtonsPanel;
-                     private List<EditorEntitySpawnButton> spawnButtons;
-
 
     // StateMachine & Modes
     private EditorStateMachine stateMachine;
@@ -70,16 +64,6 @@ public class MapEditor : MonoBehaviour
     void Start()
     {
         stateMachine.SetMode(selectMode);
-
-        // Generate entity spawn buttons from building data DB
-        spawnButtons = new();
-        var buttonPrefab = ResourceLoader.GetResource<EditorEntitySpawnButton>(Prefabs.UI.EditorEntitySpawnButton);
-        foreach(var buildingData in EntityDataDB.GetBuildingDatas())
-        {
-            var button = GameObject.Instantiate(buttonPrefab, spawnButtonsPanel);
-            button.Setup(this, buildingData);
-            spawnButtons.Add(button);
-        }
     }
 
     // Update is called once per frame

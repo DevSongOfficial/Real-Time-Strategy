@@ -19,8 +19,6 @@ public abstract class PlayableAbsFactory<T> where T : Playable
         var indicator = selectionIndicatorFactory.Create();
         indicator.SetParent(playable.transform, false);
         indicator.localPosition = Vector3.zero.WithY(-playable.GetPositionDeltaY()) + offset;
-        Debug.Log(playable);
-        Debug.Log(playable.GetData());
         indicator.GetChild(0).localScale = (Vector3.one * radius).WithZ(1);
         indicator.gameObject.SetActive(false);
         return indicator.gameObject;

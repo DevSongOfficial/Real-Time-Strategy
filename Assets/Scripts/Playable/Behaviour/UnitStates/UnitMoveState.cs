@@ -15,7 +15,7 @@ public class UnitMoveState : UnitStateBase
     public override void Enter()
     {
         // temp
-        if (blackBoard.Target.Entity is Building ) 
+        if (blackBoard.Target.Entity is Building )
             stateContext.SetDestination(blackBoard.Target);
         else
             stateContext.SetDestination(blackBoard.Target.GetPosition());

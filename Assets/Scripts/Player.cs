@@ -129,7 +129,7 @@ public sealed class Player : MonoBehaviour
         }
 
         var temp_minePosition = new Vector3(34, 0.5f, 34);
-        placementPresenter.TryPlace(goldMineData, GameManager.GetTeamContext(Team.Red),  temp_minePosition, out Building mine);
+        placementPresenter.TryPlace(goldMineData, GameManager.GetTeamContext(Team.None),  temp_minePosition, out Building mine);
         placementPresenter.TryPlace(redTeamBuildingData, GameManager.GetTeamContext(Team.Red), temp_minePosition + Vector3.back * 4, out Building building);
         
     }

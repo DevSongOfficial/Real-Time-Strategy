@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 988b72154a432ea408aa7ebd242a17c0, type: 3}
   m_Name: GoldMine(Destoryable)Data
   m_EditorClassIdentifier: 
+  <Id>k__BackingField: mine2
   <Prefab>k__BackingField: {fileID: 6404431195190590083, guid: 50e06ebbe1061a341bbf1df45a6949f0, type: 3}
   <DisplayName>k__BackingField: Gold Mine
   <ProfileSprite>k__BackingField: {fileID: 21300000, guid: 32c5298c995db7c47b5a3b5cb7836f62, type: 3}
