@@ -18,6 +18,11 @@ public class MapBuildingRecord
     public int cellX;
     public int cellY;
     public int teamId;
+
+    public bool hasRallyPoint;
+    public float rallyX;
+    public float rallyY;
+    public float rallyZ;
 }
 
 [Serializable]

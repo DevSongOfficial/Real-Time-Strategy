@@ -17,13 +17,24 @@ public class MapSaveLoad : MonoBehaviour
             var data = building.GetData();
             Vector2Int cell = building.GetCellPosition();
 
-            mapData.buildings.Add(new MapBuildingRecord
+            var record = new MapBuildingRecord
             {
                 id = data.Id,
                 cellX = cell.x,
                 cellY = cell.y,
                 teamId = (int)building.GetTeam(),
-            });
+            };
+
+            if (building is IUnitGenerator generator)
+            {
+                Vector3 rally = generator.GetUnitRallyPoint();
+                record.hasRallyPoint = true;
+                record.rallyX = rally.x;
+                record.rallyY = rally.y;
+                record.rallyZ = rally.z;
+            }
+
+            mapData.buildings.Add(record);
         }
 
         if (units == null) return mapData;

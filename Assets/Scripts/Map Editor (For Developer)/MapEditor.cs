@@ -1,9 +1,10 @@
 using BuildingSystem;
+using CustomResourceManagement;
 using System.Collections.Generic;
 using System.Net.Sockets;
-using UnityEngine;
-using CustomResourceManagement;
 using Unity.AppUI.UI;
+using UnityEngine;
+using static CustomResourceManagement.Prefabs.Playable;
 
 public class MapEditor : MonoBehaviour
 {
@@ -112,8 +113,16 @@ public class MapEditor : MonoBehaviour
             var data        = EntityDataDB.GetBuildinigData(record.id);
             var teamContext = GameManager.GetTeamContext((Team)record.teamId);
             var position    = new Vector3(record.cellX, 0.5f, record.cellY);
+ 
+            var result = placementPresenter.TryPlace(data, teamContext , position , out Building placed, spendResources: false);
+            if (result != PlacementResult.Success) continue;
 
-            placementPresenter.TryPlace(data, teamContext , position , out Building placed, spendResources: false);
+            // Set rally point
+            if (placed is IUnitGenerator generator && record.hasRallyPoint)
+            {
+                Vector3 rallyPoint = new Vector3(record.rallyX, record.rallyY, record.rallyZ);
+                generator.SetUnitRallyPoint(rallyPoint);
+            }
         }
     }
     #endregion

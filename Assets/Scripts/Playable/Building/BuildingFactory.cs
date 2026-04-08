@@ -44,7 +44,7 @@ public class BuildingFactory : PlayableAbsFactory<Building>, IBuildingPreviewFac
         if (building is IUnitGenerator unitGenerator && getUnitGenerator != null)
         {
             unitGenerator?.SetUnitGenerator(getUnitGenerator.Invoke());
-            unitGenerator?.SetSpawnPositionSetter(spawnPositionSetter);
+            unitGenerator?.SetRallyPositionSetter(spawnPositionSetter);
         }
 
         return building;

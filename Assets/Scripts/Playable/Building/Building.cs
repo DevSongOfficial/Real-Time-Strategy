@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext, IDamageable
 {
@@ -16,6 +17,7 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext, 
     protected new BuildingBlackBoard blackBoard;
 
     public bool IsPreview { get; private set; }
+    [SerializeField] private NavMeshObstacle navMeshObstacle;
 
     public bool IsUnderConstruction => (stateMachine.CurrentState is BuildingUnderConstructionState);
     public IState CurrentState => stateMachine.CurrentState;
@@ -181,6 +183,7 @@ public class Building : Playable, ITarget<BuildingData>, IBuildingStateContext, 
     {
         IsPreview = true;
         enabled = false;
+        navMeshObstacle.enabled = false;
         gameObject.SetLayer(Layer.IgnoreCollision);
     }
 

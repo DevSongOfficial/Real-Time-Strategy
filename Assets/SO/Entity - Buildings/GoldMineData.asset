@@ -16,13 +16,13 @@ MonoBehaviour:
   <Prefab>k__BackingField: {fileID: 6404431195190590083, guid: 50e06ebbe1061a341bbf1df45a6949f0, type: 3}
   <DisplayName>k__BackingField: Gold Mine
   <ProfileSprite>k__BackingField: {fileID: 21300000, guid: 32c5298c995db7c47b5a3b5cb7836f62, type: 3}
-  <RadiusOnTerrain>k__BackingField: 2
+  <RadiusOnTerrain>k__BackingField: 4
   <SelectionIndicatorPositionOffset>k__BackingField: {x: 0, y: 0, z: 0}
   <CommandSet>k__BackingField: []
   <MaxHealth>k__BackingField: 5
   <Combat>k__BackingField: {fileID: 11400000, guid: 6cb5b9cdf07257844966f082b6a892f4, type: 2}
   <Movement>k__BackingField: {fileID: 0}
-  <CellSize>k__BackingField: {x: 1, y: 1}
+  <CellSize>k__BackingField: {x: 2, y: 2}
   <ConsructionTime>k__BackingField: 0
   <GoldRequired>k__BackingField: 0
   <WoodRequired>k__BackingField: 0

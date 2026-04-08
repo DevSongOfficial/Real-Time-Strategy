@@ -8,7 +8,7 @@ using UnityEngine;
 public interface IUnitGenerator
 {
     void SetUnitGenerator(UnitGenerator unitGenerator);
-    void SetSpawnPositionSetter(RallyPointSetter setter);
+    void SetRallyPositionSetter(RallyPointSetter setter);
 
     void GenerateUnit(UnitGenerationInfo unitGenerationInfo);
     bool CanGenerateUnit(UnitGenerationInfo info);
@@ -76,7 +76,7 @@ public class Barracks : Building, ITarget<BarracksData>, IUnitGenerator
         unitGenerationQueue = new List<UnitGenerationInfo>();
     }
 
-    public void SetSpawnPositionSetter(RallyPointSetter setter)
+    public void SetRallyPositionSetter(RallyPointSetter setter)
     {
         this.rallyPointSetter = setter;
     }

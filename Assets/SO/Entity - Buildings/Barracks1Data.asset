@@ -16,7 +16,7 @@ MonoBehaviour:
   <Prefab>k__BackingField: {fileID: 6404431195190590083, guid: 3e7ddadddd3047f49b7a73fe5997b3f3, type: 3}
   <DisplayName>k__BackingField: Barracks
   <ProfileSprite>k__BackingField: {fileID: 21300000, guid: 47a210e716ed90b46914b5ffc65ca857, type: 3}
-  <RadiusOnTerrain>k__BackingField: 3
+  <RadiusOnTerrain>k__BackingField: 2
   <SelectionIndicatorPositionOffset>k__BackingField: {x: 0, y: 0, z: 0}
   <CommandSet>k__BackingField:
   - {fileID: 11400000, guid: b6832e66701b1ef4cb4d6b5fd84ff98f, type: 2}

@@ -13,9 +13,9 @@ namespace CustomResourceManagement
 		}
 		public struct Playable{
 			public enum Building{
+				Barracks,
 				BuildingA,
 				BuildingB,
-				BuildingC,
 				GoldMine,
 				Headquarters,
 				Tree,
